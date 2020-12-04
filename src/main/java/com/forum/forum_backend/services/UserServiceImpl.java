@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	}
 
-	private UserEntity getUserById(int userId) {
+	public UserEntity getUserById(int userId) {
 		UserEntity user = null;
 		try {
 			user = userRepository.getOne(userId);

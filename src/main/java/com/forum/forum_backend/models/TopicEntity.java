@@ -29,6 +29,14 @@ public class TopicEntity {
 	@JoinColumn(name = "topic_id")
 	private List<CommentEntity> comments;
 
+	public TopicEntity() { }
+
+	public TopicEntity(String header, String content, UserEntity user) {
+		this.header = header;
+		this.content = content;
+		this.user = user;
+	}
+
 	public int getId() {
 		return id;
 	}
