@@ -1,8 +1,11 @@
 package com.forum.forum_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -19,9 +22,11 @@ public class UserEntity {
 	@Column(name = "password")
 	private String password;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
 	private Collection<AuthorityEntity> authorities;
+
+	// Getters and setters
 
 	public int getId() {
 		return id;
@@ -55,10 +60,13 @@ public class UserEntity {
 		this.authorities = authorities;
 	}
 
+	// helper methods
+
 	public void addAuthority(AuthorityEntity authorityEntity) {
 		if (this.authorities == null) {
 			authorities = new ArrayList<>();
 		}
 		authorities.add(authorityEntity);
+
 	}
 }
