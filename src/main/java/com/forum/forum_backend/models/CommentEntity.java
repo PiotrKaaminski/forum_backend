@@ -1,5 +1,7 @@
 package com.forum.forum_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,6 +15,11 @@ public class CommentEntity {
 
 	@Column(name = "content")
 	private String content;
+
+	@JsonIgnore
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "topic_id")
+	private TopicEntity topic;
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "user_id")
@@ -32,6 +39,14 @@ public class CommentEntity {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public TopicEntity getTopic() {
+		return topic;
+	}
+
+	public void setTopic(TopicEntity topic) {
+		this.topic = topic;
 	}
 
 	public UserEntity getUser() {

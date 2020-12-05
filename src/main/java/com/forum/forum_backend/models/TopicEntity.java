@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -75,5 +76,15 @@ public class TopicEntity {
 
 	public void setComments(List<CommentEntity> comments) {
 		this.comments = comments;
+	}
+
+	// helper methods
+
+	public void addComment(CommentEntity commentEntity) {
+		if (this.comments == null) {
+			comments = new ArrayList<>();
+		}
+		comments.add(commentEntity);
+
 	}
 }
