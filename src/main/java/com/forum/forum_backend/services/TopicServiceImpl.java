@@ -30,6 +30,11 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
+	public TopicEntity getTopic(int topicId) {
+		return topicRepository.findById(topicId).get();
+	}
+
+	@Override
 	public void addTopic(TopicDto topicDto) {
 		System.out.println("TopicService->addTopic @@@ topicDto.header: " + topicDto.getHeader());
 		System.out.println("TopicService->addTopic @@@ topicDto.content: " + topicDto.getContent());

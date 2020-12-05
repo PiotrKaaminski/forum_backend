@@ -25,6 +25,11 @@ public class TopicController {
 		return topicService.getTopicList();
 	}
 
+	@GetMapping("/{topicId}")
+	public TopicEntity getTopic(@PathVariable int topicId) {
+		return topicService.getTopic(topicId);
+	}
+
 	@PostMapping
 	public void addTopic(@RequestBody TopicDto topicDto) {
 		topicService.addTopic(topicDto);
