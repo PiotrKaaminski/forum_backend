@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.stream.events.Comment;
+
 @Transactional
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -25,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
 	private UserService userService;
 
 	@Override
-	public void addComment(CommentDto commentDto, int topicId) {
+	public void addComment( int topicId, CommentDto commentDto) {
 		TopicEntity topic = topicRepository.getOne(topicId);
 
 		CommentEntity comment = new CommentEntity();
@@ -38,8 +40,33 @@ public class CommentServiceImpl implements CommentService {
 		comment.setUser(owner);
 		comment.setTopic(topic);
 
-		topic.addComment(comment);
+		commentRepository.save(comment);
+	}
 
-		topicRepository.save(topic);
+	@Override
+	public void modifyComment(int commentId, CommentDto commentDto) {
+		CommentEntity comment = commentRepository.getOne(commentId);
+
+		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int userId = user.getId();
+
+		if (comment.getUser().getId() == userId) {
+			comment.setContent(commentDto.getContent());
+		}
+
+		commentRepository.save(comment);
+
+	}
+
+	@Override
+	public void deleteComment(int commentId) {
+		CommentEntity comment = commentRepository.getOne(commentId);
+
+		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int userId = user.getId();
+
+		if (comment.getUser().getId() == userId) {
+			commentRepository.delete(comment);
+		}
 	}
 }

@@ -4,6 +4,8 @@ import com.forum.forum_backend.dtos.CommentDto;
 
 public interface CommentService {
 
-	void addComment(CommentDto commentDto, int topicId);
+	void addComment(int topicId, CommentDto commentDto);
+	void modifyComment(int commentId, CommentDto commentDto);
+	void deleteComment(int commentId);
 
 }

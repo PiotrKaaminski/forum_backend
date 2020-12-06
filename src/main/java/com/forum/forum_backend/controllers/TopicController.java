@@ -15,7 +15,6 @@ public class TopicController {
 	@Autowired
 	private TopicService topicService;
 
-
 	@GetMapping
 	public List<TopicEntity> getTopicList() {
 		return topicService.getTopicList();
