@@ -65,4 +65,17 @@ public class TopicServiceImpl implements TopicService {
 			topicRepository.save(topic);
 		}
 	}
+
+	@Override
+	public void deleteTopic(int topicId) {
+		TopicEntity topic = topicRepository.getOne(topicId);
+
+		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int userId = user.getId();
+
+		if (topic.getUser().getId() == userId) {
+
+			topicRepository.delete(topic);
+		}
+	}
 }

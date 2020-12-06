@@ -35,4 +35,9 @@ public class TopicController {
 		topicService.modifyTopic(topicDto, topicId);
 	}
 
+	@DeleteMapping("/{topicId}")
+	public void deleteTopic(@PathVariable int topicId) {
+		topicService.deleteTopic(topicId);
+	}
+
 }

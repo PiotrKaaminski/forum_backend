@@ -11,4 +11,5 @@ public interface TopicService {
 	TopicEntity getTopic(int topicId);
 	void addTopic(TopicDto topicDto);
 	void modifyTopic(TopicDto topicDto, int topicId);
+	void deleteTopic(int topicId);
 }
