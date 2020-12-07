@@ -1,7 +1,6 @@
 package com.forum.forum_backend.controllers;
 
 import com.forum.forum_backend.dtos.TopicDto;
-import com.forum.forum_backend.models.TopicEntity;
 import com.forum.forum_backend.services.interfaces.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +15,12 @@ public class TopicController {
 	private TopicService topicService;
 
 	@GetMapping
-	public List<TopicEntity> getTopicList() {
+	public List<TopicDto> getTopicList() {
 		return topicService.getTopicList();
 	}
 
 	@GetMapping("/{topicId}")
-	public TopicEntity getTopic(@PathVariable int topicId) {
+	public TopicDto getTopic(@PathVariable int topicId) {
 		return topicService.getTopic(topicId);
 	}
 

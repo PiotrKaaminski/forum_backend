@@ -1,8 +1,5 @@
 package com.forum.forum_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

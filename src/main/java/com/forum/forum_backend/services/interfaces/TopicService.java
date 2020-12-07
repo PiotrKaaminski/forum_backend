@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface TopicService {
 
-	List<TopicEntity> getTopicList();
-	TopicEntity getTopic(int topicId);
+	List<TopicDto> getTopicList();
+	TopicDto getTopic(int topicId);
 	void addTopic(TopicDto topicDto);
 	void modifyTopic(TopicDto topicDto, int topicId);
 	void deleteTopic(int topicId);
