@@ -1,13 +1,21 @@
 package com.forum.forum_backend.dtos;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.forum.forum_backend.Views.TopicView;
+
 import java.util.List;
 
 public class TopicDto {
 
+	@JsonView(TopicView.Minimal.class)
 	private int id;
+	@JsonView(TopicView.Minimal.class)
 	private String header;
+	@JsonView(TopicView.Extended.class)
 	private String content;
+	@JsonView(TopicView.Minimal.class)
 	private UserDto topicAuthor;
+	@JsonView(TopicView.Extended.class)
 	private List<CommentDto> comments;
 
 	public int getId() {
