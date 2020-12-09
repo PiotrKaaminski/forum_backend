@@ -1,6 +1,8 @@
 package com.forum.forum_backend.services;
+
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.CommentDto;
+import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.CommentEntity;
 import com.forum.forum_backend.models.TopicEntity;
@@ -12,6 +14,9 @@ import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.NoSuchElementException;
 
 @Transactional
 @Service
@@ -28,44 +33,55 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public void addComment( int topicId, CommentDto commentDto) {
-		TopicEntity topic = topicRepository.getOne(topicId);
+	public void addComment( int topicId, CommentDto commentDto) throws NotFoundException {
+		try {
+			TopicEntity topic = topicRepository.findById(topicId).orElseThrow();
 
-		CommentEntity comment = new CommentEntity();
+			CommentEntity comment = new CommentEntity();
 
-		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		int userId = user.getId();
-		UserEntity owner = userService.getUserById(userId);
+			UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			int userId = user.getId();
+			UserEntity owner = userService.getUserById(userId);
 
-		comment.setContent(commentDto.getContent());
-		comment.setUser(owner);
-		comment.setTopic(topic);
+			comment.setContent(commentDto.getContent());
+			comment.setUser(owner);
+			comment.setTopic(topic);
 
-		commentRepository.save(comment);
+			commentRepository.save(comment);
+		} catch (NoSuchElementException ex) {
+			throw new NotFoundException("Topic with id = " + topicId + " doesn't exist");
+		}
 	}
 
 	@Override
-	public void modifyComment(int commentId, CommentDto commentDto) throws UnauthorizedException {
-		CommentEntity comment = commentRepository.getOne(commentId);
+	public void modifyComment(int commentId, CommentDto commentDto) throws UnauthorizedException, NotFoundException {
+		try {
+			CommentEntity comment = commentRepository.getOne(commentId);
 
-		if (isUserTheAuthor(comment)) {
-			comment.setContent(commentDto.getContent());
-		} else {
-			throw new UnauthorizedException("You have no permissions to modify this comment");
+			if (isUserTheAuthor(comment)) {
+				comment.setContent(commentDto.getContent());
+			} else {
+				throw new UnauthorizedException("You have no permissions to modify this comment");
+			}
+			commentRepository.save(comment);
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Comment with id = " + commentId + " doesn't exist");
 		}
 
-		commentRepository.save(comment);
-
 	}
 
 	@Override
-	public void deleteComment(int commentId) throws UnauthorizedException {
-		CommentEntity comment = commentRepository.getOne(commentId);
+	public void deleteComment(int commentId) throws UnauthorizedException, NotFoundException {
+		try {
+			CommentEntity comment = commentRepository.getOne(commentId);
 
-		if (isUserTheAuthor(comment)) {
-			commentRepository.delete(comment);
-		} else {
-			throw new UnauthorizedException("You have no permissions to delete this comment");
+			if (isUserTheAuthor(comment)) {
+				commentRepository.delete(comment);
+			} else {
+				throw new UnauthorizedException("You have no permissions to delete this comment");
+			}
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Comment with id = " + commentId + " doesn't exist");
 		}
 	}
 
