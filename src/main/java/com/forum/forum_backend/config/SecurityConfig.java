@@ -3,6 +3,7 @@ package com.forum.forum_backend.config;
 import com.forum.forum_backend.services.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,10 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/api/register", "/api/login", "/api/hello1", "/api/topics/**").permitAll()
+				.antMatchers("/api/register", "/api/login").permitAll()
 				.antMatchers("/api/hello2").authenticated()
 				.antMatchers("/api/hello3").hasAuthority("USER")
 				.antMatchers("/api/hello4").hasAuthority("ADMIN")
+				.antMatchers("/api/login", "/api/register").permitAll()
+				.antMatchers(HttpMethod.GET, "/api/topics", "/api/topics/*").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/topics", "/api/comments").authenticated()
+				.antMatchers(HttpMethod.PUT, "/api/topics/*", "/api/comments/*").authenticated()
+				.antMatchers(HttpMethod.DELETE, "/api/topics/*", "/api/comments/*").authenticated()
 				.and()
 				.csrf().disable()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

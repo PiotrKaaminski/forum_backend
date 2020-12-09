@@ -1,4 +1,4 @@
-package com.forum.forum_backend.Views;
+package com.forum.forum_backend.views;
 
 public class TopicView {
 

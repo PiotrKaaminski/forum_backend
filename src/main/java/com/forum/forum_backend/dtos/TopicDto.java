@@ -1,7 +1,7 @@
 package com.forum.forum_backend.dtos;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.forum.forum_backend.Views.TopicView;
+import com.forum.forum_backend.views.TopicView;
 
 import java.util.List;
 
