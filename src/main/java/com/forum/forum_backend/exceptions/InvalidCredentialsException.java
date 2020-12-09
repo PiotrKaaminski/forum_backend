@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class InvalidCredentialsException extends Exception {
 
-	final private HttpStatus httpStatus = HttpStatus.FORBIDDEN;
+	final private HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
 	public InvalidCredentialsException(String message) {
 		super(message);

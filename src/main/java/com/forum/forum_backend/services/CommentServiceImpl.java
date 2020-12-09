@@ -1,6 +1,7 @@
 package com.forum.forum_backend.services;
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.CommentDto;
+import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.CommentEntity;
 import com.forum.forum_backend.models.TopicEntity;
 import com.forum.forum_backend.models.UserEntity;
@@ -44,14 +45,13 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public void modifyComment(int commentId, CommentDto commentDto) {
+	public void modifyComment(int commentId, CommentDto commentDto) throws UnauthorizedException {
 		CommentEntity comment = commentRepository.getOne(commentId);
 
-		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		int userId = user.getId();
-
-		if (comment.getUser().getId() == userId) {
+		if (isUserTheAuthor(comment)) {
 			comment.setContent(commentDto.getContent());
+		} else {
+			throw new UnauthorizedException("You have no permissions to modify this comment");
 		}
 
 		commentRepository.save(comment);
@@ -59,14 +59,20 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public void deleteComment(int commentId) {
+	public void deleteComment(int commentId) throws UnauthorizedException {
 		CommentEntity comment = commentRepository.getOne(commentId);
 
+		if (isUserTheAuthor(comment)) {
+			commentRepository.delete(comment);
+		} else {
+			throw new UnauthorizedException("You have no permissions to delete this comment");
+		}
+	}
+
+	private boolean isUserTheAuthor(CommentEntity comment) {
 		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		int userId = user.getId();
 
-		if (comment.getUser().getId() == userId) {
-			commentRepository.delete(comment);
-		}
+		return comment.getUser().getId() == userId;
 	}
 }

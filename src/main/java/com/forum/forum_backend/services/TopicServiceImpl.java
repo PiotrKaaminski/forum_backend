@@ -4,6 +4,7 @@ import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.CommentDto;
 import com.forum.forum_backend.dtos.TopicDto;
 import com.forum.forum_backend.dtos.UserDto;
+import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.CommentEntity;
 import com.forum.forum_backend.models.TopicEntity;
 import com.forum.forum_backend.models.UserEntity;
@@ -50,7 +51,7 @@ public class TopicServiceImpl implements TopicService {
 
 	@Override
 	public TopicDto getTopic(int topicId) {
-		TopicEntity topicEntity = topicRepository.findById(topicId).get();
+		TopicEntity topicEntity = topicRepository.getOne(topicId);
 		TopicDto topic = new TopicDto();
 		topic.setId(topicEntity.getId());
 		topic.setHeader(topicEntity.getHeader());
@@ -91,13 +92,11 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public void modifyTopic(TopicDto topicDto, int topicId) {
-		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		int userId = user.getId();
+	public void modifyTopic(TopicDto topicDto, int topicId) throws UnauthorizedException {
 
 		TopicEntity topic = topicRepository.getOne(topicId);
 
-		if (topic.getUser().getId() == userId) {
+		if (isUserTheAuthor(topic)) {
 			if(topicDto.getHeader() != null) {
 				topic.setHeader(topicDto.getHeader());
 			}
@@ -105,19 +104,26 @@ public class TopicServiceImpl implements TopicService {
 				topic.setContent(topicDto.getContent());
 			}
 			topicRepository.save(topic);
+		} else {
+			throw new UnauthorizedException("You have no permissions to modify this topic");
 		}
 	}
 
 	@Override
-	public void deleteTopic(int topicId) {
+	public void deleteTopic(int topicId) throws UnauthorizedException {
 		TopicEntity topic = topicRepository.getOne(topicId);
 
+		if (isUserTheAuthor(topic)) {
+			topicRepository.delete(topic);
+		} else {
+			throw new UnauthorizedException("You have no permissions to delete this topic");
+		}
+	}
+
+	private boolean isUserTheAuthor(TopicEntity topic) {
 		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		int userId = user.getId();
 
-		if (topic.getUser().getId() == userId) {
-
-			topicRepository.delete(topic);
-		}
+		return topic.getUser().getId() == userId;
 	}
 }
