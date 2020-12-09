@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+		xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+	<changeSet id="1" author="Piotr">
+		<createTable tableName="authority">
+			<column name="id" autoIncrement="true" type="INT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" unique="true" />
+			</column>
+			<column name="authority" type="VARCHAR(60)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		
+		<createTable tableName="user">
+			<column name="id" autoIncrement="true" type="INT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" unique="true" />
+			</column>
+			<column name="username" type="VARCHAR(50)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="password" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		
+		<createTable tableName="user_authorities">
+			<column name="user_id" type="INT UNSIGNED">
+				<constraints nullable="false"/>
+			</column>
+			<column name="authority_id" type="INT UNSIGNED">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		
+		<createTable tableName="topic">
+			<column name="id" autoIncrement="true" type="INT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" unique="true" />
+			</column>
+			<column name="header" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="content" type="VARCHAR(500)">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="INT UNSIGNED" />
+		</createTable>
+
+		<createTable tableName="comment">
+			<column name="id" autoIncrement="true" type="INT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" unique="true" />
+			</column>
+			<column name="content" type="VARCHAR(500)" >
+				<constraints nullable="false" />
+			</column>
+			<column name="topic_id" type="INT UNSIGNED" />
+			<column name="user_id" type="INT UNSIGNED" />
+		</createTable>
+	</changeSet>
+</databaseChangeLog>
+
+
+
+
+
+
+
+
+
+
+
+
+
