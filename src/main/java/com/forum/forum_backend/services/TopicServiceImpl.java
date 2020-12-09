@@ -10,7 +10,6 @@ import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.TopicRepository;
 import com.forum.forum_backend.services.interfaces.TopicService;
 import com.forum.forum_backend.services.interfaces.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +20,14 @@ import java.util.List;
 @Transactional
 @Service
 public class TopicServiceImpl implements TopicService {
+	
+	private final TopicRepository topicRepository;
+	private final UserService userService;
 
-	@Autowired
-	private TopicRepository topicRepository;
-	@Autowired
-	private UserService userService;
-
+	public TopicServiceImpl(TopicRepository topicRepository, UserService userService) {
+		this.topicRepository = topicRepository;
+		this.userService = userService;
+	}
 
 	@Override
 	public List<TopicDto> getTopicList() {

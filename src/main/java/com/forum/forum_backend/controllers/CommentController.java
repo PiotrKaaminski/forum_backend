@@ -2,15 +2,17 @@ package com.forum.forum_backend.controllers;
 
 import com.forum.forum_backend.dtos.CommentDto;
 import com.forum.forum_backend.services.interfaces.CommentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
 
-	@Autowired
-	private CommentService commentService;
+	private final CommentService commentService;
+
+	public CommentController(CommentService commentService) {
+		this.commentService = commentService;
+	}
 
 	@PostMapping
 	public void addComment(@RequestParam(name = "topicId") int topicId, @RequestBody CommentDto commentDto) {
@@ -23,7 +25,7 @@ public class CommentController {
 	}
 
 	@DeleteMapping("/{commentId}")
-	public void modifyComment(@PathVariable int commentId) {
+	public void deleteComment(@PathVariable int commentId) {
 		commentService.deleteComment(commentId);
 	}
 

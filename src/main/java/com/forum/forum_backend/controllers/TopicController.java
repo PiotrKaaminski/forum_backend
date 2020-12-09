@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.forum.forum_backend.Views.TopicView;
 import com.forum.forum_backend.dtos.TopicDto;
 import com.forum.forum_backend.services.interfaces.TopicService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,8 +12,11 @@ import java.util.List;
 @RequestMapping("/api/topics")
 public class TopicController {
 
-	@Autowired
-	private TopicService topicService;
+	private final TopicService topicService;
+
+	public TopicController(TopicService topicService) {
+		this.topicService = topicService;
+	}
 
 	@GetMapping
 	@JsonView(TopicView.Minimal.class)

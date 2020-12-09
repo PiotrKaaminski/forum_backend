@@ -1,7 +1,6 @@
 package com.forum.forum_backend.config;
 
 import com.forum.forum_backend.services.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,8 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private UserServiceImpl userService;
+	private final UserServiceImpl userService;
+
+	public SecurityConfig(UserServiceImpl userService) {
+		this.userService = userService;
+	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) {

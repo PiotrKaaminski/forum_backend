@@ -8,23 +8,23 @@ import com.forum.forum_backend.repositories.CommentRepository;
 import com.forum.forum_backend.repositories.TopicRepository;
 import com.forum.forum_backend.services.interfaces.CommentService;
 import com.forum.forum_backend.services.interfaces.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.xml.stream.events.Comment;
 
 @Transactional
 @Service
 public class CommentServiceImpl implements CommentService {
 
-	@Autowired
-	private CommentRepository commentRepository;
-	@Autowired
-	private TopicRepository topicRepository;
-	@Autowired
-	private UserService userService;
+	private final CommentRepository commentRepository;
+	private final TopicRepository topicRepository;
+	private final UserService userService;
+
+	public CommentServiceImpl(CommentRepository commentRepository, TopicRepository topicRepository, UserService userService) {
+		this.commentRepository = commentRepository;
+		this.topicRepository = topicRepository;
+		this.userService = userService;
+	}
 
 	@Override
 	public void addComment( int topicId, CommentDto commentDto) {

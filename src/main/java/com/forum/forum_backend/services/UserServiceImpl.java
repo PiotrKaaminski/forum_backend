@@ -20,7 +20,7 @@ import java.util.Collection;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
