@@ -2,11 +2,11 @@ package com.forum.forum_backend.exceptions;
 
 import org.springframework.http.HttpStatus;
 
-public class InvalidCredentialsException extends Exception {
+public class NotFoundException extends Exception{
 
-	private HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+	 private HttpStatus httpStatus = HttpStatus.NOT_FOUND;
 
-	public InvalidCredentialsException(String message) {
+	public NotFoundException(String message) {
 		super(message);
 	}
 

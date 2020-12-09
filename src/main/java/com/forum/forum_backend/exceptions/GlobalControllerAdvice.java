@@ -24,4 +24,9 @@ public class GlobalControllerAdvice {
 	public ResponseEntity<?> handleUnauthorizedException (UnauthorizedException ex) {
 		return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
 	}
+
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<?> handleNotFoundException(NotFoundException ex) {
+		return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
+	}
 }
