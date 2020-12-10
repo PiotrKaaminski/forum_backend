@@ -22,7 +22,7 @@ public class TopicController {
 	}
 
 	@GetMapping
-	@JsonView(TopicView.Minimal.class)
+	@JsonView(TopicView.TopicList.class)
 	@ResponseStatus(HttpStatus.OK)
 	public List<TopicDto> getTopicList() {
 		return topicService.getTopicList();

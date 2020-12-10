@@ -17,6 +17,8 @@ public class TopicDto {
 	private UserDto topicAuthor;
 	@JsonView(TopicView.Extended.class)
 	private List<CommentDto> comments;
+	@JsonView(TopicView.TopicList.class)
+	private int commentsAmount;
 
 	public int getId() {
 		return id;
@@ -58,4 +60,11 @@ public class TopicDto {
 		this.comments = comments;
 	}
 
+	public int getCommentsAmount() {
+		return commentsAmount;
+	}
+
+	public void setCommentsAmount(int commentsAmount) {
+		this.commentsAmount = commentsAmount;
+	}
 }

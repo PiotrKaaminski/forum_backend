@@ -17,7 +17,7 @@ public class GlobalControllerAdvice {
 
 	@ExceptionHandler(SQLIntegrityConstraintViolationException.class)
 	public ResponseEntity<?> handleSQLIntegrityConstraintViolationException (SQLIntegrityConstraintViolationException ex) {
-		return new ResponseEntity<>("User with given username already exists", HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>("User with given username already exists", HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(UnauthorizedException.class)

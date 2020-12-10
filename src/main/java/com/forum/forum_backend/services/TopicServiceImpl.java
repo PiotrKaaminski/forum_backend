@@ -6,7 +6,6 @@ import com.forum.forum_backend.dtos.TopicDto;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
-import com.forum.forum_backend.models.CommentEntity;
 import com.forum.forum_backend.models.TopicEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.TopicRepository;
@@ -19,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -35,20 +35,20 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public List<TopicDto> getTopicList() {
 		List<TopicEntity> topicEntities =  topicRepository.findAll();
-		List<TopicDto> topics = new ArrayList<>();
 
-		for (TopicEntity topic: topicEntities) {
-			TopicDto tempTopic = new TopicDto();
-			tempTopic.setId(topic.getId());
-			tempTopic.setHeader(topic.getHeader());
+		return new ArrayList<>() {{
+			addAll(topicEntities.stream().map(x -> new TopicDto() {{
+				setId(x.getId());
+				setHeader(x.getHeader());
 
-			UserDto topicAuthor = new UserDto();
-			topicAuthor.setId(topic.getUser().getId());
-			topicAuthor.setUsername(topic.getUser().getUsername());
-			tempTopic.setTopicAuthor(topicAuthor);
-			topics.add(tempTopic);
-		}
-		return topics;
+				UserDto author = new UserDto();
+				author.setId(x.getUser().getId());
+				author.setUsername(x.getUser().getUsername());
+				setTopicAuthor(author);
+				setCommentsAmount(x.getComments().size());
+			}}).collect(Collectors.toList()));
+		}};
+
 	}
 
 	@Override
@@ -65,23 +65,21 @@ public class TopicServiceImpl implements TopicService {
 			topicAuthor.setUsername(topicEntity.getUser().getUsername());
 			topic.setTopicAuthor(topicAuthor);
 
-			List<CommentDto> comments = new ArrayList<>();
+			topic.setComments(new ArrayList<>() {{
+				addAll(topicEntity.getComments().stream().map(x -> new CommentDto() {{
+					setId(x.getId());
+					setContent(x.getContent());
 
-			for (CommentEntity commentEntity : topicEntity.getComments()) {
-				CommentDto tempComment = new CommentDto();
-				tempComment.setId(commentEntity.getId());
-				tempComment.setContent(commentEntity.getContent());
+					UserDto commentAuthor = new UserDto();
+					commentAuthor.setId(x.getUser().getId());
+					commentAuthor.setUsername(x.getUser().getUsername());
 
-				UserDto commentAuthor = new UserDto();
-				commentAuthor.setId(commentEntity.getUser().getId());
-				commentAuthor.setUsername(commentEntity.getUser().getUsername());
-				tempComment.setCommentAuthor(commentAuthor);
-				comments.add(tempComment);
-			}
-
-			topic.setComments(comments);
+					setCommentAuthor(commentAuthor);
+				}}).collect(Collectors.toList()));
+			}});
 
 			return topic;
+
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Topic with id = " + topicId + " doesn't exist");
 		}

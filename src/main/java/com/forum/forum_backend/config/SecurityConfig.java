@@ -19,9 +19,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final UserServiceImpl userService;
+	private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
-	public SecurityConfig(UserServiceImpl userService) {
+	public SecurityConfig(UserServiceImpl userService, JwtAuthenticationEntryPoint unauthorizedHandler) {
 		this.userService = userService;
+		this.unauthorizedHandler = unauthorizedHandler;
 	}
 
 	@Override
@@ -43,6 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.DELETE, "/api/topics/*", "/api/comments/*").authenticated()
 				.and()
 				.csrf().disable()
+				.exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+				.and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

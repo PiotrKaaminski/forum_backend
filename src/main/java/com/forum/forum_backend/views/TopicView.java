@@ -6,4 +6,6 @@ public class TopicView {
 
 	public static class Extended extends Minimal {}
 
+	public static class TopicList extends Minimal {}
+
 }

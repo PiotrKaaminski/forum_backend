@@ -1,5 +1,6 @@
 package com.forum.forum_backend.config;
 
+import com.forum.forum_backend.exceptions.BadJwtException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -41,16 +42,20 @@ public class JwtTokenProvider {
 			return true;
 		} catch (SignatureException e) {
 			System.out.println("JwtTokenProvider.validateToken: SignatureException");
+			throw new BadJwtException("Bad signature");
 		} catch (MalformedJwtException e) {
 			System.out.println("JwtTokenProvider.validateToken: MalformedJwtException");
+			throw new BadJwtException("Bad signature");
 		} catch (ExpiredJwtException e) {
 			System.out.println("JwtTokenProvider.validateToken: ExpiredJwtException");
+			throw new BadJwtException("Expired Token");
 		} catch (UnsupportedJwtException e) {
 			System.out.println("JwtTokenProvider.validateToken: UnsupportedJwtException");
+			throw new BadJwtException("Bad signature");
 		} catch (IllegalArgumentException e) {
 			System.out.println("JwtTokenProvider.validateToken: IllegalArgumentException");
+			throw new BadJwtException("Bad signature");
 		}
-		return false;
 	}
 
 	public int getUserIdFromToken(String jwtToken) {
