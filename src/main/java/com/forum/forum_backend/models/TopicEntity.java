@@ -27,6 +27,10 @@ public class TopicEntity {
 	@JoinColumn(name = "topic_id")
 	private List<CommentEntity> comments;
 
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinTable(name = "topic_likes", joinColumns = @JoinColumn(name = "topic_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	private List<UserEntity> usersLikes ;
+
 	public TopicEntity() { }
 
 	public TopicEntity(String header, String content, UserEntity user) {
@@ -75,6 +79,14 @@ public class TopicEntity {
 		this.comments = comments;
 	}
 
+	public List<UserEntity> getUsersLikes() {
+		return usersLikes;
+	}
+
+	public void setUsersLikes(List<UserEntity> usersLikes) {
+		this.usersLikes = usersLikes;
+	}
+
 	// helper methods
 
 	public void addComment(CommentEntity commentEntity) {
@@ -82,6 +94,13 @@ public class TopicEntity {
 			comments = new ArrayList<>();
 		}
 		comments.add(commentEntity);
+	}
+
+	public void addLike(UserEntity userEntity) {
+		if (this.usersLikes == null) {
+			usersLikes = new ArrayList<>();
+		}
+		usersLikes.add(userEntity);
 	}
 
 }

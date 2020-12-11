@@ -42,6 +42,13 @@ public class TopicController {
 		topicService.addTopic(topicDto);
 	}
 
+	@PostMapping("/{topicId}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void addLike(@PathVariable int topicId)
+		throws NotFoundException {
+		topicService.addLike(topicId);
+	}
+
 	@PutMapping("/{topicId}")
 	public void modifyTopic(@RequestBody TopicDto topicDto, @PathVariable int topicId)
 			throws UnauthorizedException, NotFoundException {

@@ -49,6 +49,15 @@
 			<column name="user_id" type="INT UNSIGNED" />
 		</createTable>
 
+		<createTable tableName="topic_likes">
+			<column name="topic_id" type="INT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="user_id" type="INT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+		</createTable>
+
 		<createTable tableName="comment">
 			<column name="id" autoIncrement="true" type="INT UNSIGNED">
 				<constraints primaryKey="true" nullable="false" unique="true" />
@@ -58,6 +67,15 @@
 			</column>
 			<column name="topic_id" type="INT UNSIGNED" />
 			<column name="user_id" type="INT UNSIGNED" />
+		</createTable>
+
+		<createTable tableName="comment_likes">
+			<column name="comment_id" type="INT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="user_id" type="INT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
 		</createTable>
 	</changeSet>
 </databaseChangeLog>

@@ -24,6 +24,13 @@ public class CommentController {
 		commentService.addComment(topicId, commentDto);
 	}
 
+	@PostMapping("/{commentId}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void addLike(@PathVariable int commentId)
+			throws NotFoundException {
+		commentService.addLike(commentId);
+	}
+
 	@PutMapping("/{commentId}")
 	public void modifyComment(@PathVariable int commentId ,@RequestBody CommentDto commentDto)
 			throws UnauthorizedException, NotFoundException {

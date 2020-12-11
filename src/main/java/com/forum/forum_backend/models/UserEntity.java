@@ -3,6 +3,7 @@ package com.forum.forum_backend.models;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -22,6 +23,14 @@ public class UserEntity {
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
 	private Collection<AuthorityEntity> authorities;
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "topic_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
+	private List<TopicEntity> likedTopics ;
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "comment_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "comment_id"))
+	private List<CommentEntity> likedComments;
 
 	// Getters and setters
 
@@ -57,6 +66,22 @@ public class UserEntity {
 		this.authorities = authorities;
 	}
 
+	public List<TopicEntity> getLikedTopics() {
+		return likedTopics;
+	}
+
+	public void setLikedTopics(List<TopicEntity> likedTopics) {
+		this.likedTopics = likedTopics;
+	}
+
+	public List<CommentEntity> getLikedComments() {
+		return likedComments;
+	}
+
+	public void setLikedComments(List<CommentEntity> likedComments) {
+		this.likedComments = likedComments;
+	}
+
 	// helper methods
 
 	public void addAuthority(AuthorityEntity authorityEntity) {
@@ -64,6 +89,22 @@ public class UserEntity {
 			authorities = new ArrayList<>();
 		}
 		authorities.add(authorityEntity);
+
+	}
+
+	public void addTopicLike(TopicEntity topicEntity) {
+		if (this.likedTopics == null) {
+			likedTopics = new ArrayList<>();
+		}
+		likedTopics.add(topicEntity);
+
+	}
+
+	public void addCommentLike(CommentEntity commentEntity) {
+		if (this.likedComments == null) {
+			likedComments = new ArrayList<>();
+		}
+		likedComments.add(commentEntity);
 
 	}
 }

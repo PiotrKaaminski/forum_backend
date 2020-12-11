@@ -11,6 +11,7 @@ public interface TopicService {
 	List<TopicDto> getTopicList();
 	TopicDto getTopic(int topicId) throws NotFoundException;
 	void addTopic(TopicDto topicDto);
+	void addLike(int topicId) throws NotFoundException;
 	void modifyTopic(TopicDto topicDto, int topicId) throws UnauthorizedException, NotFoundException;
 	void deleteTopic(int topicId) throws UnauthorizedException, NotFoundException;
 }

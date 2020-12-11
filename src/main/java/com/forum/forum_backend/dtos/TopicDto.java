@@ -15,10 +15,13 @@ public class TopicDto {
 	private String content;
 	@JsonView(TopicView.Minimal.class)
 	private UserDto topicAuthor;
-	@JsonView(TopicView.Extended.class)
-	private List<CommentDto> comments;
 	@JsonView(TopicView.TopicList.class)
 	private int commentsAmount;
+	@JsonView(TopicView.Minimal.class)
+	private int likesAmount;
+	@JsonView(TopicView.Extended.class)
+	private List<CommentDto> comments;
+
 
 	public int getId() {
 		return id;
@@ -52,14 +55,6 @@ public class TopicDto {
 		this.topicAuthor = topicAuthor;
 	}
 
-	public List<CommentDto> getComments() {
-		return comments;
-	}
-
-	public void setComments(List<CommentDto> comments) {
-		this.comments = comments;
-	}
-
 	public int getCommentsAmount() {
 		return commentsAmount;
 	}
@@ -67,4 +62,21 @@ public class TopicDto {
 	public void setCommentsAmount(int commentsAmount) {
 		this.commentsAmount = commentsAmount;
 	}
+
+	public int getLikesAmount() {
+		return likesAmount;
+	}
+
+	public void setLikesAmount(int likesAmount) {
+		this.likesAmount = likesAmount;
+	}
+
+	public List<CommentDto> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentDto> comments) {
+		this.comments = comments;
+	}
+	
 }

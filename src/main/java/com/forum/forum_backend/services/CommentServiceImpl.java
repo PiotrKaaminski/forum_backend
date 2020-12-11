@@ -9,6 +9,7 @@ import com.forum.forum_backend.models.TopicEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.CommentRepository;
 import com.forum.forum_backend.repositories.TopicRepository;
+import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.CommentService;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.NoSuchElementException;
 
 @Transactional
 @Service
@@ -25,17 +25,19 @@ public class CommentServiceImpl implements CommentService {
 	private final CommentRepository commentRepository;
 	private final TopicRepository topicRepository;
 	private final UserService userService;
+	private final UserRepository userRepository;
 
-	public CommentServiceImpl(CommentRepository commentRepository, TopicRepository topicRepository, UserService userService) {
+	public CommentServiceImpl(CommentRepository commentRepository, TopicRepository topicRepository, UserService userService, UserRepository userRepository) {
 		this.commentRepository = commentRepository;
 		this.topicRepository = topicRepository;
 		this.userService = userService;
+		this.userRepository = userRepository;
 	}
 
 	@Override
 	public void addComment( int topicId, CommentDto commentDto) throws NotFoundException {
 		try {
-			TopicEntity topic = topicRepository.findById(topicId).orElseThrow();
+			TopicEntity topic = topicRepository.getOne(topicId);
 
 			CommentEntity comment = new CommentEntity();
 
@@ -48,8 +50,28 @@ public class CommentServiceImpl implements CommentService {
 			comment.setTopic(topic);
 
 			commentRepository.save(comment);
-		} catch (NoSuchElementException ex) {
+		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Topic with id = " + topicId + " doesn't exist");
+		}
+	}
+
+	@Override
+	public void addLike(int commentId) throws NotFoundException {
+		try {
+			CommentEntity comment = commentRepository.getOne(commentId);
+
+			UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			UserEntity user = userService.getUserById(userPrincipal.getId());
+
+			if(user.getLikedComments().contains(comment)){
+				user.getLikedComments().remove(comment);
+			} else {
+				user.addCommentLike(comment);
+				userRepository.save(user);
+			}
+
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Comment with id = " + commentId + " doesn't exist");
 		}
 	}
 

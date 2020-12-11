@@ -9,6 +9,7 @@ public class CommentDto {
 	private int id;
 	private String content;
 	private UserDto commentAuthor;
+	private int likesAmount;
 
 	public int getId() {
 		return id;
@@ -32,5 +33,13 @@ public class CommentDto {
 
 	public void setCommentAuthor(UserDto commentAuthor) {
 		this.commentAuthor = commentAuthor;
+	}
+
+	public int getLikesAmount() {
+		return likesAmount;
+	}
+
+	public void setLikesAmount(int likesAmount) {
+		this.likesAmount = likesAmount;
 	}
 }

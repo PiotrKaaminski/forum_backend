@@ -9,6 +9,7 @@ import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.TopicEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.TopicRepository;
+import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.TopicService;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,10 +26,12 @@ import java.util.stream.Collectors;
 public class TopicServiceImpl implements TopicService {
 	
 	private final TopicRepository topicRepository;
+	private final UserRepository userRepository;
 	private final UserService userService;
 
-	public TopicServiceImpl(TopicRepository topicRepository, UserService userService) {
+	public TopicServiceImpl(TopicRepository topicRepository, UserRepository userRepository, UserService userService) {
 		this.topicRepository = topicRepository;
+		this.userRepository = userRepository;
 		this.userService = userService;
 	}
 
@@ -46,6 +49,7 @@ public class TopicServiceImpl implements TopicService {
 				author.setUsername(x.getUser().getUsername());
 				setTopicAuthor(author);
 				setCommentsAmount(x.getComments().size());
+				setLikesAmount(x.getUsersLikes().size());
 			}}).collect(Collectors.toList()));
 		}};
 
@@ -64,6 +68,7 @@ public class TopicServiceImpl implements TopicService {
 			topicAuthor.setId(topicEntity.getUser().getId());
 			topicAuthor.setUsername(topicEntity.getUser().getUsername());
 			topic.setTopicAuthor(topicAuthor);
+			topic.setLikesAmount(topicEntity.getUsersLikes().size());
 
 			topic.setComments(new ArrayList<>() {{
 				addAll(topicEntity.getComments().stream().map(x -> new CommentDto() {{
@@ -75,6 +80,7 @@ public class TopicServiceImpl implements TopicService {
 					commentAuthor.setUsername(x.getUser().getUsername());
 
 					setCommentAuthor(commentAuthor);
+					setLikesAmount(x.getUsersLikes().size());
 				}}).collect(Collectors.toList()));
 			}});
 
@@ -93,6 +99,26 @@ public class TopicServiceImpl implements TopicService {
 
 		TopicEntity topic = new TopicEntity(topicDto.getHeader(), topicDto.getContent(), owner);
 		topicRepository.save(topic);
+	}
+
+	@Override
+	public void addLike(int topicId) throws NotFoundException {
+		try {
+			TopicEntity topic = topicRepository.getOne(topicId);
+
+			UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			UserEntity user = userService.getUserById(userPrincipal.getId());
+
+			if(user.getLikedTopics().contains(topic)){
+				user.getLikedTopics().remove(topic);
+			} else {
+				user.addTopicLike(topic);
+				userRepository.save(user);
+			}
+
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Topic with id = " + topicId + " doesn't exist");
+		}
 	}
 
 	@Override

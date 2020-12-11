@@ -7,7 +7,9 @@ import com.forum.forum_backend.exceptions.UnauthorizedException;
 public interface CommentService {
 
 	void addComment(int topicId, CommentDto commentDto) throws NotFoundException;
+	void addLike(int commentId) throws NotFoundException;
 	void modifyComment(int commentId, CommentDto commentDto) throws UnauthorizedException, NotFoundException;
 	void deleteComment(int commentId) throws UnauthorizedException, NotFoundException;
+
 
 }
