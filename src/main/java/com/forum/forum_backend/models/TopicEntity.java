@@ -82,6 +82,6 @@ public class TopicEntity {
 			comments = new ArrayList<>();
 		}
 		comments.add(commentEntity);
-
 	}
+
 }

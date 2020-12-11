@@ -29,10 +29,10 @@
 		
 		<createTable tableName="user_authorities">
 			<column name="user_id" type="INT UNSIGNED">
-				<constraints nullable="false"/>
+				<constraints primaryKey="true" nullable="false"/>
 			</column>
 			<column name="authority_id" type="INT UNSIGNED">
-				<constraints nullable="false" />
+				<constraints primaryKey="true" nullable="false" />
 			</column>
 		</createTable>
 		

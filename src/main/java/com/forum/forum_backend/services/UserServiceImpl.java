@@ -6,6 +6,7 @@ import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -63,6 +64,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return user;
 	}
 
+	@Override
+	public boolean isUserAuthorized(UserEntity entryAuthor) {
+		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int userId = user.getId();
+
+		return entryAuthor.getId() == userId;
+	}
 }
 
 

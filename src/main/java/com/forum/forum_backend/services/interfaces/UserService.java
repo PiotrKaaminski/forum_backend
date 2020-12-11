@@ -7,5 +7,5 @@ public interface UserService {
 
 	UserPrincipal createUserPrincipal(int userId);
 	UserEntity getUserById(int userId);
-
+	boolean isUserAuthorized(UserEntity entryAuthor);
 }
