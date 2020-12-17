@@ -1,25 +1,18 @@
 package com.forum.forum_backend.dtos;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.forum.forum_backend.views.TopicView;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TopicDto {
 
-	@JsonView(TopicView.Minimal.class)
 	private int id;
-	@JsonView(TopicView.Minimal.class)
 	private String header;
-	@JsonView(TopicView.Extended.class)
 	private String content;
-	@JsonView(TopicView.Minimal.class)
 	private UserDto topicAuthor;
-	@JsonView(TopicView.TopicList.class)
-	private int commentsAmount;
-	@JsonView(TopicView.Minimal.class)
+	private Integer commentsAmount;
 	private int likesAmount;
-	@JsonView(TopicView.Extended.class)
 	private List<CommentDto> comments;
 
 
@@ -55,11 +48,11 @@ public class TopicDto {
 		this.topicAuthor = topicAuthor;
 	}
 
-	public int getCommentsAmount() {
+	public Integer getCommentsAmount() {
 		return commentsAmount;
 	}
 
-	public void setCommentsAmount(int commentsAmount) {
+	public void setCommentsAmount(Integer commentsAmount) {
 		this.commentsAmount = commentsAmount;
 	}
 

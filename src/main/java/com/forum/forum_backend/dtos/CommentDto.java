@@ -1,9 +1,8 @@
 package com.forum.forum_backend.dtos;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.forum.forum_backend.views.TopicView;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonView(TopicView.Extended.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentDto {
 
 	private int id;

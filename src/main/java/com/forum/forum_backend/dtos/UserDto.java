@@ -1,14 +1,11 @@
 package com.forum.forum_backend.dtos;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.forum.forum_backend.views.TopicView;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 
-	@JsonView(TopicView.Minimal.class)
 	private int id;
-
-	@JsonView(TopicView.Minimal.class)
 	private String username;
 	private String password;
 

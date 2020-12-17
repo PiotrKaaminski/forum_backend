@@ -69,6 +69,7 @@ public class TopicServiceImpl implements TopicService {
 			topicAuthor.setUsername(topicEntity.getUser().getUsername());
 			topic.setTopicAuthor(topicAuthor);
 			topic.setLikesAmount(topicEntity.getUsersLikes().size());
+			topic.setCommentsAmount(null);
 
 			topic.setComments(new ArrayList<>() {{
 				addAll(topicEntity.getComments().stream().map(x -> new CommentDto() {{
