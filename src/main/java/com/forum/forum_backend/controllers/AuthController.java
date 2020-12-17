@@ -1,10 +1,11 @@
 package com.forum.forum_backend.controllers;
 
 import com.forum.forum_backend.dtos.UserDto;
-import com.forum.forum_backend.exceptions.InvalidCredentialsException;
 import com.forum.forum_backend.services.interfaces.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -21,8 +22,7 @@ public class AuthController {
 
 	@PostMapping("/register")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void register(@RequestBody UserDto userDto)
-			throws InvalidCredentialsException{
+	public void register(@Valid @RequestBody UserDto userDto) {
 		authService.registerUser(userDto);
 	}
 

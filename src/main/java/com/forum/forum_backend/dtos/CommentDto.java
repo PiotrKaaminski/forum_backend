@@ -2,10 +2,13 @@ package com.forum.forum_backend.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.validation.constraints.NotEmpty;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentDto {
 
 	private int id;
+	@NotEmpty(message = "Content cannot be empty")
 	private String content;
 	private UserDto commentAuthor;
 	private int likesAmount;

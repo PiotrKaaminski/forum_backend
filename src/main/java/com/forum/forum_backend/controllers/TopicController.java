@@ -7,6 +7,7 @@ import com.forum.forum_backend.services.interfaces.TopicService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class TopicController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addTopic(@RequestBody TopicDto topicDto) {
+	public void addTopic(@Valid @RequestBody TopicDto topicDto) {
 		topicService.addTopic(topicDto);
 	}
 
@@ -46,7 +47,7 @@ public class TopicController {
 	}
 
 	@PutMapping("/{topicId}")
-	public void modifyTopic(@RequestBody TopicDto topicDto, @PathVariable int topicId)
+	public void modifyTopic(@Valid @RequestBody TopicDto topicDto, @PathVariable int topicId)
 			throws UnauthorizedException, NotFoundException {
 		topicService.modifyTopic(topicDto, topicId);
 	}

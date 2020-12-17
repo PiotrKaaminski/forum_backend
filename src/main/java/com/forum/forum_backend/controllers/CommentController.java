@@ -7,6 +7,8 @@ import com.forum.forum_backend.services.interfaces.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
@@ -19,7 +21,7 @@ public class CommentController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addComment(@RequestParam(name = "topicId") int topicId, @RequestBody CommentDto commentDto)
+	public void addComment(@RequestParam(name = "topicId") int topicId, @Valid @RequestBody CommentDto commentDto)
 			throws NotFoundException {
 		commentService.addComment(topicId, commentDto);
 	}
@@ -32,7 +34,7 @@ public class CommentController {
 	}
 
 	@PutMapping("/{commentId}")
-	public void modifyComment(@PathVariable int commentId ,@RequestBody CommentDto commentDto)
+	public void modifyComment(@PathVariable int commentId ,@Valid @RequestBody CommentDto commentDto)
 			throws UnauthorizedException, NotFoundException {
 		commentService.modifyComment(commentId, commentDto);
 	}

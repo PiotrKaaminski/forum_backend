@@ -2,13 +2,17 @@ package com.forum.forum_backend.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TopicDto {
 
 	private int id;
+	@NotEmpty(message = "Header cannot be empty")
 	private String header;
+	@NotEmpty(message = "Content cannot be empty")
 	private String content;
 	private UserDto topicAuthor;
 	private Integer commentsAmount;
