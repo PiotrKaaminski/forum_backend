@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -33,26 +32,6 @@ public class TopicServiceImpl implements TopicService {
 		this.topicRepository = topicRepository;
 		this.userRepository = userRepository;
 		this.userService = userService;
-	}
-
-	@Override
-	public List<TopicDto> getTopicList() {
-		List<TopicEntity> topicEntities =  topicRepository.findAll();
-
-		return new ArrayList<>() {{
-			addAll(topicEntities.stream().map(x -> new TopicDto() {{
-				setId(x.getId());
-				setHeader(x.getHeader());
-
-				UserDto author = new UserDto();
-				author.setId(x.getUser().getId());
-				author.setUsername(x.getUser().getUsername());
-				setTopicAuthor(author);
-				setCommentsAmount(x.getComments().size());
-				setLikesAmount(x.getUsersLikes().size());
-			}}).collect(Collectors.toList()));
-		}};
-
 	}
 
 	@Override
@@ -159,4 +138,19 @@ public class TopicServiceImpl implements TopicService {
 		}
 	}
 
+	@Override
+	public TopicDto mapChildEntityToDto(TopicEntity topicEntity) {
+		return new TopicDto() {{
+			setId(topicEntity.getId());
+			setHeader(topicEntity.getHeader());
+
+			UserDto author = new UserDto();
+			author.setId(topicEntity.getUser().getId());
+			author.setUsername(topicEntity.getUser().getUsername());
+			setTopicAuthor(author);
+
+			setCommentsAmount(topicEntity.getComments().size());
+			setLikesAmount(topicEntity.getUsersLikes().size());
+		}};
+	}
 }

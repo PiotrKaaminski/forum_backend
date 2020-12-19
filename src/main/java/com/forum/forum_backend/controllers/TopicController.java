@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/topics")
@@ -18,12 +17,6 @@ public class TopicController {
 
 	public TopicController(TopicService topicService) {
 		this.topicService = topicService;
-	}
-
-	@GetMapping
-	@ResponseStatus(HttpStatus.OK)
-	public List<TopicDto> getTopicList() {
-		return topicService.getTopicList();
 	}
 
 	@GetMapping("/{topicId}")

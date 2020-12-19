@@ -11,13 +11,17 @@ public class TopicEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private int id;
+	private Integer id;
 
 	@Column(name = "header")
 	private String header;
 
 	@Column(name = "content")
 	private String content;
+
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "category_id")
+	private CategoryEntity parentCategory;
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "user_id")
@@ -29,7 +33,7 @@ public class TopicEntity {
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "topic_likes", joinColumns = @JoinColumn(name = "topic_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private List<UserEntity> usersLikes ;
+	private List<UserEntity> usersLikes;
 
 	public TopicEntity() { }
 
@@ -61,6 +65,14 @@ public class TopicEntity {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public CategoryEntity getParentCategory() {
+		return parentCategory;
+	}
+
+	public void setParentCategory(CategoryEntity parentCategory) {
+		this.parentCategory = parentCategory;
 	}
 
 	public UserEntity getUser() {

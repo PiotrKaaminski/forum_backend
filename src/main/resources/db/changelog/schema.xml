@@ -46,6 +46,9 @@
 			<column name="content" type="VARCHAR(500)">
 				<constraints nullable="false" />
 			</column>
+			<column name="category_id" type="INT UNSIGNED">
+				<constraints nullable="false" />
+			</column>
 			<column name="user_id" type="INT UNSIGNED" />
 		</createTable>
 
@@ -76,6 +79,16 @@
 			<column name="user_id" type="INT UNSIGNED">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
+		</createTable>
+
+		<createTable tableName="category">
+			<column name="id" autoIncrement="true" type="INT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" unique="true" />
+			</column>
+			<column name="title" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="parent_category_id" type="INT UNSIGNED" />
 		</createTable>
 	</changeSet>
 </databaseChangeLog>
