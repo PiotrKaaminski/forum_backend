@@ -2,11 +2,10 @@ package com.forum.forum_backend.controllers;
 
 import com.forum.forum_backend.dtos.CategoryDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
+import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.services.interfaces.CategoryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +27,19 @@ public class CategoryController {
 	@GetMapping("/{categoryId}")
 	public CategoryDto getSubCategory(@PathVariable int categoryId) throws NotFoundException {
 		return categoryService.getSubCategory(categoryId);
+	}
+
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public void addMainCategory(@RequestBody CategoryDto categoryDto) {
+		categoryService.addMainCategory(categoryDto);
+	}
+
+	@PostMapping("/{categoryId}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void addSubCategory(@RequestBody CategoryDto categoryDto, @PathVariable int categoryId)
+			throws UnauthorizedException, NotFoundException {
+		categoryService.addSubCategory(categoryDto, categoryId);
 	}
 
 }

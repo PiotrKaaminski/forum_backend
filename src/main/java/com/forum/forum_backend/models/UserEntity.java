@@ -24,13 +24,17 @@ public class UserEntity {
 	@JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
 	private Collection<AuthorityEntity> authorities;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "topic_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
 	private List<TopicEntity> likedTopics ;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "comment_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "comment_id"))
 	private List<CommentEntity> likedComments;
+
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinTable(name = "category_moderators", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private List<CategoryEntity> moderatedCategories;
 
 	// Getters and setters
 
@@ -82,6 +86,14 @@ public class UserEntity {
 		this.likedComments = likedComments;
 	}
 
+	public List<CategoryEntity> getModeratedCategories() {
+		return moderatedCategories;
+	}
+
+	public void setModeratedCategories(List<CategoryEntity> moderatedCategories) {
+		this.moderatedCategories = moderatedCategories;
+	}
+
 	// helper methods
 
 	public void addAuthority(AuthorityEntity authorityEntity) {
@@ -105,6 +117,14 @@ public class UserEntity {
 			likedComments = new ArrayList<>();
 		}
 		likedComments.add(commentEntity);
+
+	}
+
+	public void addModeratedCategory(CategoryEntity categoryEntity) {
+		if (this.moderatedCategories == null) {
+			moderatedCategories = new ArrayList<>();
+		}
+		moderatedCategories.add(categoryEntity);
 
 	}
 }

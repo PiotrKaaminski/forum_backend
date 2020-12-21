@@ -2,10 +2,12 @@ package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.dtos.CategoryDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
+import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.CategoryEntity;
 import com.forum.forum_backend.repositories.CategoryRepository;
 import com.forum.forum_backend.services.interfaces.CategoryService;
 import com.forum.forum_backend.services.interfaces.TopicService;
+import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -20,10 +22,12 @@ public class CategoryServiceImpl implements CategoryService {
 
 	private final CategoryRepository categoryRepository;
 	private final TopicService topicService;
+	private final UserService userService;
 
-	public CategoryServiceImpl(CategoryRepository categoryRepository, TopicService topicService) {
+	public CategoryServiceImpl(CategoryRepository categoryRepository, TopicService topicService, UserService userService) {
 		this.categoryRepository = categoryRepository;
 		this.topicService = topicService;
+		this.userService = userService;
 	}
 
 	@Override
@@ -37,13 +41,13 @@ public class CategoryServiceImpl implements CategoryService {
 				if (!x.getChildCategories().isEmpty()) {
 					setChildCategories(
 							x.getChildCategories()
-									.stream().map(y -> mapChildEntityToDto(y))
+									.stream().map(CategoryServiceImpl.this::mapChildEntityToDto)
 									.collect(Collectors.toList())
 					);
 				} else if (!x.getTopicEntities().isEmpty()) {
 					setTopics(
 							x.getTopicEntities()
-									.stream().map(y -> topicService.mapChildEntityToDto(y))
+									.stream().map(topicService::mapChildEntityToDto)
 									.collect(Collectors.toList())
 					);
 				}
@@ -67,14 +71,14 @@ public class CategoryServiceImpl implements CategoryService {
 			if (!categoryEntity.getChildCategories().isEmpty()) {
 				category.setChildCategories(
 						categoryEntity.getChildCategories()
-								.stream().map(x -> mapChildEntityToDto(x))
+								.stream().map(this::mapChildEntityToDto)
 								.collect(Collectors.toList())
 				);
 
 			} else if (!categoryEntity.getTopicEntities().isEmpty()) {
 				category.setTopics(
 						categoryEntity.getTopicEntities()
-								.stream().map(x -> topicService.mapChildEntityToDto(x))
+								.stream().map(topicService::mapChildEntityToDto)
 								.collect(Collectors.toList())
 				);
 			}
@@ -82,6 +86,37 @@ public class CategoryServiceImpl implements CategoryService {
 			return category;
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Category with id = " + categoryId + " doesn't exist");
+		}
+	}
+
+	@Override
+	public void addMainCategory(CategoryDto categoryDto){
+		CategoryEntity category = new CategoryEntity();
+		category.setTitle(categoryDto.getTitle());
+		categoryRepository.save(category);
+	}
+
+	@Override
+	public void addSubCategory(CategoryDto categoryDto, int parentCategoryId)
+			throws UnauthorizedException, NotFoundException {
+		try {
+			CategoryEntity parentCategoryEntity = categoryRepository.getOne(parentCategoryId);
+			CategoryEntity categoryEntity = new CategoryEntity();
+			categoryEntity.setTitle(categoryDto.getTitle());
+			categoryEntity.setParentCategory(parentCategoryEntity);
+
+			if (parentCategoryEntity.getTopicEntities().isEmpty()) {
+				if (userService.isUserPermittedToModerate(parentCategoryEntity)) {
+					categoryRepository.save(categoryEntity);
+				} else {
+					throw new UnauthorizedException("You have no permission to add category");
+				}
+			} else {
+				throw new UnauthorizedException("Category already contains topics");
+			}
+
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Category with id: " + parentCategoryId + " does'n exist");
 		}
 	}
 

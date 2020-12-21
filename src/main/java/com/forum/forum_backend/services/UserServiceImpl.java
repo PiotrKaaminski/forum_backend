@@ -1,6 +1,7 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
+import com.forum.forum_backend.models.CategoryEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.UserService;
@@ -65,11 +66,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public boolean isUserAuthorized(UserEntity entryAuthor) {
+	public boolean isUserAnAuthor(UserEntity entryAuthor) {
 		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		int userId = user.getId();
 
 		return entryAuthor.getId() == userId;
+	}
+
+	@Override
+	public boolean isUserPermittedToModerate(CategoryEntity categoryEntity) {
+		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (user.hasAuthority("ADMIN") || user.hasAuthority("HEAD_MODERATOR")) {
+			return true;
+		}
+
+		do {
+			if (categoryEntity.isUserModerator(user)) {
+				return true;
+			}
+			if (categoryEntity.getParentCategory() != null) {
+				categoryEntity = categoryEntity.getParentCategory();
+			} else {
+				categoryEntity = null;
+			}
+		} while (categoryEntity != null);
+
+		return false;
 	}
 }
 

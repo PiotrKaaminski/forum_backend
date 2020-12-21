@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
 		try {
 			CommentEntity comment = commentRepository.getOne(commentId);
 
-			if (userService.isUserAuthorized(comment.getUser())) {
+			if (userService.isUserAnAuthor(comment.getUser())) {
 				comment.setContent(commentDto.getContent());
 			} else {
 				throw new UnauthorizedException("You have no permissions to modify this comment");
@@ -97,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
 		try {
 			CommentEntity comment = commentRepository.getOne(commentId);
 
-			if (userService.isUserAuthorized(comment.getUser())) {
+			if (userService.isUserAnAuthor(comment.getUser())) {
 				commentRepository.delete(comment);
 			} else {
 				throw new UnauthorizedException("You have no permissions to delete this comment");

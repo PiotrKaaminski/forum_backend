@@ -107,7 +107,7 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			TopicEntity topic = topicRepository.getOne(topicId);
 
-			if (userService.isUserAuthorized(topic.getUser())) {
+			if (userService.isUserAnAuthor(topic.getUser())) {
 				if (topicDto.getHeader() != null) {
 					topic.setHeader(topicDto.getHeader());
 				}
@@ -128,7 +128,7 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			TopicEntity topic = topicRepository.getOne(topicId);
 
-			if (userService.isUserAuthorized(topic.getUser())) {
+			if (userService.isUserAnAuthor(topic.getUser())) {
 				topicRepository.delete(topic);
 			} else {
 				throw new UnauthorizedException("You have no permissions to delete this topic");

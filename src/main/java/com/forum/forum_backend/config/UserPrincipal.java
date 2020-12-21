@@ -61,4 +61,19 @@ public class UserPrincipal implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	// helper methods
+
+	public boolean hasAuthority(String authority) {
+		if (authorities == null) {
+			return false;
+		} else {
+			for (GrantedAuthority x : authorities) {
+				if (x.getAuthority().equals(authority)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

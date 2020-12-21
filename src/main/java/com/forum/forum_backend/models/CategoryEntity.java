@@ -1,6 +1,9 @@
 package com.forum.forum_backend.models;
 
+import com.forum.forum_backend.config.UserPrincipal;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,6 +29,10 @@ public class CategoryEntity {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "category_id")
 	private List<TopicEntity> topicEntities;
+
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinTable(name = "category_moderators", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	private List<UserEntity> moderators;
 
 	public int getId() {
 		return id;
@@ -65,5 +72,31 @@ public class CategoryEntity {
 
 	public void setTopicEntities(List<TopicEntity> topicEntities) {
 		this.topicEntities = topicEntities;
+	}
+
+	public List<UserEntity> getModerators() {
+		return moderators;
+	}
+
+	public void setModerators(List<UserEntity> moderators) {
+		this.moderators = moderators;
+	}
+
+	// helper methods
+
+	public void addModerator(UserEntity userEntity) {
+		if (this.moderators == null) {
+			moderators = new ArrayList<>();
+		}
+		moderators.add(userEntity);
+	}
+
+	public boolean isUserModerator(UserPrincipal user) {
+		for (UserEntity moderator : moderators) {
+			if (moderator.getId() == user.getId()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
