@@ -109,7 +109,7 @@ public class CategoryServiceImpl implements CategoryService {
 				if (userService.isUserPermittedToModerate(parentCategoryEntity)) {
 					categoryRepository.save(categoryEntity);
 				} else {
-					throw new UnauthorizedException("You have no permission to add category");
+					throw new UnauthorizedException("You have no permission to add category here");
 				}
 			} else {
 				throw new UnauthorizedException("Category already contains topics");
@@ -117,6 +117,38 @@ public class CategoryServiceImpl implements CategoryService {
 
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Category with id: " + parentCategoryId + " does'n exist");
+		}
+	}
+
+	@Override
+	public void modifyCategory(CategoryDto categoryDto, int categoryId) throws NotFoundException, UnauthorizedException {
+		try {
+			CategoryEntity categoryEntity = categoryRepository.getOne(categoryId);
+			if (userService.isUserPermittedToModerate(categoryEntity)) {
+				categoryEntity.setTitle(categoryDto.getTitle());
+				categoryRepository.save(categoryEntity);
+			} else {
+				throw new UnauthorizedException("You have no permission to modify this category");
+			}
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Category with id: " + categoryId + " doesn't exist");
+		}
+	}
+
+	@Override
+	public void deleteCategory(int categoryId) throws NotFoundException, UnauthorizedException {
+		try {
+			CategoryEntity categoryEntity = categoryRepository.getOne(categoryId);
+
+			if (categoryEntity.getParentCategory() == null) {
+				categoryRepository.delete(categoryEntity);
+			} else if (userService.isUserPermittedToModerate(categoryEntity.getParentCategory())) {
+				categoryRepository.delete(categoryEntity);
+			} else {
+				throw new UnauthorizedException("You have no permission to delete this category");
+			}
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Category with id: " + categoryId + " doesn't exist");
 		}
 	}
 

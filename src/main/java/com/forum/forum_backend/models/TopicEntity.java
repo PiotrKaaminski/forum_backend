@@ -27,8 +27,7 @@ public class TopicEntity {
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "topic_id")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "topic")
 	private List<CommentEntity> comments;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

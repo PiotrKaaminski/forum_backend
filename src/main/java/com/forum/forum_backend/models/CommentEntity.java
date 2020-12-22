@@ -1,7 +1,5 @@
 package com.forum.forum_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,6 @@ public class CommentEntity {
 	@Column(name = "content")
 	private String content;
 
-	@JsonIgnore
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "topic_id")
 	private TopicEntity topic;

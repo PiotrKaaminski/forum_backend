@@ -68,7 +68,9 @@
 			<column name="content" type="VARCHAR(500)" >
 				<constraints nullable="false" />
 			</column>
-			<column name="topic_id" type="INT UNSIGNED" />
+			<column name="topic_id" type="INT UNSIGNED">
+				<constraints nullable="false" />
+			</column>
 			<column name="user_id" type="INT UNSIGNED" />
 		</createTable>
 

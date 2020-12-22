@@ -2,12 +2,14 @@ package com.forum.forum_backend.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryDto {
 
 	private Integer id;
+	@NotEmpty(message = "Category title cannot be empty")
 	private String title;
 	private Integer parentId;
 	private Integer childrenAmount;

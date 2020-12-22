@@ -10,5 +10,7 @@ public interface CategoryService {
 	List<CategoryDto> getMainCategoryList();
 	CategoryDto getSubCategory(int categoryId) throws NotFoundException;
 	void addMainCategory(CategoryDto categoryDto);
-	void addSubCategory(CategoryDto categoryDto, int parentCategoryId) throws UnauthorizedException, NotFoundException;
+	void addSubCategory(CategoryDto categoryDto, int parentCategoryId) throws NotFoundException, UnauthorizedException;
+	void modifyCategory(CategoryDto categoryDto, int categoryId) throws NotFoundException, UnauthorizedException;
+	void deleteCategory(int categoryId) throws NotFoundException, UnauthorizedException;
 }

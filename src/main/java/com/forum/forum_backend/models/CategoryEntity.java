@@ -26,8 +26,7 @@ public class CategoryEntity {
 	@JoinColumn(name = "parent_category_id")
 	private List<CategoryEntity> childCategories;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "category_id")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentCategory")
 	private List<TopicEntity> topicEntities;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

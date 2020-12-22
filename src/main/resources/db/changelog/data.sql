@@ -13,7 +13,8 @@ INSERT INTO user (username, password) VALUES
 ("moderator1", "$2a$10$GplnWpXcAZolUkGKhW4URucIxtlYUycDyz92nu/rmj3vk.WtCijka"),
 ("moderator2", "$2a$10$2uXMzRSUu0oRg8ghXGNRIOB6Lswptct.ay1EcJP1QAcr29EamWSi6"),
 ("moderator3", "$2a$10$GiqY7E5.a5VIDtrwgdZms.YS07W2X5kVqawMgYEctTJRLvHqhWMdK"),
-("moderator4", "$2a$10$7GzzNFtE.3ed9MIoRghecO4ggsF42/tvItAgi3N4NFQtkC45yrE4i");
+("moderator4", "$2a$10$7GzzNFtE.3ed9MIoRghecO4ggsF42/tvItAgi3N4NFQtkC45yrE4i"),
+("moderator5", "$2a$10$j6wO./.XCTem8jQUek2Q1.2UjfhjiJl4sygmehv4xkWNLcwlxR/xW");
 
 INSERT INTO user_authorities (user_id, authority_id) VALUES
 (1, 1),
@@ -30,7 +31,9 @@ INSERT INTO user_authorities (user_id, authority_id) VALUES
 (8, 1),
 (8, 2),
 (9, 1),
-(9, 2);
+(9, 2),
+(10, 1),
+(10, 2);
 
 INSERT INTO category (title, parent_category_id) VALUES
 ("main category 1 of categories", null),
@@ -50,7 +53,8 @@ INSERT INTO category_moderators (category_id, user_id) VALUES
 (2, 7),
 (3, 7),
 (4, 8),
-(6, 9);
+(6, 9),
+(7, 10);
 
 INSERT INTO topic (header, content, user_id, category_id) VALUES
 ("user1 topic1", "user1 topic1 content", 1, 2),
