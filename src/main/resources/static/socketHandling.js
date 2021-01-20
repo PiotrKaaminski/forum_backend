@@ -1,0 +1,81 @@
+var stompClient = null;
+
+function connect() {
+	var socket = new SockJS('/my-socket-endpoint');
+	stompClient = Stomp.over(socket);
+	stompClient.connect({"Authorization": "Bearer " + jwt}, function(frame) {
+
+		setConnected(true);
+		console.log('Connected: ' + frame);
+
+		stompClient.subscribe('/topic/chat', function (response) {
+			console.log(response.body);
+			addMessage(response.body);
+		});
+
+		stompClient.subscribe('/user/queue/whisper', function (response) {
+			console.log(response);
+			addWhisper(JSON.parse(response.body));
+		})
+
+	})
+}
+
+function disconnect() {
+	if (stompClient !== null) {
+		stompClient.disconnect();
+	}
+	setConnected(false);
+	console.log("Disconnected");
+}
+
+function setConnected(connected) {
+	document.getElementById('connectButton').disabled = connected;
+	document.getElementById('disconnectButton').disabled = !connected;
+}
+
+function sendMessage() {
+	var message = document.getElementById('message').value;
+	stompClient.send("/app/chat", {}, message);
+}
+
+function addMessage(message) {
+	let trNode = document.createElement("tr");
+	let tdNode = document.createElement("td");
+	let bNode = document.createElement("b");
+	bNode.appendChild(document.createTextNode(message));
+	tdNode.appendChild(bNode);
+	trNode.appendChild(tdNode);
+	document.getElementById('messages').appendChild(trNode);
+}
+
+function sendWhisper() {
+	var destination = document.getElementById('whisperTargetUsername').value;
+	var message = document.getElementById('whisperMessage').value;
+	var msg = '{"username": "' + destination + '", "message": "' + message + '"}';
+	stompClient.send('/app/whisper', {}, msg);
+	let trNode = document.createElement("tr");
+	let tdNode1 = document.createElement("td");
+	let tdNode2 = document.createElement("td");
+	let bNode = document.createElement("b");
+	bNode.appendChild(document.createTextNode('To: ' + destination));
+	tdNode1.appendChild(bNode);
+	tdNode2.appendChild(document.createTextNode('Message: ' + message));
+	trNode.appendChild(tdNode1);
+	trNode.appendChild(tdNode2);
+	document.getElementById('whispers').appendChild(trNode);
+}
+
+function addWhisper(whisper) {
+	let trNode = document.createElement("tr");
+	let tdNode1 = document.createElement("td");
+	let tdNode2 = document.createElement("td");
+	let bNode = document.createElement("b");
+	bNode.appendChild(document.createTextNode('From: ' + whisper.username));
+	tdNode1.appendChild(bNode);
+	tdNode2.appendChild(document.createTextNode('Message: ' + whisper.message));
+	trNode.appendChild(tdNode1);
+	trNode.appendChild(tdNode2);
+	document.getElementById('whispers').appendChild(trNode);
+}
+

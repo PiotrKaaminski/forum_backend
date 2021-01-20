@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			if (categoryEntity.isUserModerator(user)) {
 				return true;
 			}
+
 			if (categoryEntity.getParentCategory() != null) {
 				categoryEntity = categoryEntity.getParentCategory();
 			} else {

@@ -6,7 +6,7 @@ import com.forum.forum_backend.models.AuthorityEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.AuthorityRepository;
 import com.forum.forum_backend.repositories.UserRepository;
-import com.forum.forum_backend.services.interfaces.AuthService;
+import com.forum.forum_backend.services.interfaces.AuthenticationService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class AuthServiceImpl implements AuthService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
 	private final UserRepository userRepository;
 	private final AuthorityRepository authorityRepository;
@@ -25,9 +25,9 @@ public class AuthServiceImpl implements AuthService {
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;
 
-	public AuthServiceImpl(UserRepository userRepository, AuthorityRepository authorityRepository,
-						   BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationManager authenticationManager,
-						   JwtTokenProvider jwtTokenProvider) {
+	public AuthenticationServiceImpl(UserRepository userRepository, AuthorityRepository authorityRepository,
+									 BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationManager authenticationManager,
+									 JwtTokenProvider jwtTokenProvider) {
 		this.userRepository = userRepository;
 		this.authorityRepository = authorityRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;

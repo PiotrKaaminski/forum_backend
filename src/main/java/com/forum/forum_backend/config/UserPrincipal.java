@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails{
 
 	private int id;
 	private String username;
@@ -76,4 +76,5 @@ public class UserPrincipal implements UserDetails {
 		}
 		return false;
 	}
+
 }
