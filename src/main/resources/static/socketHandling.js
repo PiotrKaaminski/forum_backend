@@ -10,7 +10,7 @@ function connect() {
 
 		stompClient.subscribe('/topic/chat', function (response) {
 			console.log(response.body);
-			addMessage(response.body);
+			addMessage(JSON.parse(response.body));
 		});
 
 		stompClient.subscribe('/user/queue/whisper', function (response) {
@@ -41,29 +41,15 @@ function sendMessage() {
 
 function addMessage(message) {
 	let trNode = document.createElement("tr");
-	let tdNode = document.createElement("td");
-	let bNode = document.createElement("b");
-	bNode.appendChild(document.createTextNode(message));
-	tdNode.appendChild(bNode);
-	trNode.appendChild(tdNode);
-	document.getElementById('messages').appendChild(trNode);
-}
-
-function sendWhisper() {
-	var destination = document.getElementById('whisperTargetUsername').value;
-	var message = document.getElementById('whisperMessage').value;
-	var msg = '{"username": "' + destination + '", "message": "' + message + '"}';
-	stompClient.send('/app/whisper', {}, msg);
-	let trNode = document.createElement("tr");
 	let tdNode1 = document.createElement("td");
 	let tdNode2 = document.createElement("td");
 	let bNode = document.createElement("b");
-	bNode.appendChild(document.createTextNode('To: ' + destination));
+	bNode.appendChild(document.createTextNode(message.username + ": "));
 	tdNode1.appendChild(bNode);
-	tdNode2.appendChild(document.createTextNode('Message: ' + message));
+	tdNode2.appendChild(document.createTextNode('Message: ' + message.message));
 	trNode.appendChild(tdNode1);
 	trNode.appendChild(tdNode2);
-	document.getElementById('whispers').appendChild(trNode);
+	document.getElementById('messages').appendChild(trNode);
 }
 
 function addWhisper(whisper) {

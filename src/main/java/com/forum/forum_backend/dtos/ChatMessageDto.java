@@ -1,9 +1,15 @@
 package com.forum.forum_backend.dtos;
 
-public class WhisperDto {
+public class ChatMessageDto {
 
 	private String username;
 	private String message;
+
+
+	public ChatMessageDto(String username, String message) {
+		this.username = username;
+		this.message = message;
+	}
 
 	public String getUsername() {
 		return username;

@@ -1,7 +1,8 @@
 package com.forum.forum_backend.controllers;
 
-import com.forum.forum_backend.dtos.WhisperDto;
+import com.forum.forum_backend.dtos.ChatMessageDto;
 import com.forum.forum_backend.exceptions.UserNotFoundException;
+import com.forum.forum_backend.services.interfaces.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,6 +15,12 @@ import java.security.Principal;
 @Controller
 public class WebSocketController {
 
+	private ChatService chatService;
+
+	public WebSocketController(ChatService chatService) {
+		this.chatService = chatService;
+	}
+
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -21,18 +28,18 @@ public class WebSocketController {
 	private SimpUserRegistry simpUserRegistry;
 
 	@MessageMapping("/chat")
-	public String chat(String message) throws InterruptedException {
+	public void chat(String message, Principal author) throws InterruptedException, UserNotFoundException {
 		Thread.sleep(500);
-		return "New message sent: " + message;
+		chatService.commandCheck(message.trim(), author.getName());
 	}
 
 	@MessageMapping("/whisper")
-	public void whisper(WhisperDto message, Principal principal) throws InterruptedException, UserNotFoundException {
+	public void whisper(ChatMessageDto message, Principal author) throws InterruptedException, UserNotFoundException {
 		Thread.sleep(500);
 		String destination = message.getUsername();
-		message.setUsername(principal.getName());
+		message.setUsername(author.getName());
 		if (simpUserRegistry.getUser(destination) == null) {
-			throw new UserNotFoundException(destination + " is offline.", principal.getName());
+			throw new UserNotFoundException(destination + " is offline.", author.getName());
 		} else {
 			simpMessagingTemplate.convertAndSendToUser(destination, "/queue/whisper", message);
 		}
@@ -40,9 +47,7 @@ public class WebSocketController {
 
 	@MessageExceptionHandler
 	public void handleUserNotFoundException(UserNotFoundException ex) {
-		WhisperDto whisper = new WhisperDto();
-		whisper.setUsername("Error");
-		whisper.setMessage(ex.getMessage());
+		ChatMessageDto whisper = new ChatMessageDto("Error", ex.getMessage());
 		simpMessagingTemplate.convertAndSendToUser(ex.getAuthor(), "/queue/whisper", whisper);
 	}
 
