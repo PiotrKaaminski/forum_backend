@@ -57,9 +57,9 @@ function addWhisper(whisper) {
 	let tdNode1 = document.createElement("td");
 	let tdNode2 = document.createElement("td");
 	let bNode = document.createElement("b");
-	bNode.appendChild(document.createTextNode('From: ' + whisper.username));
+	bNode.appendChild(document.createTextNode(whisper.username));
 	tdNode1.appendChild(bNode);
-	tdNode2.appendChild(document.createTextNode('Message: ' + whisper.message));
+	tdNode2.appendChild(document.createTextNode(whisper.message));
 	trNode.appendChild(tdNode1);
 	trNode.appendChild(tdNode2);
 	document.getElementById('whispers').appendChild(trNode);
