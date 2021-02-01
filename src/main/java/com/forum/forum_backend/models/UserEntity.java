@@ -26,7 +26,7 @@ public class UserEntity {
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "topic_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
-	private List<TopicEntity> likedTopics ;
+	private List<ThreadEntity> likedTopics ;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "comment_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "comment_id"))
@@ -70,11 +70,11 @@ public class UserEntity {
 		this.authorities = authorities;
 	}
 
-	public List<TopicEntity> getLikedTopics() {
+	public List<ThreadEntity> getLikedTopics() {
 		return likedTopics;
 	}
 
-	public void setLikedTopics(List<TopicEntity> likedTopics) {
+	public void setLikedTopics(List<ThreadEntity> likedTopics) {
 		this.likedTopics = likedTopics;
 	}
 
@@ -104,11 +104,11 @@ public class UserEntity {
 
 	}
 
-	public void addTopicLike(TopicEntity topicEntity) {
+	public void addTopicLike(ThreadEntity threadEntity) {
 		if (this.likedTopics == null) {
 			likedTopics = new ArrayList<>();
 		}
-		likedTopics.add(topicEntity);
+		likedTopics.add(threadEntity);
 
 	}
 

@@ -11,11 +11,11 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/topics")
-public class TopicController {
+public class ThreadController {
 
 	private final TopicService topicService;
 
-	public TopicController(TopicService topicService) {
+	public ThreadController(TopicService topicService) {
 		this.topicService = topicService;
 	}
 

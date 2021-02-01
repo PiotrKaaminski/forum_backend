@@ -5,7 +5,7 @@ import com.forum.forum_backend.dtos.CommentDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.CommentEntity;
-import com.forum.forum_backend.models.TopicEntity;
+import com.forum.forum_backend.models.ThreadEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.CommentRepository;
 import com.forum.forum_backend.repositories.TopicRepository;
@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public void addComment( int topicId, CommentDto commentDto) throws NotFoundException {
 		try {
-			TopicEntity topic = topicRepository.getOne(topicId);
+			ThreadEntity topic = topicRepository.getOne(topicId);
 
 			CommentEntity comment = new CommentEntity();
 

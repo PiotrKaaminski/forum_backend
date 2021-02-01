@@ -27,7 +27,7 @@ public class CategoryEntity {
 	private List<CategoryEntity> childCategories;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentCategory")
-	private List<TopicEntity> topicEntities;
+	private List<ThreadEntity> topicEntities;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "category_moderators", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -65,11 +65,11 @@ public class CategoryEntity {
 		this.childCategories = childCategories;
 	}
 
-	public List<TopicEntity> getTopicEntities() {
+	public List<ThreadEntity> getTopicEntities() {
 		return topicEntities;
 	}
 
-	public void setTopicEntities(List<TopicEntity> topicEntities) {
+	public void setTopicEntities(List<ThreadEntity> topicEntities) {
 		this.topicEntities = topicEntities;
 	}
 

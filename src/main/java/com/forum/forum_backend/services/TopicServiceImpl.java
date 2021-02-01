@@ -6,7 +6,7 @@ import com.forum.forum_backend.dtos.TopicDto;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
-import com.forum.forum_backend.models.TopicEntity;
+import com.forum.forum_backend.models.ThreadEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.TopicRepository;
 import com.forum.forum_backend.repositories.UserRepository;
@@ -37,21 +37,21 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public TopicDto getTopic(int topicId) throws NotFoundException {
 		try {
-			TopicEntity topicEntity = topicRepository.getOne(topicId);
+			ThreadEntity threadEntity = topicRepository.getOne(topicId);
 			TopicDto topic = new TopicDto();
-			topic.setId(topicEntity.getId());
-			topic.setHeader(topicEntity.getHeader());
-			topic.setContent(topicEntity.getContent());
+			topic.setId(threadEntity.getId());
+			topic.setHeader(threadEntity.getHeader());
+			topic.setContent(threadEntity.getContent());
 
 			UserDto topicAuthor = new UserDto();
-			topicAuthor.setId(topicEntity.getUser().getId());
-			topicAuthor.setUsername(topicEntity.getUser().getUsername());
+			topicAuthor.setId(threadEntity.getUser().getId());
+			topicAuthor.setUsername(threadEntity.getUser().getUsername());
 			topic.setTopicAuthor(topicAuthor);
-			topic.setLikesAmount(topicEntity.getUsersLikes().size());
+			topic.setLikesAmount(threadEntity.getUsersLikes().size());
 			topic.setCommentsAmount(null);
 
 			topic.setComments(new ArrayList<>() {{
-				addAll(topicEntity.getComments().stream().map(x -> new CommentDto() {{
+				addAll(threadEntity.getComments().stream().map(x -> new CommentDto() {{
 					setId(x.getId());
 					setContent(x.getContent());
 
@@ -77,14 +77,14 @@ public class TopicServiceImpl implements TopicService {
 		int userId = user.getId();
 		UserEntity owner = userService.getUserById(userId);
 
-		TopicEntity topic = new TopicEntity(topicDto.getHeader(), topicDto.getContent(), owner);
+		ThreadEntity topic = new ThreadEntity(topicDto.getHeader(), topicDto.getContent(), owner);
 		topicRepository.save(topic);
 	}
 
 	@Override
 	public void addLike(int topicId) throws NotFoundException {
 		try {
-			TopicEntity topic = topicRepository.getOne(topicId);
+			ThreadEntity topic = topicRepository.getOne(topicId);
 
 			UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			UserEntity user = userService.getUserById(userPrincipal.getId());
@@ -105,7 +105,7 @@ public class TopicServiceImpl implements TopicService {
 	public void modifyTopic(TopicDto topicDto, int topicId) throws UnauthorizedException, NotFoundException {
 
 		try {
-			TopicEntity topic = topicRepository.getOne(topicId);
+			ThreadEntity topic = topicRepository.getOne(topicId);
 
 			if (userService.isUserAnAuthor(topic.getUser())) {
 				if (topicDto.getHeader() != null) {
@@ -126,7 +126,7 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public void deleteTopic(int topicId) throws UnauthorizedException, NotFoundException {
 		try {
-			TopicEntity topic = topicRepository.getOne(topicId);
+			ThreadEntity topic = topicRepository.getOne(topicId);
 
 			if (userService.isUserAnAuthor(topic.getUser())) {
 				topicRepository.delete(topic);
@@ -139,18 +139,18 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public TopicDto mapChildEntityToDto(TopicEntity topicEntity) {
+	public TopicDto mapChildEntityToDto(ThreadEntity threadEntity) {
 		return new TopicDto() {{
-			setId(topicEntity.getId());
-			setHeader(topicEntity.getHeader());
+			setId(threadEntity.getId());
+			setHeader(threadEntity.getHeader());
 
 			UserDto author = new UserDto();
-			author.setId(topicEntity.getUser().getId());
-			author.setUsername(topicEntity.getUser().getUsername());
+			author.setId(threadEntity.getUser().getId());
+			author.setUsername(threadEntity.getUser().getUsername());
 			setTopicAuthor(author);
 
-			setCommentsAmount(topicEntity.getComments().size());
-			setLikesAmount(topicEntity.getUsersLikes().size());
+			setCommentsAmount(threadEntity.getComments().size());
+			setLikesAmount(threadEntity.getUsersLikes().size());
 		}};
 	}
 }

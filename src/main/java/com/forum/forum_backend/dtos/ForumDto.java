@@ -6,14 +6,14 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CategoryDto {
+public class ForumDto {
 
 	private Integer id;
 	@NotEmpty(message = "Category title cannot be empty")
 	private String title;
 	private Integer parentId;
 	private Integer childrenAmount;
-	private List<CategoryDto> childCategories;
+	private List<ForumDto> childCategories;
 	private List<TopicDto> topics;
 
 	public Integer getId() {
@@ -48,11 +48,11 @@ public class CategoryDto {
 		this.childrenAmount = childrenAmount;
 	}
 
-	public List<CategoryDto> getChildCategories() {
+	public List<ForumDto> getChildCategories() {
 		return childCategories;
 	}
 
-	public void setChildCategories(List<CategoryDto> childCategories) {
+	public void setChildCategories(List<ForumDto> childCategories) {
 		this.childCategories = childCategories;
 	}
 

@@ -18,7 +18,7 @@ public class CommentEntity {
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "topic_id")
-	private TopicEntity topic;
+	private ThreadEntity topic;
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "user_id")
@@ -44,11 +44,11 @@ public class CommentEntity {
 		this.content = content;
 	}
 
-	public TopicEntity getTopic() {
+	public ThreadEntity getTopic() {
 		return topic;
 	}
 
-	public void setTopic(TopicEntity topic) {
+	public void setTopic(ThreadEntity topic) {
 		this.topic = topic;
 	}
 

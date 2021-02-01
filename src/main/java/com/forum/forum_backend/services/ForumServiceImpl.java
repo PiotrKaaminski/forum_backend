@@ -1,11 +1,11 @@
 package com.forum.forum_backend.services;
 
-import com.forum.forum_backend.dtos.CategoryDto;
+import com.forum.forum_backend.dtos.ForumDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.CategoryEntity;
 import com.forum.forum_backend.repositories.CategoryRepository;
-import com.forum.forum_backend.services.interfaces.CategoryService;
+import com.forum.forum_backend.services.interfaces.ForumService;
 import com.forum.forum_backend.services.interfaces.TopicService;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.stereotype.Service;
@@ -18,30 +18,30 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class CategoryServiceImpl implements CategoryService {
+public class ForumServiceImpl implements ForumService {
 
 	private final CategoryRepository categoryRepository;
 	private final TopicService topicService;
 	private final UserService userService;
 
-	public CategoryServiceImpl(CategoryRepository categoryRepository, TopicService topicService, UserService userService) {
+	public ForumServiceImpl(CategoryRepository categoryRepository, TopicService topicService, UserService userService) {
 		this.categoryRepository = categoryRepository;
 		this.topicService = topicService;
 		this.userService = userService;
 	}
 
 	@Override
-	public List<CategoryDto> getMainCategoryList() {
+	public List<ForumDto> getMainCategoryList() {
 		List<CategoryEntity> categoryEntities = categoryRepository.findAllByParentCategoryId(null);
 
 		return new ArrayList<>() {{
-			addAll(categoryEntities.stream().map(x -> new CategoryDto() {{
+			addAll(categoryEntities.stream().map(x -> new ForumDto() {{
 				setId(x.getId());
 				setTitle(x.getTitle());
 				if (!x.getChildCategories().isEmpty()) {
 					setChildCategories(
 							x.getChildCategories()
-									.stream().map(CategoryServiceImpl.this::mapChildEntityToDto)
+									.stream().map(ForumServiceImpl.this::mapChildEntityToDto)
 									.collect(Collectors.toList())
 					);
 				} else if (!x.getTopicEntities().isEmpty()) {
@@ -56,11 +56,11 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryDto getSubCategory(int categoryId) throws NotFoundException {
+	public ForumDto getSubForum(int categoryId) throws NotFoundException {
 		try {
 			CategoryEntity categoryEntity = categoryRepository.getOne(categoryId);
 
-			CategoryDto category = new CategoryDto();
+			ForumDto category = new ForumDto();
 			category.setId(categoryEntity.getId());
 			category.setTitle(categoryEntity.getTitle());
 
@@ -90,19 +90,19 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public void addMainCategory(CategoryDto categoryDto){
+	public void addMainForum(ForumDto forumDto){
 		CategoryEntity category = new CategoryEntity();
-		category.setTitle(categoryDto.getTitle());
+		category.setTitle(forumDto.getTitle());
 		categoryRepository.save(category);
 	}
 
 	@Override
-	public void addSubCategory(CategoryDto categoryDto, int parentCategoryId)
+	public void addSubForum(ForumDto forumDto, int parentCategoryId)
 			throws UnauthorizedException, NotFoundException {
 		try {
 			CategoryEntity parentCategoryEntity = categoryRepository.getOne(parentCategoryId);
 			CategoryEntity categoryEntity = new CategoryEntity();
-			categoryEntity.setTitle(categoryDto.getTitle());
+			categoryEntity.setTitle(forumDto.getTitle());
 			categoryEntity.setParentCategory(parentCategoryEntity);
 
 			if (parentCategoryEntity.getTopicEntities().isEmpty()) {
@@ -121,11 +121,11 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public void modifyCategory(CategoryDto categoryDto, int categoryId) throws NotFoundException, UnauthorizedException {
+	public void modifyForum(ForumDto forumDto, int categoryId) throws NotFoundException, UnauthorizedException {
 		try {
 			CategoryEntity categoryEntity = categoryRepository.getOne(categoryId);
 			if (userService.isUserPermittedToModerate(categoryEntity)) {
-				categoryEntity.setTitle(categoryDto.getTitle());
+				categoryEntity.setTitle(forumDto.getTitle());
 				categoryRepository.save(categoryEntity);
 			} else {
 				throw new UnauthorizedException("You have no permission to modify this category");
@@ -136,7 +136,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public void deleteCategory(int categoryId) throws NotFoundException, UnauthorizedException {
+	public void deleteForum(int categoryId) throws NotFoundException, UnauthorizedException {
 		try {
 			CategoryEntity categoryEntity = categoryRepository.getOne(categoryId);
 
@@ -152,8 +152,8 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 	}
 
-	private CategoryDto mapChildEntityToDto(CategoryEntity categoryEntity) {
-		return new CategoryDto() {{
+	private ForumDto mapChildEntityToDto(CategoryEntity categoryEntity) {
+		return new ForumDto() {{
 			setId(categoryEntity.getId());
 			setTitle(categoryEntity.getTitle());
 

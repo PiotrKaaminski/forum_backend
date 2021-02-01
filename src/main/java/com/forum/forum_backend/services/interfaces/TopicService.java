@@ -3,7 +3,7 @@ package com.forum.forum_backend.services.interfaces;
 import com.forum.forum_backend.dtos.TopicDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
-import com.forum.forum_backend.models.TopicEntity;
+import com.forum.forum_backend.models.ThreadEntity;
 
 public interface TopicService {
 
@@ -12,5 +12,5 @@ public interface TopicService {
 	void addLike(int topicId) throws NotFoundException;
 	void modifyTopic(TopicDto topicDto, int topicId) throws UnauthorizedException, NotFoundException;
 	void deleteTopic(int topicId) throws UnauthorizedException, NotFoundException;
-	TopicDto mapChildEntityToDto(TopicEntity topicEntity);
+	TopicDto mapChildEntityToDto(ThreadEntity threadEntity);
 }

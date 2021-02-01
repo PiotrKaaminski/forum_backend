@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "topic")
-public class TopicEntity {
+public class ThreadEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,9 +34,9 @@ public class TopicEntity {
 	@JoinTable(name = "topic_likes", joinColumns = @JoinColumn(name = "topic_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<UserEntity> usersLikes;
 
-	public TopicEntity() { }
+	public ThreadEntity() { }
 
-	public TopicEntity(String header, String content, UserEntity user) {
+	public ThreadEntity(String header, String content, UserEntity user) {
 		this.header = header;
 		this.content = content;
 		this.user = user;
