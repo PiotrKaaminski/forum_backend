@@ -1,54 +1,54 @@
 package com.forum.forum_backend.controllers;
 
-import com.forum.forum_backend.dtos.TopicDto;
+import com.forum.forum_backend.dtos.ThreadDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
-import com.forum.forum_backend.services.interfaces.TopicService;
+import com.forum.forum_backend.services.interfaces.ThreadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/topics")
+@RequestMapping("/api/threads")
 public class ThreadController {
 
-	private final TopicService topicService;
+	private final ThreadService threadService;
 
-	public ThreadController(TopicService topicService) {
-		this.topicService = topicService;
+	public ThreadController(ThreadService threadService) {
+		this.threadService = threadService;
 	}
 
-	@GetMapping("/{topicId}")
+	@GetMapping("/{threadId}")
 	@ResponseStatus(HttpStatus.OK)
-	public TopicDto getTopic(@PathVariable int topicId)
+	public ThreadDto getThread(@PathVariable int threadId)
 			throws NotFoundException {
-		return topicService.getTopic(topicId);
+		return threadService.getThread(threadId);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addTopic(@Valid @RequestBody TopicDto topicDto) {
-		topicService.addTopic(topicDto);
+	public void addThread(@Valid @RequestBody ThreadDto threadDto) {
+		threadService.addThread(threadDto);
 	}
 
-	@PostMapping("/{topicId}")
+	@PostMapping("/{threadId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addLike(@PathVariable int topicId)
+	public void addLike(@PathVariable int threadId)
 		throws NotFoundException {
-		topicService.addLike(topicId);
+		threadService.addLike(threadId);
 	}
 
-	@PutMapping("/{topicId}")
-	public void modifyTopic(@Valid @RequestBody TopicDto topicDto, @PathVariable int topicId)
+	@PutMapping("/{threadId}")
+	public void modifyThread(@Valid @RequestBody ThreadDto threadDto, @PathVariable int threadId)
 			throws UnauthorizedException, NotFoundException {
-		topicService.modifyTopic(topicDto, topicId);
+		threadService.modifyThread(threadDto, threadId);
 	}
 
-	@DeleteMapping("/{topicId}")
-	public void deleteTopic(@PathVariable int topicId)
+	@DeleteMapping("/{threadId}")
+	public void deleteTopic(@PathVariable int threadId)
 			throws UnauthorizedException, NotFoundException {
-		topicService.deleteTopic(topicId);
+		threadService.deleteThread(threadId);
 	}
 
 }

@@ -35,19 +35,19 @@ INSERT INTO user_authorities (user_id, authority_id) VALUES
 (10, 1),
 (10, 2);
 
-INSERT INTO category (title, parent_category_id) VALUES
-("main category 1 of categories", null),
-("main category 2 of topics", null),
-("main category 3 of categories", null),
-("main category 4 of topics", null),
-("sub-category 1 in 1 of topics", 1),
-("sub-category 2 in 1 of categories", 1),
-("sub-sub-category 1 in 6 of categories", 6),
-("sub-sub-category 2 in 6 of categories", 6),
-("sub-sub-category 3 in 6 of categories", 6),
-("sub-sub-category 4 in 6 of categories", 6);
+INSERT INTO forum (title, parent_forum_id) VALUES
+("main forum 1 of forums", null),
+("main forum 2 of threads", null),
+("main forum 3 of forums", null),
+("main forum 4 of threads", null),
+("sub-forum 1 in 1 of threads", 1),
+("sub-forum 2 in 1 of forums", 1),
+("sub-sub-forum 1 in 6 of forums", 6),
+("sub-sub-forum 2 in 6 of forums", 6),
+("sub-sub-forum 3 in 6 of forums", 6),
+("sub-sub-forum 4 in 6 of forums", 6);
 
-INSERT INTO category_moderators (category_id, user_id) VALUES
+INSERT INTO forum_moderators (forum_id, user_id) VALUES
 (1, 6),
 (2, 6),
 (2, 7),
@@ -56,38 +56,38 @@ INSERT INTO category_moderators (category_id, user_id) VALUES
 (6, 9),
 (7, 10);
 
-INSERT INTO topic (header, content, user_id, category_id) VALUES
-("user1 topic1", "user1 topic1 content", 1, 2),
-("user1 topic2", "user1 topic2 content", 1, 2),
-("user2 topic1", "user2 topic1 content", 2, 4),
-("user3 topic1", "user3 topic1 content", 3, 5),
-("admin1 topic1", "admin1 topic1 content", 4, 5);
+INSERT INTO thread (title, message, creator_id, forum_id) VALUES
+("user1 thread1", "user1 thread1 message", 1, 2),
+("user1 thread2", "user1 thread2 message", 1, 2),
+("user2 thread1", "user2 thread1 message", 2, 4),
+("user3 thread1", "user3 thread1 message", 3, 5),
+("admin1 thread1", "admin1 thread1 message", 4, 5);
 
-INSERT INTO comment (content, topic_id, user_id) VALUES
-("user1 topic1 comment1", 1, 1),
-("user1 topic1 comment2", 1, 2),
-("user1 topic1 comment3", 1, 4),
-("user1 topic1 comment4", 1, 3),
-("user1 topic1 comment5", 1, 2),
-("user1 topic1 comment6", 1, 2),
-("user1 topic1 comment7", 1, 1),
-("user1 topic1 comment8", 1, 4),
-("user1 topic1 comment9", 1, 1),
-("user1 topic2 comment1", 2, 3),
-("user1 topic2 comment2", 2, 3),
-("user1 topic2 comment3", 2, 4),
-("user1 topic2 comment4", 2, 2),
-("user1 topic2 comment5", 2, 1),
-("user1 topic2 comment6", 2, 4),
-("user1 topic2 comment7", 2, 2),
-("user1 topic2 comment8", 2, 2),
-("user2 topic1 comment1", 3, 3),
-("user2 topic1 comment2", 3, 2),
-("user2 topic1 comment3", 3, 4),
-("user2 topic1 comment4", 3, 1),
-("user3 topic1 comment1", 4, 2),
-("user3 topic1 comment2", 4, 2),
-("user3 topic1 comment3", 4, 3);
+INSERT INTO post (message, thread_id, creator_id) VALUES
+("user1 thread1 message1", 1, 1),
+("user1 thread1 message2", 1, 2),
+("user1 thread1 message3", 1, 4),
+("user1 thread1 message4", 1, 3),
+("user1 thread1 message5", 1, 2),
+("user1 thread1 message6", 1, 2),
+("user1 thread1 message7", 1, 1),
+("user1 thread1 message8", 1, 4),
+("user1 thread1 message9", 1, 1),
+("user1 thread2 message1", 2, 3),
+("user1 thread2 message2", 2, 3),
+("user1 thread2 message3", 2, 4),
+("user1 thread2 message4", 2, 2),
+("user1 thread2 message5", 2, 1),
+("user1 thread2 message6", 2, 4),
+("user1 thread2 message7", 2, 2),
+("user1 thread2 message8", 2, 2),
+("user2 thread1 message1", 3, 3),
+("user2 thread1 message2", 3, 2),
+("user2 thread1 message3", 3, 4),
+("user2 thread1 message4", 3, 1),
+("user3 thread1 message1", 4, 2),
+("user3 thread1 message2", 4, 2),
+("user3 thread1 message3", 4, 3);
 
 
 

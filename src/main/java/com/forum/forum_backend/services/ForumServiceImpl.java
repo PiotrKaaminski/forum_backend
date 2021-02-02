@@ -3,10 +3,10 @@ package com.forum.forum_backend.services;
 import com.forum.forum_backend.dtos.ForumDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
-import com.forum.forum_backend.models.CategoryEntity;
-import com.forum.forum_backend.repositories.CategoryRepository;
+import com.forum.forum_backend.models.ForumEntity;
+import com.forum.forum_backend.repositories.ForumRepository;
 import com.forum.forum_backend.services.interfaces.ForumService;
-import com.forum.forum_backend.services.interfaces.TopicService;
+import com.forum.forum_backend.services.interfaces.ThreadService;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.stereotype.Service;
 
@@ -20,34 +20,34 @@ import java.util.stream.Collectors;
 @Transactional
 public class ForumServiceImpl implements ForumService {
 
-	private final CategoryRepository categoryRepository;
-	private final TopicService topicService;
+	private final ForumRepository forumRepository;
+	private final ThreadService threadService;
 	private final UserService userService;
 
-	public ForumServiceImpl(CategoryRepository categoryRepository, TopicService topicService, UserService userService) {
-		this.categoryRepository = categoryRepository;
-		this.topicService = topicService;
+	public ForumServiceImpl(ForumRepository forumRepository, ThreadService threadService, UserService userService) {
+		this.forumRepository = forumRepository;
+		this.threadService = threadService;
 		this.userService = userService;
 	}
 
 	@Override
-	public List<ForumDto> getMainCategoryList() {
-		List<CategoryEntity> categoryEntities = categoryRepository.findAllByParentCategoryId(null);
+	public List<ForumDto> getMainForumList() {
+		List<ForumEntity> forumEntities = forumRepository.findAllByParentForumId(null);
 
 		return new ArrayList<>() {{
-			addAll(categoryEntities.stream().map(x -> new ForumDto() {{
+			addAll(forumEntities.stream().map(x -> new ForumDto() {{
 				setId(x.getId());
 				setTitle(x.getTitle());
-				if (!x.getChildCategories().isEmpty()) {
-					setChildCategories(
-							x.getChildCategories()
+				if (!x.getChildForums().isEmpty()) {
+					setChildForums(
+							x.getChildForums()
 									.stream().map(ForumServiceImpl.this::mapChildEntityToDto)
 									.collect(Collectors.toList())
 					);
-				} else if (!x.getTopicEntities().isEmpty()) {
-					setTopics(
-							x.getTopicEntities()
-									.stream().map(topicService::mapChildEntityToDto)
+				} else if (!x.getThreadEntities().isEmpty()) {
+					setThreads(
+							x.getThreadEntities()
+									.stream().map(threadService::mapChildEntityToDto)
 									.collect(Collectors.toList())
 					);
 				}
@@ -56,111 +56,111 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public ForumDto getSubForum(int categoryId) throws NotFoundException {
+	public ForumDto getSubForum(int forumId) throws NotFoundException {
 		try {
-			CategoryEntity categoryEntity = categoryRepository.getOne(categoryId);
+			ForumEntity forumEntity = forumRepository.getOne(forumId);
 
-			ForumDto category = new ForumDto();
-			category.setId(categoryEntity.getId());
-			category.setTitle(categoryEntity.getTitle());
+			ForumDto forum = new ForumDto();
+			forum.setId(forumEntity.getId());
+			forum.setTitle(forumEntity.getTitle());
 
-			if (categoryEntity.getParentCategory() != null) {
-				category.setParentId(categoryEntity.getParentCategory().getId());
+			if (forumEntity.getParentForum() != null) {
+				forum.setParentId(forumEntity.getParentForum().getId());
 			}
 
-			if (!categoryEntity.getChildCategories().isEmpty()) {
-				category.setChildCategories(
-						categoryEntity.getChildCategories()
+			if (!forumEntity.getChildForums().isEmpty()) {
+				forum.setChildForums(
+						forumEntity.getChildForums()
 								.stream().map(this::mapChildEntityToDto)
 								.collect(Collectors.toList())
 				);
 
-			} else if (!categoryEntity.getTopicEntities().isEmpty()) {
-				category.setTopics(
-						categoryEntity.getTopicEntities()
-								.stream().map(topicService::mapChildEntityToDto)
+			} else if (!forumEntity.getThreadEntities().isEmpty()) {
+				forum.setThreads(
+						forumEntity.getThreadEntities()
+								.stream().map(threadService::mapChildEntityToDto)
 								.collect(Collectors.toList())
 				);
 			}
 
-			return category;
+			return forum;
 		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Category with id = " + categoryId + " doesn't exist");
+			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
 		}
 	}
 
 	@Override
 	public void addMainForum(ForumDto forumDto){
-		CategoryEntity category = new CategoryEntity();
-		category.setTitle(forumDto.getTitle());
-		categoryRepository.save(category);
+		ForumEntity forum = new ForumEntity();
+		forum.setTitle(forumDto.getTitle());
+		forumRepository.save(forum);
 	}
 
 	@Override
-	public void addSubForum(ForumDto forumDto, int parentCategoryId)
+	public void addSubForum(ForumDto forumDto, int parentForumId)
 			throws UnauthorizedException, NotFoundException {
 		try {
-			CategoryEntity parentCategoryEntity = categoryRepository.getOne(parentCategoryId);
-			CategoryEntity categoryEntity = new CategoryEntity();
-			categoryEntity.setTitle(forumDto.getTitle());
-			categoryEntity.setParentCategory(parentCategoryEntity);
+			ForumEntity parentForumEntity = forumRepository.getOne(parentForumId);
+			ForumEntity forumEntity = new ForumEntity();
+			forumEntity.setTitle(forumDto.getTitle());
+			forumEntity.setParentForum(parentForumEntity);
 
-			if (parentCategoryEntity.getTopicEntities().isEmpty()) {
-				if (userService.isUserPermittedToModerate(parentCategoryEntity)) {
-					categoryRepository.save(categoryEntity);
+			if (parentForumEntity.getThreadEntities().isEmpty()) {
+				if (userService.isUserPermittedToModerate(parentForumEntity)) {
+					forumRepository.save(forumEntity);
 				} else {
-					throw new UnauthorizedException("You have no permission to add category here");
+					throw new UnauthorizedException("You have no permission to add forum here");
 				}
 			} else {
-				throw new UnauthorizedException("Category already contains topics");
+				throw new UnauthorizedException("Forum already contains threads");
 			}
 
 		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Category with id: " + parentCategoryId + " does'n exist");
+			throw new NotFoundException("Forum with id: " + parentForumId + " doesn't exist");
 		}
 	}
 
 	@Override
-	public void modifyForum(ForumDto forumDto, int categoryId) throws NotFoundException, UnauthorizedException {
+	public void modifyForum(ForumDto forumDto, int forumId) throws NotFoundException, UnauthorizedException {
 		try {
-			CategoryEntity categoryEntity = categoryRepository.getOne(categoryId);
-			if (userService.isUserPermittedToModerate(categoryEntity)) {
-				categoryEntity.setTitle(forumDto.getTitle());
-				categoryRepository.save(categoryEntity);
+			ForumEntity forumEntity = forumRepository.getOne(forumId);
+			if (userService.isUserPermittedToModerate(forumEntity)) {
+				forumEntity.setTitle(forumDto.getTitle());
+				forumRepository.save(forumEntity);
 			} else {
-				throw new UnauthorizedException("You have no permission to modify this category");
+				throw new UnauthorizedException("You have no permission to modify this forum");
 			}
 		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Category with id: " + categoryId + " doesn't exist");
+			throw new NotFoundException("Forum with id: " + forumId + " doesn't exist");
 		}
 	}
 
 	@Override
-	public void deleteForum(int categoryId) throws NotFoundException, UnauthorizedException {
+	public void deleteForum(int forumId) throws NotFoundException, UnauthorizedException {
 		try {
-			CategoryEntity categoryEntity = categoryRepository.getOne(categoryId);
+			ForumEntity forumEntity = forumRepository.getOne(forumId);
 
-			if (categoryEntity.getParentCategory() == null) {
-				categoryRepository.delete(categoryEntity);
-			} else if (userService.isUserPermittedToModerate(categoryEntity.getParentCategory())) {
-				categoryRepository.delete(categoryEntity);
+			if (forumEntity.getParentForum() == null) {
+				forumRepository.delete(forumEntity);
+			} else if (userService.isUserPermittedToModerate(forumEntity.getParentForum())) {
+				forumRepository.delete(forumEntity);
 			} else {
-				throw new UnauthorizedException("You have no permission to delete this category");
+				throw new UnauthorizedException("You have no permission to delete this forum");
 			}
 		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Category with id: " + categoryId + " doesn't exist");
+			throw new NotFoundException("Forum with id: " + forumId + " doesn't exist");
 		}
 	}
 
-	private ForumDto mapChildEntityToDto(CategoryEntity categoryEntity) {
+	private ForumDto mapChildEntityToDto(ForumEntity forumEntity) {
 		return new ForumDto() {{
-			setId(categoryEntity.getId());
-			setTitle(categoryEntity.getTitle());
+			setId(forumEntity.getId());
+			setTitle(forumEntity.getTitle());
 
-			if (!categoryEntity.getChildCategories().isEmpty()) {
-				setChildrenAmount(categoryEntity.getChildCategories().size());
-			} else if (!categoryEntity.getTopicEntities().isEmpty()) {
-				setChildrenAmount(categoryEntity.getTopicEntities().size());
+			if (!forumEntity.getChildForums().isEmpty()) {
+				setChildrenAmount(forumEntity.getChildForums().size());
+			} else if (!forumEntity.getThreadEntities().isEmpty()) {
+				setChildrenAmount(forumEntity.getThreadEntities().size());
 			} else {
 				setChildrenAmount(0);
 			}

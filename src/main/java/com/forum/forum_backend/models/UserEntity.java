@@ -25,18 +25,19 @@ public class UserEntity {
 	private Collection<AuthorityEntity> authorities;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "topic_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
-	private List<ThreadEntity> likedTopics ;
+	@JoinTable(name = "thread_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "thread_id"))
+	private List<ThreadEntity> likedThreads ;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "comment_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "comment_id"))
-	private List<CommentEntity> likedComments;
+	@JoinTable(name = "post_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "post_id"))
+	private List<PostEntity> likedPosts;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "category_moderators", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-	private List<CategoryEntity> moderatedCategories;
+	@JoinTable(name = "forum_moderators", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "forum_id"))
+	private List<ForumEntity> moderatedForums;
 
 	// Getters and setters
+
 
 	public int getId() {
 		return id;
@@ -70,28 +71,28 @@ public class UserEntity {
 		this.authorities = authorities;
 	}
 
-	public List<ThreadEntity> getLikedTopics() {
-		return likedTopics;
+	public List<ThreadEntity> getLikedThreads() {
+		return likedThreads;
 	}
 
-	public void setLikedTopics(List<ThreadEntity> likedTopics) {
-		this.likedTopics = likedTopics;
+	public void setLikedThreads(List<ThreadEntity> likedThreads) {
+		this.likedThreads = likedThreads;
 	}
 
-	public List<CommentEntity> getLikedComments() {
-		return likedComments;
+	public List<PostEntity> getLikedPosts() {
+		return likedPosts;
 	}
 
-	public void setLikedComments(List<CommentEntity> likedComments) {
-		this.likedComments = likedComments;
+	public void setLikedPosts(List<PostEntity> likedPosts) {
+		this.likedPosts = likedPosts;
 	}
 
-	public List<CategoryEntity> getModeratedCategories() {
-		return moderatedCategories;
+	public List<ForumEntity> getModeratedForums() {
+		return moderatedForums;
 	}
 
-	public void setModeratedCategories(List<CategoryEntity> moderatedCategories) {
-		this.moderatedCategories = moderatedCategories;
+	public void setModeratedForums(List<ForumEntity> moderatedForums) {
+		this.moderatedForums = moderatedForums;
 	}
 
 	// helper methods
@@ -104,27 +105,27 @@ public class UserEntity {
 
 	}
 
-	public void addTopicLike(ThreadEntity threadEntity) {
-		if (this.likedTopics == null) {
-			likedTopics = new ArrayList<>();
+	public void addThreadLike(ThreadEntity threadEntity) {
+		if (this.likedThreads == null) {
+			likedThreads = new ArrayList<>();
 		}
-		likedTopics.add(threadEntity);
+		likedThreads.add(threadEntity);
 
 	}
 
-	public void addCommentLike(CommentEntity commentEntity) {
-		if (this.likedComments == null) {
-			likedComments = new ArrayList<>();
+	public void addPostLike(PostEntity postEntity) {
+		if (this.likedPosts == null) {
+			likedPosts = new ArrayList<>();
 		}
-		likedComments.add(commentEntity);
+		likedPosts.add(postEntity);
 
 	}
 
-	public void addModeratedCategory(CategoryEntity categoryEntity) {
-		if (this.moderatedCategories == null) {
-			moderatedCategories = new ArrayList<>();
+	public void addModeratedForum(ForumEntity forumEntity) {
+		if (this.moderatedForums == null) {
+			moderatedForums = new ArrayList<>();
 		}
-		moderatedCategories.add(categoryEntity);
+		moderatedForums.add(forumEntity);
 
 	}
 }

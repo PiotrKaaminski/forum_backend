@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import javax.validation.constraints.NotEmpty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CommentDto {
+public class PostDto {
 
 	private int id;
-	@NotEmpty(message = "Content cannot be empty")
-	private String content;
-	private UserDto commentAuthor;
+	@NotEmpty(message = "Message cannot be empty")
+	private String message;
+	private UserDto postAuthor;
 	private int likesAmount;
 
 	public int getId() {
@@ -21,20 +21,20 @@ public class CommentDto {
 		this.id = id;
 	}
 
-	public String getContent() {
-		return content;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
-	public UserDto getCommentAuthor() {
-		return commentAuthor;
+	public UserDto getPostAuthor() {
+		return postAuthor;
 	}
 
-	public void setCommentAuthor(UserDto commentAuthor) {
-		this.commentAuthor = commentAuthor;
+	public void setPostAuthor(UserDto postAuthor) {
+		this.postAuthor = postAuthor;
 	}
 
 	public int getLikesAmount() {

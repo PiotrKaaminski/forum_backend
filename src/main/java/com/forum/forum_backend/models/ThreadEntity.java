@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "topic")
+@Table(name = "thread")
 public class ThreadEntity {
 
 	@Id
@@ -13,65 +13,65 @@ public class ThreadEntity {
 	@Column(name = "id")
 	private Integer id;
 
-	@Column(name = "header")
-	private String header;
+	@Column(name = "title")
+	private String title;
 
-	@Column(name = "content")
-	private String content;
-
-	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinColumn(name = "category_id")
-	private CategoryEntity parentCategory;
+	@Column(name = "message")
+	private String message;
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "forum_id")
+	private ForumEntity parentForum;
+
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "creator_id")
 	private UserEntity user;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "topic")
-	private List<CommentEntity> comments;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "thread")
+	private List<PostEntity> posts;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "topic_likes", joinColumns = @JoinColumn(name = "topic_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@JoinTable(name = "thread_likes", joinColumns = @JoinColumn(name = "thread_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<UserEntity> usersLikes;
 
 	public ThreadEntity() { }
 
-	public ThreadEntity(String header, String content, UserEntity user) {
-		this.header = header;
-		this.content = content;
+	public ThreadEntity(String title, String message, UserEntity user) {
+		this.title = title;
+		this.message = message;
 		this.user = user;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public String getHeader() {
-		return header;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setHeader(String header) {
-		this.header = header;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public String getContent() {
-		return content;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
-	public CategoryEntity getParentCategory() {
-		return parentCategory;
+	public ForumEntity getParentForum() {
+		return parentForum;
 	}
 
-	public void setParentCategory(CategoryEntity parentCategory) {
-		this.parentCategory = parentCategory;
+	public void setParentForum(ForumEntity parentForum) {
+		this.parentForum = parentForum;
 	}
 
 	public UserEntity getUser() {
@@ -82,12 +82,12 @@ public class ThreadEntity {
 		this.user = user;
 	}
 
-	public List<CommentEntity> getComments() {
-		return comments;
+	public List<PostEntity> getPosts() {
+		return posts;
 	}
 
-	public void setComments(List<CommentEntity> comments) {
-		this.comments = comments;
+	public void setPosts(List<PostEntity> posts) {
+		this.posts = posts;
 	}
 
 	public List<UserEntity> getUsersLikes() {
@@ -100,11 +100,11 @@ public class ThreadEntity {
 
 	// helper methods
 
-	public void addComment(CommentEntity commentEntity) {
-		if (this.comments == null) {
-			comments = new ArrayList<>();
+	public void addPost(PostEntity postEntity) {
+		if (this.posts == null) {
+			posts = new ArrayList<>();
 		}
-		comments.add(commentEntity);
+		posts.add(postEntity);
 	}
 
 	public void addLike(UserEntity userEntity) {

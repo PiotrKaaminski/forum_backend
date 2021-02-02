@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "category")
-public class CategoryEntity {
+@Table(name = "forum")
+public class ForumEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,18 +19,18 @@ public class CategoryEntity {
 	private String title;
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinColumn(name = "parent_category_id")
-	private CategoryEntity parentCategory;
+	@JoinColumn(name = "parent_forum_id")
+	private ForumEntity parentForum;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "parent_category_id")
-	private List<CategoryEntity> childCategories;
+	@JoinColumn(name = "parent_forum_id")
+	private List<ForumEntity> childForums;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentCategory")
-	private List<ThreadEntity> topicEntities;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentForum")
+	private List<ThreadEntity> threadEntities;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "category_moderators", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@JoinTable(name = "forum_moderators", joinColumns = @JoinColumn(name = "forum_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<UserEntity> moderators;
 
 	public int getId() {
@@ -49,28 +49,28 @@ public class CategoryEntity {
 		this.title = title;
 	}
 
-	public CategoryEntity getParentCategory() {
-		return parentCategory;
+	public ForumEntity getParentForum() {
+		return parentForum;
 	}
 
-	public void setParentCategory(CategoryEntity parentCategory) {
-		this.parentCategory = parentCategory;
+	public void setParentForum(ForumEntity parentForum) {
+		this.parentForum = parentForum;
 	}
 
-	public List<CategoryEntity> getChildCategories() {
-		return childCategories;
+	public List<ForumEntity> getChildForums() {
+		return childForums;
 	}
 
-	public void setChildCategories(List<CategoryEntity> childCategories) {
-		this.childCategories = childCategories;
+	public void setChildForums(List<ForumEntity> childForums) {
+		this.childForums = childForums;
 	}
 
-	public List<ThreadEntity> getTopicEntities() {
-		return topicEntities;
+	public List<ThreadEntity> getThreadEntities() {
+		return threadEntities;
 	}
 
-	public void setTopicEntities(List<ThreadEntity> topicEntities) {
-		this.topicEntities = topicEntities;
+	public void setThreadEntities(List<ThreadEntity> threadEntities) {
+		this.threadEntities = threadEntities;
 	}
 
 	public List<UserEntity> getModerators() {

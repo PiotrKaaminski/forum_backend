@@ -9,12 +9,12 @@ import java.util.List;
 public class ForumDto {
 
 	private Integer id;
-	@NotEmpty(message = "Category title cannot be empty")
+	@NotEmpty(message = "Forum title cannot be empty")
 	private String title;
 	private Integer parentId;
 	private Integer childrenAmount;
-	private List<ForumDto> childCategories;
-	private List<TopicDto> topics;
+	private List<ForumDto> childForums;
+	private List<ThreadDto> threads;
 
 	public Integer getId() {
 		return id;
@@ -48,20 +48,19 @@ public class ForumDto {
 		this.childrenAmount = childrenAmount;
 	}
 
-	public List<ForumDto> getChildCategories() {
-		return childCategories;
+	public List<ForumDto> getChildForums() {
+		return childForums;
 	}
 
-	public void setChildCategories(List<ForumDto> childCategories) {
-		this.childCategories = childCategories;
+	public void setChildForums(List<ForumDto> childForums) {
+		this.childForums = childForums;
 	}
 
-	public List<TopicDto> getTopics() {
-		return topics;
+	public List<ThreadDto> getThreads() {
+		return threads;
 	}
 
-	public void setTopics(List<TopicDto> topics) {
-		this.topics = topics;
+	public void setThreads(List<ThreadDto> threads) {
+		this.threads = threads;
 	}
-
 }

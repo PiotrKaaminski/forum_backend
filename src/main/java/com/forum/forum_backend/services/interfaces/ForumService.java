@@ -7,10 +7,10 @@ import com.forum.forum_backend.exceptions.UnauthorizedException;
 import java.util.List;
 
 public interface ForumService {
-	List<ForumDto> getMainCategoryList();
-	ForumDto getSubForum(int categoryId) throws NotFoundException;
+	List<ForumDto> getMainForumList();
+	ForumDto getSubForum(int forumId) throws NotFoundException;
 	void addMainForum(ForumDto forumDto);
-	void addSubForum(ForumDto forumDto, int parentCategoryId) throws NotFoundException, UnauthorizedException;
-	void modifyForum(ForumDto forumDto, int categoryId) throws NotFoundException, UnauthorizedException;
-	void deleteForum(int categoryId) throws NotFoundException, UnauthorizedException;
+	void addSubForum(ForumDto forumDto, int parentForumId) throws NotFoundException, UnauthorizedException;
+	void modifyForum(ForumDto forumDto, int forumId) throws NotFoundException, UnauthorizedException;
+	void deleteForum(int forumId) throws NotFoundException, UnauthorizedException;
 }

@@ -22,7 +22,7 @@ public class ForumController {
 
 	@GetMapping
 	public List<ForumDto> getMainForumList() {
-		return forumService.getMainCategoryList();
+		return forumService.getMainForumList();
 	}
 
 	@GetMapping("/{forumId}")

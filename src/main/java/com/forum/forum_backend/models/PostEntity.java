@@ -5,27 +5,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "comment")
-public class CommentEntity {
+@Table(name = "post")
+public class PostEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 
-	@Column(name = "content")
-	private String content;
+	@Column(name = "message")
+	private String message;
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinColumn(name = "topic_id")
-	private ThreadEntity topic;
+	@JoinColumn(name = "thread_id")
+	private ThreadEntity thread;
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "creator_id")
 	private UserEntity user;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "comment_likes", joinColumns = @JoinColumn(name = "comment_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@JoinTable(name = "post_likes", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<UserEntity> usersLikes ;
 
 	public int getId() {
@@ -36,20 +36,20 @@ public class CommentEntity {
 		this.id = id;
 	}
 
-	public String getContent() {
-		return content;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
-	public ThreadEntity getTopic() {
-		return topic;
+	public ThreadEntity getThread() {
+		return thread;
 	}
 
-	public void setTopic(ThreadEntity topic) {
-		this.topic = topic;
+	public void setThread(ThreadEntity thread) {
+		this.thread = thread;
 	}
 
 	public UserEntity getUser() {
@@ -67,6 +67,7 @@ public class CommentEntity {
 	public void setUsersLikes(List<UserEntity> usersLikes) {
 		this.usersLikes = usersLikes;
 	}
+
 	// helper methods
 
 	public void addLike(UserEntity userEntity) {
