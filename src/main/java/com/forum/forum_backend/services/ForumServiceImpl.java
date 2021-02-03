@@ -8,6 +8,7 @@ import com.forum.forum_backend.repositories.ForumRepository;
 import com.forum.forum_backend.services.interfaces.ForumService;
 import com.forum.forum_backend.services.interfaces.ThreadService;
 import com.forum.forum_backend.services.interfaces.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -24,7 +25,10 @@ public class ForumServiceImpl implements ForumService {
 	private final ThreadService threadService;
 	private final UserService userService;
 
-	public ForumServiceImpl(ForumRepository forumRepository, ThreadService threadService, UserService userService) {
+	public ForumServiceImpl(
+			ForumRepository forumRepository,
+			@Lazy ThreadService threadService,
+			UserService userService) {
 		this.forumRepository = forumRepository;
 		this.threadService = threadService;
 		this.userService = userService;
@@ -63,6 +67,7 @@ public class ForumServiceImpl implements ForumService {
 			ForumDto forum = new ForumDto();
 			forum.setId(forumEntity.getId());
 			forum.setTitle(forumEntity.getTitle());
+			forum.setBreadcrump(getBreadcrump(forumEntity));
 
 			if (forumEntity.getParentForum() != null) {
 				forum.setParentId(forumEntity.getParentForum().getId());
@@ -150,6 +155,24 @@ public class ForumServiceImpl implements ForumService {
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Forum with id: " + forumId + " doesn't exist");
 		}
+	}
+
+	@Override
+	public List<ForumDto> getBreadcrump(ForumEntity forumEntity) {
+		ArrayList<ForumDto> breadcrump = new ArrayList<>();
+		do {
+			ForumDto tempForum = new ForumDto();
+			tempForum.setTitle(forumEntity.getTitle());
+			tempForum.setId(forumEntity.getId());
+			breadcrump.add(tempForum);
+			if (forumEntity.getParentForum() != null) {
+				forumEntity = forumEntity.getParentForum();
+			} else {
+				forumEntity = null;
+			}
+		} while (forumEntity != null);
+
+		return breadcrump;
 	}
 
 	private ForumDto mapChildEntityToDto(ForumEntity forumEntity) {

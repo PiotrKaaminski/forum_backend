@@ -3,6 +3,7 @@ package com.forum.forum_backend.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -15,6 +16,7 @@ public class ForumDto {
 	private Integer childrenAmount;
 	private List<ForumDto> childForums;
 	private List<ThreadDto> threads;
+	private List<ForumDto> breadcrump;
 
 	public Integer getId() {
 		return id;
@@ -62,5 +64,22 @@ public class ForumDto {
 
 	public void setThreads(List<ThreadDto> threads) {
 		this.threads = threads;
+	}
+
+	public List<ForumDto> getBreadcrump() {
+		return breadcrump;
+	}
+
+	public void setBreadcrump(List<ForumDto> breadcrump) {
+		this.breadcrump = breadcrump;
+	}
+
+	//helper methods
+
+	public void addBreadcrump(ForumDto forumDto) {
+		if (this.breadcrump == null) {
+			breadcrump = new ArrayList<>();
+		}
+		breadcrump.add(forumDto);
 	}
 }

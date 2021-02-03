@@ -12,8 +12,10 @@ import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.ForumRepository;
 import com.forum.forum_backend.repositories.ThreadRepository;
 import com.forum.forum_backend.repositories.UserRepository;
+import com.forum.forum_backend.services.interfaces.ForumService;
 import com.forum.forum_backend.services.interfaces.ThreadService;
 import com.forum.forum_backend.services.interfaces.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +33,19 @@ public class ThreadServiceImpl implements ThreadService {
 	private final ThreadRepository threadRepository;
 	private final UserRepository userRepository;
 	private final UserService userService;
+	private final ForumService forumService;
 
-	public ThreadServiceImpl(ForumRepository forumRepository, ThreadRepository threadRepository, UserRepository userRepository, UserService userService) {
+	public ThreadServiceImpl(
+			ForumRepository forumRepository,
+			ThreadRepository threadRepository,
+			UserRepository userRepository,
+			UserService userService,
+			@Lazy ForumService forumService) {
 		this.forumRepository = forumRepository;
 		this.threadRepository = threadRepository;
 		this.userRepository = userRepository;
 		this.userService = userService;
+		this.forumService = forumService;
 	}
 
 	@Override
@@ -52,9 +61,11 @@ public class ThreadServiceImpl implements ThreadService {
 			threadAuthor.setId(threadEntity.getUser().getId());
 			threadAuthor.setUsername(threadEntity.getUser().getUsername());
 			thread.setThreadAuthor(threadAuthor);
+
 			thread.setLikesAmount(threadEntity.getUsersLikes().size());
 			thread.setPostsAmount(null);
 			thread.setCreateTime(threadEntity.getCreateTime());
+			thread.setBreadcrump(forumService.getBreadcrump(threadEntity.getParentForum()));
 
 			thread.setPosts(new ArrayList<>() {{
 				addAll(threadEntity.getPosts().stream().map(x -> new PostDto() {{

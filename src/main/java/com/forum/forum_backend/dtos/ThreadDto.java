@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -19,6 +20,7 @@ public class ThreadDto {
 	private int likesAmount;
 	private Timestamp createTime;
 	private List<PostDto> posts;
+	private List<ForumDto> breadcrump;
 
 
 	public int getId() {
@@ -83,5 +85,22 @@ public class ThreadDto {
 
 	public void setPosts(List<PostDto> posts) {
 		this.posts = posts;
+	}
+
+	public List<ForumDto> getBreadcrump() {
+		return breadcrump;
+	}
+
+	public void setBreadcrump(List<ForumDto> breadcrump) {
+		this.breadcrump = breadcrump;
+	}
+
+	//helper methods
+
+	public void addBreadcrump(ForumDto forumDto) {
+		if (this.breadcrump == null) {
+			breadcrump = new ArrayList<>();
+		}
+		breadcrump.add(forumDto);
 	}
 }
