@@ -3,6 +3,7 @@ package com.forum.forum_backend.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.validation.constraints.NotEmpty;
+import java.sql.Timestamp;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -16,6 +17,7 @@ public class ThreadDto {
 	private UserDto threadAuthor;
 	private Integer postsAmount;
 	private int likesAmount;
+	private Timestamp createTime;
 	private List<PostDto> posts;
 
 
@@ -65,6 +67,14 @@ public class ThreadDto {
 
 	public void setLikesAmount(int likesAmount) {
 		this.likesAmount = likesAmount;
+	}
+
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	public List<PostDto> getPosts() {

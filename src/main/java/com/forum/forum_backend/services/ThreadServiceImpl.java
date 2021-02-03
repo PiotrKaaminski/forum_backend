@@ -6,8 +6,10 @@ import com.forum.forum_backend.dtos.ThreadDto;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
+import com.forum.forum_backend.models.ForumEntity;
 import com.forum.forum_backend.models.ThreadEntity;
 import com.forum.forum_backend.models.UserEntity;
+import com.forum.forum_backend.repositories.ForumRepository;
 import com.forum.forum_backend.repositories.ThreadRepository;
 import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.ThreadService;
@@ -17,18 +19,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Transactional
 @Service
 public class ThreadServiceImpl implements ThreadService {
-	
+
+	private final ForumRepository forumRepository;
 	private final ThreadRepository threadRepository;
 	private final UserRepository userRepository;
 	private final UserService userService;
 
-	public ThreadServiceImpl(ThreadRepository threadRepository, UserRepository userRepository, UserService userService) {
+	public ThreadServiceImpl(ForumRepository forumRepository, ThreadRepository threadRepository, UserRepository userRepository, UserService userService) {
+		this.forumRepository = forumRepository;
 		this.threadRepository = threadRepository;
 		this.userRepository = userRepository;
 		this.userService = userService;
@@ -49,6 +54,7 @@ public class ThreadServiceImpl implements ThreadService {
 			thread.setThreadAuthor(threadAuthor);
 			thread.setLikesAmount(threadEntity.getUsersLikes().size());
 			thread.setPostsAmount(null);
+			thread.setCreateTime(threadEntity.getCreateTime());
 
 			thread.setPosts(new ArrayList<>() {{
 				addAll(threadEntity.getPosts().stream().map(x -> new PostDto() {{
@@ -61,6 +67,7 @@ public class ThreadServiceImpl implements ThreadService {
 
 					setPostAuthor(postAuthor);
 					setLikesAmount(x.getUsersLikes().size());
+					setCreateTime(x.getCreateTime());
 				}}).collect(Collectors.toList()));
 			}});
 
@@ -72,13 +79,22 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public void addThread(ThreadDto threadDto) {
-		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		int userId = user.getId();
-		UserEntity owner = userService.getUserById(userId);
+	public void addThread(int forumId, ThreadDto threadDto) throws NotFoundException {
+		try {
+			ForumEntity parentForum = forumRepository.getOne(forumId);
 
-		ThreadEntity thread = new ThreadEntity(threadDto.getTitle(), threadDto.getMessage(), owner);
-		threadRepository.save(thread);
+			UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			int userId = user.getId();
+			UserEntity owner = userService.getUserById(userId);
+
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+			ThreadEntity thread = new ThreadEntity(threadDto.getTitle(), threadDto.getMessage(), owner, timestamp);
+			thread.setParentForum(parentForum);
+			threadRepository.save(thread);
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
+		}
 	}
 
 	@Override

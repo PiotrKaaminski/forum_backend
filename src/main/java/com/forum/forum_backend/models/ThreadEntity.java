@@ -1,6 +1,7 @@
 package com.forum.forum_backend.models;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,9 @@ public class ThreadEntity {
 	@Column(name = "message")
 	private String message;
 
+	@Column(name = "create_time")
+	private Timestamp createTime;
+
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "forum_id")
 	private ForumEntity parentForum;
@@ -36,10 +40,11 @@ public class ThreadEntity {
 
 	public ThreadEntity() { }
 
-	public ThreadEntity(String title, String message, UserEntity user) {
+	public ThreadEntity(String title, String message, UserEntity user, Timestamp createTime) {
 		this.title = title;
 		this.message = message;
 		this.user = user;
+		this.createTime = createTime;
 	}
 
 	public Integer getId() {
@@ -96,6 +101,14 @@ public class ThreadEntity {
 
 	public void setUsersLikes(List<UserEntity> usersLikes) {
 		this.usersLikes = usersLikes;
+	}
+
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	// helper methods

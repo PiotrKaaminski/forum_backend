@@ -56,7 +56,7 @@ INSERT INTO forum_moderators (forum_id, user_id) VALUES
 (6, 9),
 (7, 10);
 
-INSERT INTO thread (title, message, creator_id, forum_id) VALUES
+/*INSERT INTO thread (title, message, creator_id, forum_id) VALUES
 ("user1 thread1", "user1 thread1 message", 1, 2),
 ("user1 thread2", "user1 thread2 message", 1, 2),
 ("user2 thread1", "user2 thread1 message", 2, 4),
@@ -87,7 +87,7 @@ INSERT INTO post (message, thread_id, creator_id) VALUES
 ("user2 thread1 message4", 3, 1),
 ("user3 thread1 message1", 4, 2),
 ("user3 thread1 message2", 4, 2),
-("user3 thread1 message3", 4, 3);
+("user3 thread1 message3", 4, 3);*/
 
 
 

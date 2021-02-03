@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.Timestamp;
 
 @Transactional
 @Service
@@ -45,9 +46,12 @@ public class PostServiceImpl implements PostService {
 			int userId = user.getId();
 			UserEntity owner = userService.getUserById(userId);
 
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
 			post.setMessage(postDto.getMessage());
 			post.setUser(owner);
 			post.setThread(thread);
+			post.setCreateTime(timestamp);
 
 			postRepository.save(post);
 		} catch (EntityNotFoundException ex) {

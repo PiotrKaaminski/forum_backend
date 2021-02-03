@@ -50,6 +50,9 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="creator_id" type="INT UNSIGNED" />
+			<column name="create_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 
 		<createTable tableName="thread_likes">
@@ -72,6 +75,9 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="creator_id" type="INT UNSIGNED" />
+			<column name="create_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 
 		<createTable tableName="post_likes">
