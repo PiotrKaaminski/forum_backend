@@ -96,7 +96,13 @@
 			<column name="title" type="VARCHAR(100)">
 				<constraints nullable="false" />
 			</column>
+			<column name="description" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
 			<column name="parent_forum_id" type="INT UNSIGNED" />
+			<column name="create_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 
 		<createTable tableName="forum_moderators">

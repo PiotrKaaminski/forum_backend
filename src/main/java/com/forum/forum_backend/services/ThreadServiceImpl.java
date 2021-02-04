@@ -170,6 +170,7 @@ public class ThreadServiceImpl implements ThreadService {
 		return new ThreadDto() {{
 			setId(threadEntity.getId());
 			setTitle(threadEntity.getTitle());
+			setCreateTime(threadEntity.getCreateTime());
 
 			UserDto author = new UserDto();
 			author.setId(threadEntity.getUser().getId());

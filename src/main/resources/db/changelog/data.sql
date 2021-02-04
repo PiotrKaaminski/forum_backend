@@ -35,7 +35,7 @@ INSERT INTO user_authorities (user_id, authority_id) VALUES
 (10, 1),
 (10, 2);
 
-INSERT INTO forum (title, parent_forum_id) VALUES
+/*INSERT INTO forum (title, parent_forum_id) VALUES
 ("main forum 1 of forums", null),
 ("main forum 2 of threads", null),
 ("main forum 3 of forums", null),
@@ -56,7 +56,7 @@ INSERT INTO forum_moderators (forum_id, user_id) VALUES
 (6, 9),
 (7, 10);
 
-/*INSERT INTO thread (title, message, creator_id, forum_id) VALUES
+INSERT INTO thread (title, message, creator_id, forum_id) VALUES
 ("user1 thread1", "user1 thread1 message", 1, 2),
 ("user1 thread2", "user1 thread2 message", 1, 2),
 ("user2 thread1", "user2 thread1 message", 2, 4),

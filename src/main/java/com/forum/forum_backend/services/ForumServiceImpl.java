@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +43,8 @@ public class ForumServiceImpl implements ForumService {
 			addAll(forumEntities.stream().map(x -> new ForumDto() {{
 				setId(x.getId());
 				setTitle(x.getTitle());
+				setDescription(x.getDescription());
+				setCreateTime(x.getCreateTime());
 
 				setChildForums(
 						x.getChildForums()
@@ -64,6 +67,8 @@ public class ForumServiceImpl implements ForumService {
 			ForumDto forum = new ForumDto();
 			forum.setId(forumEntity.getId());
 			forum.setTitle(forumEntity.getTitle());
+			forum.setDescription(forumEntity.getDescription());
+			forum.setCreateTime(forumEntity.getCreateTime());
 			forum.setBreadcrump(getBreadcrump(forumEntity));
 
 			if (forumEntity.getParentForum() != null) {
@@ -102,6 +107,10 @@ public class ForumServiceImpl implements ForumService {
 			}
 
 			forumEntity.setTitle(forumDto.getTitle());
+			forumEntity.setDescription(forumDto.getDescription());
+
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			forumEntity.setCreateTime(timestamp);
 
 			if (userService.isUserPermittedToModerate(parentForumEntity)) {
 				forumRepository.save(forumEntity);
@@ -119,7 +128,12 @@ public class ForumServiceImpl implements ForumService {
 		try {
 			ForumEntity forumEntity = forumRepository.getOne(forumId);
 			if (userService.isUserPermittedToModerate(forumEntity)) {
-				forumEntity.setTitle(forumDto.getTitle());
+				if (forumDto.getTitle() != null) {
+					forumEntity.setTitle(forumDto.getTitle());
+				}
+				if (forumDto.getDescription() != null) {
+					forumEntity.setDescription(forumDto.getDescription());
+				}
 				forumRepository.save(forumEntity);
 			} else {
 				throw new UnauthorizedException("You have no permission to modify this forum");
@@ -168,6 +182,8 @@ public class ForumServiceImpl implements ForumService {
 		return new ForumDto() {{
 			setId(forumEntity.getId());
 			setTitle(forumEntity.getTitle());
+			setCreateTime(forumEntity.getCreateTime());
+			setDescription(forumEntity.getDescription());
 
 			if (!forumEntity.getChildForums().isEmpty()) {
 				setChildrenAmount(forumEntity.getChildForums().size());

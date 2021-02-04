@@ -3,6 +3,7 @@ package com.forum.forum_backend.models;
 import com.forum.forum_backend.config.UserPrincipal;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,12 @@ public class ForumEntity {
 
 	@Column(name = "title")
 	private String title;
+
+	@Column(name = "description")
+	private String description;
+
+	@Column(name = "create_time")
+	private Timestamp createTime;
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "parent_forum_id")
@@ -47,6 +54,22 @@ public class ForumEntity {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	public ForumEntity getParentForum() {
