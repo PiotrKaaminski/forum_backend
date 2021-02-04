@@ -13,11 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -41,21 +36,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/api/register", "/api/login")
 				.permitAll()
-				.antMatchers(HttpMethod.GET, "/api/topics", "/api/topics/*", "/api/categories", "/api/categories/*")
+				.antMatchers(HttpMethod.GET, "/api/threads", "/api/threads/*", "/api/forums", "/api/forums/*")
 				.permitAll()
-				.antMatchers(HttpMethod.POST, "/api/topics", "/api/topics/*", "/api/comments", "/api/comments/*")
+				.antMatchers(HttpMethod.POST, "/api/threads", "/api/threads/*", "/api/posts", "/api/posts/*")
 				.hasAuthority("USER")
-				.antMatchers(HttpMethod.POST, "/api/categories")
+				.antMatchers(HttpMethod.POST, "/api/forums")
 				.hasAnyAuthority("HEAD_MODERATOR", "ADMIN")
-				.antMatchers(HttpMethod.POST, "/api/categories/*")
+				.antMatchers(HttpMethod.POST, "/api/forums/*")
 				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
-				.antMatchers(HttpMethod.PUT, "/api/topics/*", "/api/comments/*")
+				.antMatchers(HttpMethod.PUT, "/api/threads/*", "/api/posts/*")
 				.hasAuthority("USER")
-				.antMatchers(HttpMethod.PUT, "/api/categories/*")
+				.antMatchers(HttpMethod.PUT, "/api/forums/*")
 				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
-				.antMatchers(HttpMethod.DELETE, "/api/topics/*", "/api/comments/*")
+				.antMatchers(HttpMethod.DELETE, "/api/threads/*", "/api/posts/*")
 				.hasAuthority("USER")
-				.antMatchers(HttpMethod.DELETE, "/api/categories/*")
+				.antMatchers(HttpMethod.DELETE, "/api/forums/*")
 				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
 				.and()
 				.csrf().disable()
@@ -89,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {return new JwtAuthenticationFilter();}
 
-	@Bean
+	/*@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
@@ -99,6 +94,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		source.registerCorsConfiguration("/**", configuration);
 
 		return source;
-	}
+	}*/
 
 }

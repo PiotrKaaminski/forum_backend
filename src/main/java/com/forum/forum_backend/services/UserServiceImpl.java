@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			return true;
 		}
 
-		do {
+		while (forumEntity != null){
 			if (forumEntity.isUserModerator(user)) {
 				return true;
 			}
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			} else {
 				forumEntity = null;
 			}
-		} while (forumEntity != null);
+		}
 
 		return false;
 	}

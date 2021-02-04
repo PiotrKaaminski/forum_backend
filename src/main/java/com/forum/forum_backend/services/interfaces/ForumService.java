@@ -10,8 +10,7 @@ import java.util.List;
 public interface ForumService {
 	List<ForumDto> getMainForumList();
 	ForumDto getSubForum(int forumId) throws NotFoundException;
-	void addMainForum(ForumDto forumDto);
-	void addSubForum(ForumDto forumDto, int parentForumId) throws NotFoundException, UnauthorizedException;
+	void addForum(ForumDto forumDto, Integer parentForumId) throws NotFoundException, UnauthorizedException;
 	void modifyForum(ForumDto forumDto, int forumId) throws NotFoundException, UnauthorizedException;
 	void deleteForum(int forumId) throws NotFoundException, UnauthorizedException;
 	List<ForumDto> getBreadcrump(ForumEntity forumEntity);

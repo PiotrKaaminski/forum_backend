@@ -21,6 +21,7 @@ public class ForumController {
 	}
 
 	@GetMapping
+	@CrossOrigin(origins = "*")
 	public List<ForumDto> getMainForumList() {
 		return forumService.getMainForumList();
 	}
@@ -32,15 +33,15 @@ public class ForumController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addMainForum(@Valid @RequestBody ForumDto forumDto) {
-		forumService.addMainForum(forumDto);
+	public void addMainForum(@Valid @RequestBody ForumDto forumDto) throws NotFoundException, UnauthorizedException {
+		forumService.addForum(forumDto, null);
 	}
 
 	@PostMapping("/{forumId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void addSubForum(@Valid @RequestBody ForumDto forumDto, @PathVariable int forumId)
 			throws UnauthorizedException, NotFoundException {
-		forumService.addSubForum(forumDto, forumId);
+		forumService.addForum(forumDto, forumId);
 	}
 
 	@PutMapping("/{forumId}")

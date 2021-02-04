@@ -42,19 +42,16 @@ public class ForumServiceImpl implements ForumService {
 			addAll(forumEntities.stream().map(x -> new ForumDto() {{
 				setId(x.getId());
 				setTitle(x.getTitle());
-				if (!x.getChildForums().isEmpty()) {
-					setChildForums(
-							x.getChildForums()
-									.stream().map(ForumServiceImpl.this::mapChildEntityToDto)
-									.collect(Collectors.toList())
-					);
-				} else if (!x.getThreadEntities().isEmpty()) {
-					setThreads(
-							x.getThreadEntities()
-									.stream().map(threadService::mapChildEntityToDto)
-									.collect(Collectors.toList())
-					);
-				}
+
+				setChildForums(
+						x.getChildForums()
+								.stream().map(ForumServiceImpl.this::mapChildEntityToDto)
+								.collect(Collectors.toList())
+				);
+
+				setThreads(
+						x.getThreadEntities().stream().map(threadService::mapChildEntityToDto).collect(Collectors.toList())
+				);
 			}}).collect(Collectors.toList()));
 		}};
 	}
@@ -73,20 +70,18 @@ public class ForumServiceImpl implements ForumService {
 				forum.setParentId(forumEntity.getParentForum().getId());
 			}
 
-			if (!forumEntity.getChildForums().isEmpty()) {
-				forum.setChildForums(
-						forumEntity.getChildForums()
-								.stream().map(this::mapChildEntityToDto)
-								.collect(Collectors.toList())
-				);
+			forum.setChildForums(
+					forumEntity.getChildForums()
+							.stream().map(this::mapChildEntityToDto)
+							.collect(Collectors.toList())
+			);
 
-			} else if (!forumEntity.getThreadEntities().isEmpty()) {
-				forum.setThreads(
-						forumEntity.getThreadEntities()
-								.stream().map(threadService::mapChildEntityToDto)
-								.collect(Collectors.toList())
-				);
-			}
+			forum.setThreads(
+					forumEntity.getThreadEntities()
+							.stream().map(threadService::mapChildEntityToDto)
+							.collect(Collectors.toList())
+			);
+
 
 			return forum;
 		} catch (EntityNotFoundException ex) {
@@ -95,29 +90,23 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public void addMainForum(ForumDto forumDto){
-		ForumEntity forum = new ForumEntity();
-		forum.setTitle(forumDto.getTitle());
-		forumRepository.save(forum);
-	}
-
-	@Override
-	public void addSubForum(ForumDto forumDto, int parentForumId)
+	public void addForum(ForumDto forumDto, Integer parentForumId)
 			throws UnauthorizedException, NotFoundException {
 		try {
-			ForumEntity parentForumEntity = forumRepository.getOne(parentForumId);
 			ForumEntity forumEntity = new ForumEntity();
-			forumEntity.setTitle(forumDto.getTitle());
-			forumEntity.setParentForum(parentForumEntity);
+			ForumEntity parentForumEntity = null;
 
-			if (parentForumEntity.getThreadEntities().isEmpty()) {
-				if (userService.isUserPermittedToModerate(parentForumEntity)) {
-					forumRepository.save(forumEntity);
-				} else {
-					throw new UnauthorizedException("You have no permission to add forum here");
-				}
+			if (parentForumId != null) {
+				parentForumEntity = forumRepository.getOne(parentForumId);
+				forumEntity.setParentForum(parentForumEntity);
+			}
+
+			forumEntity.setTitle(forumDto.getTitle());
+
+			if (userService.isUserPermittedToModerate(parentForumEntity)) {
+				forumRepository.save(forumEntity);
 			} else {
-				throw new UnauthorizedException("Forum already contains threads");
+				throw new UnauthorizedException("You have no permission to add forum here");
 			}
 
 		} catch (EntityNotFoundException ex) {
