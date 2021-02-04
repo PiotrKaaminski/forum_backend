@@ -21,7 +21,6 @@ public class ForumController {
 	}
 
 	@GetMapping
-	@CrossOrigin(origins = "*")
 	public List<ForumDto> getMainForumList() {
 		return forumService.getMainForumList();
 	}
