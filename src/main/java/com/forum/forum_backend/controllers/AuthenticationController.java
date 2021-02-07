@@ -18,7 +18,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/login")
-	public String authenticateUser(@RequestBody UserDto userDto) {return authService.login(userDto);}
+	public UserDto authenticateUser(@RequestBody UserDto userDto) {return authService.login(userDto);}
 
 	@PostMapping("/register")
 	@ResponseStatus(HttpStatus.CREATED)

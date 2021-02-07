@@ -57,11 +57,8 @@ INSERT INTO forum_moderators (forum_id, user_id) VALUES
 (7, 10);
 
 INSERT INTO thread (title, message, creator_id, forum_id, create_time) VALUES
-("user1 thread1", "user1 thread1 message", 1, 2, "2021-02-07 14:23:58"),
-("user1 thread2", "user1 thread2 message", 1, 1, "2021-02-07 14:23:58"),
-("user2 thread1", "user2 thread1 message", 2, 4, "2021-02-07 14:23:58"),
-("user3 thread1", "user3 thread1 message", 3, 5, "2021-02-07 14:23:58"),
-("admin1 thread1", "admin1 thread1 message", 4, 6, "2021-02-07 14:23:58");
+("admin1 thread1", "admin1 thread1 message test tes test", 4, 6, "2021-02-07 14:23:58"),
+("admin1 thread2", "admin1 thread2 message", 4, 6, "2021-02-07 14:23:58");
 
 INSERT INTO post (message, thread_id, creator_id, create_time) VALUES
 ("user1 thread1 message1", 1, 1, "2021-02-07 14:23:58"),
@@ -80,14 +77,7 @@ INSERT INTO post (message, thread_id, creator_id, create_time) VALUES
 ("user1 thread2 message5", 2, 1, "2021-02-07 14:23:58"),
 ("user1 thread2 message6", 2, 4, "2021-02-07 14:23:58"),
 ("user1 thread2 message7", 2, 2, "2021-02-07 14:23:58"),
-("user1 thread2 message8", 2, 2, "2021-02-07 14:23:58"),
-("user2 thread1 message1", 3, 3, "2021-02-07 14:23:58"),
-("user2 thread1 message2", 3, 2, "2021-02-07 14:23:58"),
-("user2 thread1 message3", 3, 4, "2021-02-07 14:23:58"),
-("user2 thread1 message4", 3, 1, "2021-02-07 14:23:58"),
-("user3 thread1 message1", 4, 2, "2021-02-07 14:23:58"),
-("user3 thread1 message2", 4, 2, "2021-02-07 14:23:58"),
-("user3 thread1 message3", 4, 3, "2021-02-07 14:23:58");
+("user1 thread2 message8", 2, 2, "2021-02-07 14:23:58");
 
 
 

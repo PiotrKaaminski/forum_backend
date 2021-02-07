@@ -20,6 +20,8 @@ public class UserDto {
 	@NotNull(message = "Password cannot be null")
 	@Length(min = 5, max = 25, message = "Password cannot be shorter than 5 and longer than 25")
 	private String password;
+	private String email = "user@forum.com"; //email will be implemented
+	private String jwt;
 
 	public int getId() {
 		return id;
@@ -45,4 +47,19 @@ public class UserDto {
 		this.password = password.trim();
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getJwt() {
+		return jwt;
+	}
+
+	public void setJwt(String jwt) {
+		this.jwt = jwt;
+	}
 }

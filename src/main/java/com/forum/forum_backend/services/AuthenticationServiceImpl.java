@@ -1,6 +1,7 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.JwtTokenProvider;
+import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.models.AuthorityEntity;
 import com.forum.forum_backend.models.UserEntity;
@@ -36,7 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	}
 
 	@Override
-	public String login(UserDto userDto) {
+	public UserDto login(UserDto userDto) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(
 						userDto.getUsername(),
@@ -45,7 +46,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		);
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		return jwtTokenProvider.generateToken(authentication);
+
+		UserDto user = new UserDto();
+		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		user.setId(userPrincipal.getId());
+		user.setUsername(userPrincipal.getUsername());
+		user.setJwt(jwtTokenProvider.generateToken(authentication));
+
+		return user;
 	}
 
 	@Override
