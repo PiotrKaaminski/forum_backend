@@ -1,6 +1,7 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
+import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.dtos.PostDto;
 import com.forum.forum_backend.dtos.ThreadDto;
 import com.forum.forum_backend.dtos.UserDto;
@@ -67,19 +68,22 @@ public class ThreadServiceImpl implements ThreadService {
 			thread.setCreateTime(threadEntity.getCreateTime());
 			thread.setBreadcrump(forumService.getBreadcrump(threadEntity.getParentForum()));
 
-			thread.setPosts(new ArrayList<>() {{
-				addAll(threadEntity.getPosts().stream().map(x -> new PostDto() {{
-					setId(x.getId());
-					setMessage(x.getMessage());
+			thread.setPosts(new PaginatedResponse<>() {{
+				setResults(new ArrayList<>() {{
+					addAll(threadEntity.getPosts().stream().map(x -> new PostDto() {{
+						setId(x.getId());
+						setMessage(x.getMessage());
 
-					UserDto postAuthor = new UserDto();
-					postAuthor.setId(x.getUser().getId());
-					postAuthor.setUsername(x.getUser().getUsername());
+						UserDto postAuthor = new UserDto();
+						postAuthor.setId(x.getUser().getId());
+						postAuthor.setUsername(x.getUser().getUsername());
 
-					setPostAuthor(postAuthor);
-					setLikesAmount(x.getUsersLikes().size());
-					setCreateTime(x.getCreateTime());
-				}}).collect(Collectors.toList()));
+						setPostAuthor(postAuthor);
+						setLikesAmount(x.getUsersLikes().size());
+						setCreateTime(x.getCreateTime());
+					}}).collect(Collectors.toList()));
+				}});
+				setCount(getResults().size());
 			}});
 
 			return thread;

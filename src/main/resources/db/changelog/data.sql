@@ -35,17 +35,17 @@ INSERT INTO user_authorities (user_id, authority_id) VALUES
 (10, 1),
 (10, 2);
 
-/*INSERT INTO forum (title, parent_forum_id) VALUES
-("main forum 1 of forums", null),
-("main forum 2 of threads", null),
-("main forum 3 of forums", null),
-("main forum 4 of threads", null),
-("sub-forum 1 in 1 of threads", 1),
-("sub-forum 2 in 1 of forums", 1),
-("sub-sub-forum 1 in 6 of forums", 6),
-("sub-sub-forum 2 in 6 of forums", 6),
-("sub-sub-forum 3 in 6 of forums", 6),
-("sub-sub-forum 4 in 6 of forums", 6);
+INSERT INTO forum (title, description, parent_forum_id, create_time) VALUES
+("main forum 1", "description", null, "2021-02-07 14:23:58"),
+("main forum 2", "description", null, "2021-02-07 14:23:58"),
+("main forum 3", "description", null, "2021-02-07 14:23:58"),
+("main forum 4", "description", null, "2021-02-07 14:23:58"),
+("sub-forum 1 in 1", "description", 1, "2021-02-07 14:23:58"),
+("sub-forum 2 in 1", "description", 1, "2021-02-07 14:23:58"),
+("sub-sub-forum 1 in 6", "description", 6, "2021-02-07 14:23:58"),
+("sub-sub-forum 2 in 6", "description", 6, "2021-02-07 14:23:58"),
+("sub-sub-forum 3 in 6", "description", 6, "2021-02-07 14:23:58"),
+("sub-sub-forum 4 in 6", "description", 6, "2021-02-07 14:23:58");
 
 INSERT INTO forum_moderators (forum_id, user_id) VALUES
 (1, 6),
@@ -56,38 +56,38 @@ INSERT INTO forum_moderators (forum_id, user_id) VALUES
 (6, 9),
 (7, 10);
 
-INSERT INTO thread (title, message, creator_id, forum_id) VALUES
-("user1 thread1", "user1 thread1 message", 1, 2),
-("user1 thread2", "user1 thread2 message", 1, 2),
-("user2 thread1", "user2 thread1 message", 2, 4),
-("user3 thread1", "user3 thread1 message", 3, 5),
-("admin1 thread1", "admin1 thread1 message", 4, 5);
+INSERT INTO thread (title, message, creator_id, forum_id, create_time) VALUES
+("user1 thread1", "user1 thread1 message", 1, 2, "2021-02-07 14:23:58"),
+("user1 thread2", "user1 thread2 message", 1, 1, "2021-02-07 14:23:58"),
+("user2 thread1", "user2 thread1 message", 2, 4, "2021-02-07 14:23:58"),
+("user3 thread1", "user3 thread1 message", 3, 5, "2021-02-07 14:23:58"),
+("admin1 thread1", "admin1 thread1 message", 4, 6, "2021-02-07 14:23:58");
 
-INSERT INTO post (message, thread_id, creator_id) VALUES
-("user1 thread1 message1", 1, 1),
-("user1 thread1 message2", 1, 2),
-("user1 thread1 message3", 1, 4),
-("user1 thread1 message4", 1, 3),
-("user1 thread1 message5", 1, 2),
-("user1 thread1 message6", 1, 2),
-("user1 thread1 message7", 1, 1),
-("user1 thread1 message8", 1, 4),
-("user1 thread1 message9", 1, 1),
-("user1 thread2 message1", 2, 3),
-("user1 thread2 message2", 2, 3),
-("user1 thread2 message3", 2, 4),
-("user1 thread2 message4", 2, 2),
-("user1 thread2 message5", 2, 1),
-("user1 thread2 message6", 2, 4),
-("user1 thread2 message7", 2, 2),
-("user1 thread2 message8", 2, 2),
-("user2 thread1 message1", 3, 3),
-("user2 thread1 message2", 3, 2),
-("user2 thread1 message3", 3, 4),
-("user2 thread1 message4", 3, 1),
-("user3 thread1 message1", 4, 2),
-("user3 thread1 message2", 4, 2),
-("user3 thread1 message3", 4, 3);*/
+INSERT INTO post (message, thread_id, creator_id, create_time) VALUES
+("user1 thread1 message1", 1, 1, "2021-02-07 14:23:58"),
+("user1 thread1 message2", 1, 2, "2021-02-07 14:23:58"),
+("user1 thread1 message3", 1, 4, "2021-02-07 14:23:58"),
+("user1 thread1 message4", 1, 3, "2021-02-07 14:23:58"),
+("user1 thread1 message5", 1, 2, "2021-02-07 14:23:58"),
+("user1 thread1 message6", 1, 2, "2021-02-07 14:23:58"),
+("user1 thread1 message7", 1, 1, "2021-02-07 14:23:58"),
+("user1 thread1 message8", 1, 4, "2021-02-07 14:23:58"),
+("user1 thread1 message9", 1, 1, "2021-02-07 14:23:58"),
+("user1 thread2 message1", 2, 3, "2021-02-07 14:23:58"),
+("user1 thread2 message2", 2, 3, "2021-02-07 14:23:58"),
+("user1 thread2 message3", 2, 4, "2021-02-07 14:23:58"),
+("user1 thread2 message4", 2, 2, "2021-02-07 14:23:58"),
+("user1 thread2 message5", 2, 1, "2021-02-07 14:23:58"),
+("user1 thread2 message6", 2, 4, "2021-02-07 14:23:58"),
+("user1 thread2 message7", 2, 2, "2021-02-07 14:23:58"),
+("user1 thread2 message8", 2, 2, "2021-02-07 14:23:58"),
+("user2 thread1 message1", 3, 3, "2021-02-07 14:23:58"),
+("user2 thread1 message2", 3, 2, "2021-02-07 14:23:58"),
+("user2 thread1 message3", 3, 4, "2021-02-07 14:23:58"),
+("user2 thread1 message4", 3, 1, "2021-02-07 14:23:58"),
+("user3 thread1 message1", 4, 2, "2021-02-07 14:23:58"),
+("user3 thread1 message2", 4, 2, "2021-02-07 14:23:58"),
+("user3 thread1 message3", 4, 3, "2021-02-07 14:23:58");
 
 
 

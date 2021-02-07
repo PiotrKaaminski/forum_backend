@@ -1,6 +1,7 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.dtos.ForumDto;
+import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.ForumEntity;
@@ -36,17 +37,18 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public List<ForumDto> getMainForumList() {
+	public PaginatedResponse<ForumDto> getMainForumList() {
 		List<ForumEntity> forumEntities = forumRepository.findAllByParentForumId(null);
 
-		return new ArrayList<>() {{
+		PaginatedResponse<ForumDto> response = new PaginatedResponse<>();
+		response.setResults(new ArrayList<>() {{
 			addAll(forumEntities.stream().map(x -> new ForumDto() {{
 				setId(x.getId());
 				setTitle(x.getTitle());
 				setDescription(x.getDescription());
 				setCreateTime(x.getCreateTime());
 
-				setChildForums(
+				setForums(
 						x.getChildForums()
 								.stream().map(ForumServiceImpl.this::mapChildEntityToDto)
 								.collect(Collectors.toList())
@@ -56,7 +58,10 @@ public class ForumServiceImpl implements ForumService {
 						x.getThreadEntities().stream().map(threadService::mapChildEntityToDto).collect(Collectors.toList())
 				);
 			}}).collect(Collectors.toList()));
-		}};
+		}});
+
+		response.setCount(response.getResults().size());
+		return response;
 	}
 
 	@Override
@@ -72,10 +77,12 @@ public class ForumServiceImpl implements ForumService {
 			forum.setBreadcrump(getBreadcrump(forumEntity));
 
 			if (forumEntity.getParentForum() != null) {
-				forum.setParentId(forumEntity.getParentForum().getId());
+				ForumDto parentForum = new ForumDto();
+				parentForum.setId(forumEntity.getParentForum().getId());
+				parentForum.setTitle(forumEntity.getParentForum().getTitle());
 			}
 
-			forum.setChildForums(
+			forum.setForums(
 					forumEntity.getChildForums()
 							.stream().map(this::mapChildEntityToDto)
 							.collect(Collectors.toList())
@@ -162,12 +169,12 @@ public class ForumServiceImpl implements ForumService {
 
 	@Override
 	public List<ForumDto> getBreadcrump(ForumEntity forumEntity) {
-		ArrayList<ForumDto> breadcrump = new ArrayList<>();
+		ArrayList<ForumDto> parentList = new ArrayList<>();
 		do {
 			ForumDto tempForum = new ForumDto();
 			tempForum.setTitle(forumEntity.getTitle());
 			tempForum.setId(forumEntity.getId());
-			breadcrump.add(tempForum);
+			parentList.add(tempForum);
 			if (forumEntity.getParentForum() != null) {
 				forumEntity = forumEntity.getParentForum();
 			} else {
@@ -175,6 +182,11 @@ public class ForumServiceImpl implements ForumService {
 			}
 		} while (forumEntity != null);
 
+		ArrayList<ForumDto> breadcrump = new ArrayList<>();
+
+		for (int i = parentList.size() - 1; i >= 0; i--) {
+			breadcrump.add(parentList.get(i));
+		}
 		return breadcrump;
 	}
 

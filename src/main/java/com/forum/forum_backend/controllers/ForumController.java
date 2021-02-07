@@ -1,6 +1,7 @@
 package com.forum.forum_backend.controllers;
 
 import com.forum.forum_backend.dtos.ForumDto;
+import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.services.interfaces.ForumService;
@@ -8,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/forums")
@@ -21,7 +21,7 @@ public class ForumController {
 	}
 
 	@GetMapping
-	public List<ForumDto> getMainForumList() {
+	public PaginatedResponse<ForumDto> getMainForumList() {
 		return forumService.getMainForumList();
 	}
 

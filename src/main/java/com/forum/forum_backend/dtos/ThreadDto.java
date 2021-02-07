@@ -19,7 +19,7 @@ public class ThreadDto {
 	private Integer postsAmount;
 	private int likesAmount;
 	private Timestamp createTime;
-	private List<PostDto> posts;
+	private PaginatedResponse<PostDto> posts;
 	private List<ForumDto> breadcrump;
 
 
@@ -79,11 +79,11 @@ public class ThreadDto {
 		this.createTime = createTime;
 	}
 
-	public List<PostDto> getPosts() {
+	public PaginatedResponse<PostDto> getPosts() {
 		return posts;
 	}
 
-	public void setPosts(List<PostDto> posts) {
+	public void setPosts(PaginatedResponse<PostDto> posts) {
 		this.posts = posts;
 	}
 

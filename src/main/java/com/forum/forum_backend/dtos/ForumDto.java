@@ -16,9 +16,9 @@ public class ForumDto {
 	@NotEmpty(message = "Forum description cannot be empty")
 	private String description;
 	private Timestamp createTime;
-	private Integer parentId;
+	private ForumDto parent;
 	private Integer childrenAmount;
-	private List<ForumDto> childForums;
+	private List<ForumDto> forums;
 	private List<ThreadDto> threads;
 	private List<ForumDto> breadcrump;
 
@@ -54,12 +54,12 @@ public class ForumDto {
 		this.createTime = createTime;
 	}
 
-	public Integer getParentId() {
-		return parentId;
+	public ForumDto getParent() {
+		return parent;
 	}
 
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
+	public void setParent(ForumDto parent) {
+		this.parent = parent;
 	}
 
 	public Integer getChildrenAmount() {
@@ -70,12 +70,12 @@ public class ForumDto {
 		this.childrenAmount = childrenAmount;
 	}
 
-	public List<ForumDto> getChildForums() {
-		return childForums;
+	public List<ForumDto> getForums() {
+		return forums;
 	}
 
-	public void setChildForums(List<ForumDto> childForums) {
-		this.childForums = childForums;
+	public void setForums(List<ForumDto> forums) {
+		this.forums = forums;
 	}
 
 	public List<ThreadDto> getThreads() {
