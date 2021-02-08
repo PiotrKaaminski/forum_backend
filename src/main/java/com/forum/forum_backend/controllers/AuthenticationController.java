@@ -20,7 +20,7 @@ public class AuthenticationController {
 	@PostMapping("/login")
 	public UserDto authenticateUser(@RequestBody UserDto userDto) {return authService.login(userDto);}
 
-	@PostMapping("/register")
+	@PostMapping("/users")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void register(@Valid @RequestBody UserDto userDto) {
 		authService.registerUser(userDto);

@@ -61,7 +61,7 @@ public class ThreadServiceImpl implements ThreadService {
 			UserDto threadAuthor = new UserDto();
 			threadAuthor.setId(threadEntity.getUser().getId());
 			threadAuthor.setUsername(threadEntity.getUser().getUsername());
-			thread.setThreadAuthor(threadAuthor);
+			thread.setCreator(threadAuthor);
 
 			thread.setLikesAmount(threadEntity.getUsersLikes().size());
 			thread.setPostsAmount(null);
@@ -94,7 +94,8 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public void addThread(int forumId, ThreadDto threadDto) throws NotFoundException {
+	public void addThread(ThreadDto threadDto) throws NotFoundException {
+		int forumId = threadDto.getForum().getId();
 		try {
 			ForumEntity parentForum = forumRepository.getOne(forumId);
 
@@ -179,7 +180,7 @@ public class ThreadServiceImpl implements ThreadService {
 			UserDto author = new UserDto();
 			author.setId(threadEntity.getUser().getId());
 			author.setUsername(threadEntity.getUser().getUsername());
-			setThreadAuthor(author);
+			setCreator(author);
 
 			setPostsAmount(threadEntity.getPosts().size());
 			setLikesAmount(threadEntity.getUsersLikes().size());

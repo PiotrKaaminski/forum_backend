@@ -21,9 +21,9 @@ public class PostController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addPost(@RequestParam(name = "threadId") int threadId, @Valid @RequestBody PostDto postDto)
+	public void addPost(@Valid @RequestBody PostDto postDto)
 			throws NotFoundException {
-		postService.addPost(threadId, postDto);
+		postService.addPost(postDto.getThreadId(), postDto);
 	}
 
 	@PostMapping("/{postId}")

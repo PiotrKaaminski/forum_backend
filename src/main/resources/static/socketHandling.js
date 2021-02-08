@@ -1,7 +1,7 @@
 var stompClient = null;
 
 function connect() {
-	var socket = new SockJS('/my-socket-endpoint');
+	var socket = new SockJS('/socket-handshake');
 	stompClient = Stomp.over(socket);
 	stompClient.connect({"Authorization": "Bearer " + jwt}, function(frame) {
 

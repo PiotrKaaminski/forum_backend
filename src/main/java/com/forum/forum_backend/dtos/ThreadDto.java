@@ -3,6 +3,7 @@ package com.forum.forum_backend.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,9 @@ public class ThreadDto {
 	private String title;
 	@NotEmpty(message = "Message cannot be empty")
 	private String message;
-	private UserDto threadAuthor;
+	private UserDto creator;
+	@NotNull(message = "Parent forum cannot be empty")
+	private ForumDto forum;
 	private Integer postsAmount;
 	private int likesAmount;
 	private Timestamp createTime;
@@ -47,12 +50,20 @@ public class ThreadDto {
 		this.message = message;
 	}
 
-	public UserDto getThreadAuthor() {
-		return threadAuthor;
+	public UserDto getCreator() {
+		return creator;
 	}
 
-	public void setThreadAuthor(UserDto threadAuthor) {
-		this.threadAuthor = threadAuthor;
+	public void setCreator(UserDto creator) {
+		this.creator = creator;
+	}
+
+	public ForumDto getForum() {
+		return forum;
+	}
+
+	public void setForum(ForumDto forum) {
+		this.forum = forum;
 	}
 
 	public Integer getPostsAmount() {

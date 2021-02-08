@@ -33,15 +33,9 @@ public class ForumController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public void addMainForum(@Valid @RequestBody ForumDto forumDto) throws NotFoundException, UnauthorizedException {
-		forumService.addForum(forumDto, null);
+		forumService.addForum(forumDto);
 	}
 
-	@PostMapping("/{forumId}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void addSubForum(@Valid @RequestBody ForumDto forumDto, @PathVariable int forumId)
-			throws UnauthorizedException, NotFoundException {
-		forumService.addForum(forumDto, forumId);
-	}
 
 	@PutMapping("/{forumId}")
 	public void modifyForum(@Valid @RequestBody ForumDto forumDto, @PathVariable int forumId)

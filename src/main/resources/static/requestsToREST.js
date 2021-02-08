@@ -15,10 +15,10 @@ function getJwt() {
 
 
 	xhr.onload = function() {
-		var response = xhr.responseText;
+		var response = JSON.parse(xhr.responseText);
 		if (xhr.readyState === 4 && xhr.status === 200) {
 			console.log(response);
-			jwt = response;
+			jwt = response.jwt;
 		} else {
 			console.error(response);
 		}

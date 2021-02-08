@@ -102,8 +102,9 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public void addForum(ForumDto forumDto, Integer parentForumId)
+	public void addForum(ForumDto forumDto)
 			throws UnauthorizedException, NotFoundException {
+		Integer parentForumId = forumDto.getParent().getId();
 		try {
 			ForumEntity forumEntity = new ForumEntity();
 			ForumEntity parentForumEntity = null;

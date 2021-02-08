@@ -28,9 +28,9 @@ public class ThreadController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addThread(@RequestParam(name = "forumId") int forumId, @Valid @RequestBody ThreadDto threadDto)
+	public void addThread(@Valid @RequestBody ThreadDto threadDto)
 			throws NotFoundException {
-		threadService.addThread(forumId, threadDto);
+		threadService.addThread(threadDto);
 	}
 
 	@PostMapping("/{threadId}")
