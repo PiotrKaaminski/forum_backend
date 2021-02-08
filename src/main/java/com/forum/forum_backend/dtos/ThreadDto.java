@@ -23,7 +23,7 @@ public class ThreadDto {
 	private int likesAmount;
 	private Timestamp createTime;
 	private PaginatedResponse<PostDto> posts;
-	private List<ForumDto> breadcrump;
+	private List<ForumDto> breadcrumb;
 
 
 	public int getId() {
@@ -98,20 +98,20 @@ public class ThreadDto {
 		this.posts = posts;
 	}
 
-	public List<ForumDto> getBreadcrump() {
-		return breadcrump;
+	public List<ForumDto> getBreadcrumb() {
+		return breadcrumb;
 	}
 
-	public void setBreadcrump(List<ForumDto> breadcrump) {
-		this.breadcrump = breadcrump;
+	public void setBreadcrumb(List<ForumDto> breadcrumb) {
+		this.breadcrumb = breadcrumb;
 	}
 
 	//helper methods
 
-	public void addBreadcrump(ForumDto forumDto) {
-		if (this.breadcrump == null) {
-			breadcrump = new ArrayList<>();
+	public void addBreadcrumb(ForumDto forumDto) {
+		if (this.breadcrumb == null) {
+			breadcrumb = new ArrayList<>();
 		}
-		breadcrump.add(forumDto);
+		breadcrumb.add(forumDto);
 	}
 }

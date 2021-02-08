@@ -74,7 +74,7 @@ public class ForumServiceImpl implements ForumService {
 			forum.setTitle(forumEntity.getTitle());
 			forum.setDescription(forumEntity.getDescription());
 			forum.setCreateTime(forumEntity.getCreateTime());
-			forum.setBreadcrump(getBreadcrump(forumEntity));
+			forum.setBreadcrumb(getBreadcrumb(forumEntity));
 
 			if (forumEntity.getParentForum() != null) {
 				ForumDto parentForum = new ForumDto();
@@ -169,7 +169,7 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public List<ForumDto> getBreadcrump(ForumEntity forumEntity) {
+	public List<ForumDto> getBreadcrumb(ForumEntity forumEntity) {
 		ArrayList<ForumDto> parentList = new ArrayList<>();
 		do {
 			ForumDto tempForum = new ForumDto();
@@ -183,12 +183,12 @@ public class ForumServiceImpl implements ForumService {
 			}
 		} while (forumEntity != null);
 
-		ArrayList<ForumDto> breadcrump = new ArrayList<>();
+		ArrayList<ForumDto> breadcrumb = new ArrayList<>();
 
 		for (int i = parentList.size() - 1; i >= 0; i--) {
-			breadcrump.add(parentList.get(i));
+			breadcrumb.add(parentList.get(i));
 		}
-		return breadcrump;
+		return breadcrumb;
 	}
 
 	private ForumDto mapChildEntityToDto(ForumEntity forumEntity) {

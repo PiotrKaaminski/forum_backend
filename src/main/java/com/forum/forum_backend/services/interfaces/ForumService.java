@@ -14,5 +14,5 @@ public interface ForumService {
 	void addForum(ForumDto forumDto) throws NotFoundException, UnauthorizedException;
 	void modifyForum(ForumDto forumDto, int forumId) throws NotFoundException, UnauthorizedException;
 	void deleteForum(int forumId) throws NotFoundException, UnauthorizedException;
-	List<ForumDto> getBreadcrump(ForumEntity forumEntity);
+	List<ForumDto> getBreadcrumb(ForumEntity forumEntity);
 }
