@@ -17,6 +17,7 @@ public class PostDto {
 	private int threadId;
 	private int likesAmount;
 	private Timestamp createTime;
+	private boolean canModerate;
 
 	public int getId() {
 		return id;
@@ -64,5 +65,13 @@ public class PostDto {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public boolean isCanModerate() {
+		return canModerate;
+	}
+
+	public void setCanModerate(boolean canModerate) {
+		this.canModerate = canModerate;
 	}
 }

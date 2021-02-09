@@ -47,6 +47,7 @@ public class ForumServiceImpl implements ForumService {
 				setTitle(x.getTitle());
 				setDescription(x.getDescription());
 				setCreateTime(x.getCreateTime());
+				setCanModerate(userService.isUserPermittedToModerate(null));
 
 				setForums(
 						x.getChildForums()
@@ -75,6 +76,7 @@ public class ForumServiceImpl implements ForumService {
 			forum.setDescription(forumEntity.getDescription());
 			forum.setCreateTime(forumEntity.getCreateTime());
 			forum.setBreadcrumb(getBreadcrumb(forumEntity));
+			forum.setCanModerate(userService.isUserPermittedToModerate(forumEntity.getParentForum()));
 
 			if (forumEntity.getParentForum() != null) {
 				ForumDto parentForum = new ForumDto();
@@ -197,6 +199,8 @@ public class ForumServiceImpl implements ForumService {
 			setTitle(forumEntity.getTitle());
 			setCreateTime(forumEntity.getCreateTime());
 			setDescription(forumEntity.getDescription());
+			setCanModerate(userService.isUserPermittedToModerate(forumEntity.getParentForum()));
+
 
 			if (!forumEntity.getChildForums().isEmpty()) {
 				setChildrenAmount(forumEntity.getChildForums().size());

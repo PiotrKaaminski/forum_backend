@@ -87,7 +87,7 @@ public class PostServiceImpl implements PostService {
 		try {
 			PostEntity post = postRepository.getOne(postId);
 
-			if (userService.isUserAnAuthor(post.getUser())) {
+			if (userService.isUserAnAuthor(post.getUser()) || userService.isUserPermittedToModerate(post.getThread().getParentForum())) {
 				post.setMessage(postDto.getMessage());
 			} else {
 				throw new UnauthorizedException("You have no permissions to modify this post");
@@ -104,7 +104,7 @@ public class PostServiceImpl implements PostService {
 		try {
 			PostEntity post = postRepository.getOne(postId);
 
-			if (userService.isUserAnAuthor(post.getUser())) {
+			if (userService.isUserAnAuthor(post.getUser()) || userService.isUserPermittedToModerate(post.getThread().getParentForum())) {
 				postRepository.delete(post);
 			} else {
 				throw new UnauthorizedException("You have no permissions to delete this post");
@@ -127,8 +127,9 @@ public class PostServiceImpl implements PostService {
 			post.setPostAuthor(postAuthor);
 
 			post.setLikesAmount(postEntity.getUsersLikes().size());
-
 			post.setCreateTime(postEntity.getCreateTime());
+
+			post.setCanModerate(userService.isUserAnAuthor(postEntity.getUser()) || userService.isUserPermittedToModerate(postEntity.getThread().getParentForum()));
 
 			return post;
 		} catch (EntityNotFoundException ex) {

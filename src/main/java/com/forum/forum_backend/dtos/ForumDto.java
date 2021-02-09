@@ -21,6 +21,7 @@ public class ForumDto {
 	private List<ForumDto> forums;
 	private List<ThreadDto> threads;
 	private List<ForumDto> breadcrumb;
+	private boolean canModerate;
 
 	public Integer getId() {
 		return id;
@@ -92,6 +93,14 @@ public class ForumDto {
 
 	public void setBreadcrumb(List<ForumDto> breadcrumb) {
 		this.breadcrumb = breadcrumb;
+	}
+
+	public boolean isCanModerate() {
+		return canModerate;
+	}
+
+	public void setCanModerate(boolean canModerate) {
+		this.canModerate = canModerate;
 	}
 
 	//helper methods

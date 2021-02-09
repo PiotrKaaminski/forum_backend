@@ -62,12 +62,13 @@ public class ThreadServiceImpl implements ThreadService {
 			threadAuthor.setId(threadEntity.getUser().getId());
 			threadAuthor.setUsername(threadEntity.getUser().getUsername());
 			thread.setCreator(threadAuthor);
-
 			thread.setLikesAmount(threadEntity.getUsersLikes().size());
-
 			thread.setPostsAmount(null);
 			thread.setCreateTime(threadEntity.getCreateTime());
 			thread.setBreadcrumb(forumService.getBreadcrumb(threadEntity.getParentForum()));
+
+
+			thread.setCanModerate(userService.isUserAnAuthor(threadEntity.getUser()) || userService.isUserPermittedToModerate(threadEntity.getParentForum()));
 
 			thread.setPosts(new PaginatedResponse<>() {{
 				setResults(new ArrayList<>() {{
@@ -78,6 +79,8 @@ public class ThreadServiceImpl implements ThreadService {
 						UserDto postAuthor = new UserDto();
 						postAuthor.setId(x.getUser().getId());
 						postAuthor.setUsername(x.getUser().getUsername());
+
+						setCanModerate(userService.isUserAnAuthor(x.getUser()) || userService.isUserPermittedToModerate(x.getThread().getParentForum()));
 
 						setPostAuthor(postAuthor);
 						setLikesAmount(x.getUsersLikes().size());
@@ -141,7 +144,7 @@ public class ThreadServiceImpl implements ThreadService {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
 
-			if (userService.isUserAnAuthor(thread.getUser())) {
+			if (userService.isUserAnAuthor(thread.getUser()) || userService.isUserPermittedToModerate(thread.getParentForum())) {
 				if (threadDto.getTitle() != null) {
 					thread.setTitle(threadDto.getTitle());
 				}
@@ -162,7 +165,7 @@ public class ThreadServiceImpl implements ThreadService {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
 
-			if (userService.isUserAnAuthor(thread.getUser())) {
+			if (userService.isUserAnAuthor(thread.getUser()) || userService.isUserPermittedToModerate(thread.getParentForum())) {
 				threadRepository.delete(thread);
 			} else {
 				throw new UnauthorizedException("You have no permissions to delete this thread");
@@ -178,6 +181,8 @@ public class ThreadServiceImpl implements ThreadService {
 			setId(threadEntity.getId());
 			setTitle(threadEntity.getTitle());
 			setCreateTime(threadEntity.getCreateTime());
+
+			setCanModerate(userService.isUserPermittedToModerate(threadEntity.getParentForum()) || userService.isUserAnAuthor(threadEntity.getUser()));
 
 			UserDto author = new UserDto();
 			author.setId(threadEntity.getUser().getId());

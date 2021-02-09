@@ -24,6 +24,7 @@ public class ThreadDto {
 	private Timestamp createTime;
 	private PaginatedResponse<PostDto> posts;
 	private List<ForumDto> breadcrumb;
+	private boolean canModerate;
 
 
 	public int getId() {
@@ -104,6 +105,14 @@ public class ThreadDto {
 
 	public void setBreadcrumb(List<ForumDto> breadcrumb) {
 		this.breadcrumb = breadcrumb;
+	}
+
+	public boolean isCanModerate() {
+		return canModerate;
+	}
+
+	public void setCanModerate(boolean canModerate) {
+		this.canModerate = canModerate;
 	}
 
 	//helper methods
