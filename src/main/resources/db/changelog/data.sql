@@ -21,14 +21,19 @@ INSERT INTO user_authorities (user_id, authority_id) VALUES
 (2, 1),
 (3, 1),
 (4, 1),
-(4, 3),
+(4, 4),
 (5, 1),
-(5, 2),
+(5, 3),
 (6, 1),
+(6, 2),
 (7, 1),
+(7, 2),
 (8, 1),
+(8, 2),
 (9, 1),
-(10, 1);
+(9, 2),
+(10, 1),
+(10, 2);
 
 INSERT INTO forum (title, description, parent_forum_id, create_time) VALUES
 ("main forum 1", "description", null, "2021-02-07 14:23:58"),

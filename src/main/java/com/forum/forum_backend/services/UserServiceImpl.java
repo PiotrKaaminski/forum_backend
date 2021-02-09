@@ -1,16 +1,21 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
+import com.forum.forum_backend.dtos.UserDto;
+import com.forum.forum_backend.models.AuthorityEntity;
 import com.forum.forum_backend.models.ForumEntity;
 import com.forum.forum_backend.models.UserEntity;
+import com.forum.forum_backend.repositories.AuthorityRepository;
 import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +28,13 @@ import java.util.Collection;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
 	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final AuthorityRepository authorityRepository;
 
-	public UserServiceImpl(UserRepository userRepository) {
+	public UserServiceImpl(UserRepository userRepository, @Lazy BCryptPasswordEncoder bCryptPasswordEncoder, AuthorityRepository authorityRepository) {
 		this.userRepository = userRepository;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.authorityRepository = authorityRepository;
 	}
 
 	@Override
@@ -104,6 +113,31 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void addUser(UserDto userDto){
+		UserEntity user = new UserEntity();
+		user.setUsername(userDto.getUsername());
+		user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+
+		AuthorityEntity authority = authorityRepository.findByAuthority("USER");
+		user.addAuthority(authority);
+
+		userRepository.save(user);
+
+	}
+
+	@Override
+	public UserDto myAccountInfo() {
+		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserEntity userEntity = getUserById(userPrincipal.getId());
+		UserDto user = new UserDto();
+
+		user.setId(userEntity.getId());
+		user.setUsername(userEntity.getUsername());
+		//email not implemented, email is now hard-coded to UserDto
+		return user;
 	}
 }
 

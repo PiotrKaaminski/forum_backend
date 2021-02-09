@@ -52,6 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.hasAuthority("USER")
 				.antMatchers(HttpMethod.DELETE, "/api/forums/*")
 				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
+				.antMatchers(HttpMethod.GET, "/api/users/me")
+				.authenticated()
 				.and()
 				.csrf().disable()
 				.exceptionHandling().authenticationEntryPoint(unauthorizedHandler)

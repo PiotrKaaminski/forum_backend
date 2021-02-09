@@ -3,8 +3,6 @@ package com.forum.forum_backend.services;
 import com.forum.forum_backend.config.JwtTokenProvider;
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.UserDto;
-import com.forum.forum_backend.models.AuthorityEntity;
-import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.AuthorityRepository;
 import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.AuthenticationService;
@@ -55,19 +53,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		user.setJwt(jwtTokenProvider.generateToken(authentication));
 
 		return user;
-	}
-
-	@Override
-	public void registerUser(UserDto userDto){
-		UserEntity user = new UserEntity();
-		user.setUsername(userDto.getUsername());
-		user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-
-		AuthorityEntity authority = authorityRepository.findByAuthority("USER");
-		user.addAuthority(authority);
-
-		userRepository.save(user);
-
 	}
 
 }
