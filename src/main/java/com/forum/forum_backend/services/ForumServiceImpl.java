@@ -55,9 +55,7 @@ public class ForumServiceImpl implements ForumService {
 								.collect(Collectors.toList())
 				);
 
-				setThreads(
-						x.getThreadEntities().stream().map(threadService::mapChildEntityToDto).collect(Collectors.toList())
-				);
+				setThreads(null);
 			}}).collect(Collectors.toList()));
 		}});
 

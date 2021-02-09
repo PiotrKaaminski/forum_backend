@@ -103,6 +103,10 @@ public class ThreadServiceImpl implements ThreadService {
 		try {
 			ForumEntity parentForum = forumRepository.getOne(forumId);
 
+			if (parentForum.getParentForum() == null) {
+				throw new UnauthorizedException("Cannot add thread to main forum");
+			}
+
 			UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			int userId = user.getId();
 			UserEntity owner = userService.getUserById(userId);
@@ -113,7 +117,7 @@ public class ThreadServiceImpl implements ThreadService {
 			thread.setParentForum(parentForum);
 			int threadId = threadRepository.save(thread).getId();
 			return getThread(threadId);
-		} catch (EntityNotFoundException ex) {
+		} catch (EntityNotFoundException | UnauthorizedException ex) {
 			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
 		}
 	}
