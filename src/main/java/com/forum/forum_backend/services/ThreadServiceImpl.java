@@ -64,6 +64,7 @@ public class ThreadServiceImpl implements ThreadService {
 			thread.setCreator(threadAuthor);
 
 			thread.setLikesAmount(threadEntity.getUsersLikes().size());
+
 			thread.setPostsAmount(null);
 			thread.setCreateTime(threadEntity.getCreateTime());
 			thread.setBreadcrumb(forumService.getBreadcrumb(threadEntity.getParentForum()));
@@ -94,7 +95,7 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public void addThread(ThreadDto threadDto) throws NotFoundException {
+	public ThreadDto addThread(ThreadDto threadDto) throws NotFoundException {
 		int forumId = threadDto.getForum().getId();
 		try {
 			ForumEntity parentForum = forumRepository.getOne(forumId);
@@ -107,7 +108,8 @@ public class ThreadServiceImpl implements ThreadService {
 
 			ThreadEntity thread = new ThreadEntity(threadDto.getTitle(), threadDto.getMessage(), owner, timestamp);
 			thread.setParentForum(parentForum);
-			threadRepository.save(thread);
+			int threadId = threadRepository.save(thread).getId();
+			return getThread(threadId);
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
 		}

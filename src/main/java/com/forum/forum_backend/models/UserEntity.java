@@ -22,19 +22,19 @@ public class UserEntity {
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
-	private Collection<AuthorityEntity> authorities;
+	private Collection<AuthorityEntity> authorities = new ArrayList<>();
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "thread_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "thread_id"))
-	private List<ThreadEntity> likedThreads ;
+	private List<ThreadEntity> likedThreads = new ArrayList<>();
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "post_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "post_id"))
-	private List<PostEntity> likedPosts;
+	private List<PostEntity> likedPosts = new ArrayList<>();
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "forum_moderators", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "forum_id"))
-	private List<ForumEntity> moderatedForums;
+	private List<ForumEntity> moderatedForums = new ArrayList<>();
 
 	// Getters and setters
 

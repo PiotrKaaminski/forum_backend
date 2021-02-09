@@ -32,11 +32,11 @@ public class ThreadEntity {
 	private UserEntity user;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "thread")
-	private List<PostEntity> posts;
+	private List<PostEntity> posts = new ArrayList<>();
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "thread_likes", joinColumns = @JoinColumn(name = "thread_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private List<UserEntity> usersLikes;
+	private List<UserEntity> usersLikes = new ArrayList<>();
 
 	public ThreadEntity() { }
 

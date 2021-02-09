@@ -30,7 +30,7 @@ public class PostEntity {
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "post_likes", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private List<UserEntity> usersLikes ;
+	private List<UserEntity> usersLikes = new ArrayList<>();
 
 	public int getId() {
 		return id;

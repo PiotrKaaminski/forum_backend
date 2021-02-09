@@ -31,14 +31,14 @@ public class ForumEntity {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "parent_forum_id")
-	private List<ForumEntity> childForums;
+	private List<ForumEntity> childForums = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentForum")
-	private List<ThreadEntity> threadEntities;
+	private List<ThreadEntity> threadEntities = new ArrayList<>();
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "forum_moderators", joinColumns = @JoinColumn(name = "forum_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private List<UserEntity> moderators;
+	private List<UserEntity> moderators = new ArrayList<>();
 
 	public int getId() {
 		return id;

@@ -2,6 +2,7 @@ package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.PostDto;
+import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.PostEntity;
@@ -36,7 +37,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void addPost( int threadId, PostDto postDto) throws NotFoundException {
+	public PostDto addPost( int threadId, PostDto postDto) throws NotFoundException {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
 
@@ -53,7 +54,9 @@ public class PostServiceImpl implements PostService {
 			post.setThread(thread);
 			post.setCreateTime(timestamp);
 
-			postRepository.save(post);
+			int postId = postRepository.save(post).getId();
+
+			return getPost(postId);
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Thread with id = " + threadId + " doesn't exist");
 		}
@@ -106,6 +109,28 @@ public class PostServiceImpl implements PostService {
 			} else {
 				throw new UnauthorizedException("You have no permissions to delete this post");
 			}
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Post with id = " + postId + " doesn't exist");
+		}
+	}
+
+	private PostDto getPost(int postId) throws NotFoundException {
+		try {
+			PostEntity postEntity = postRepository.getOne(postId);
+			PostDto post = new PostDto();
+			post.setId(postEntity.getId());
+			post.setMessage(postEntity.getMessage());
+
+			UserDto postAuthor = new UserDto();
+			postAuthor.setId(postEntity.getUser().getId());
+			postAuthor.setUsername(postEntity.getUser().getUsername());
+			post.setPostAuthor(postAuthor);
+
+			post.setLikesAmount(postEntity.getUsersLikes().size());
+
+			post.setCreateTime(postEntity.getCreateTime());
+
+			return post;
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Post with id = " + postId + " doesn't exist");
 		}
