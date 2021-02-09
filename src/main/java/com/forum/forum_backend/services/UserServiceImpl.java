@@ -67,6 +67,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public boolean isUserAnAuthor(UserEntity entryAuthor) {
+
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return false;
+		}
+
 		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		int userId = user.getId();
 
@@ -75,6 +80,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public boolean isUserPermittedToModerate(ForumEntity forumEntity) {
+
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return false;
+		}
+
 		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (user.hasAuthority("ADMIN") || user.hasAuthority("HEAD_MODERATOR")) {

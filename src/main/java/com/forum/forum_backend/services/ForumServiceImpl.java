@@ -2,9 +2,12 @@ package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.dtos.ForumDto;
 import com.forum.forum_backend.dtos.PaginatedResponse;
+import com.forum.forum_backend.dtos.ThreadDto;
+import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.ForumEntity;
+import com.forum.forum_backend.models.ThreadEntity;
 import com.forum.forum_backend.repositories.ForumRepository;
 import com.forum.forum_backend.services.interfaces.ForumService;
 import com.forum.forum_backend.services.interfaces.ThreadService;
@@ -199,6 +202,19 @@ public class ForumServiceImpl implements ForumService {
 			setDescription(forumEntity.getDescription());
 			setCanModerate(userService.isUserPermittedToModerate(forumEntity.getParentForum()));
 
+			if (forumEntity.getThreadEntities().size() > 0) {
+				ThreadDto latestThread = new ThreadDto();
+				ThreadEntity threadEntity = forumEntity.getThreadEntities().get(forumEntity.getThreadEntities().size() - 1);
+				latestThread.setId(threadEntity.getId());
+				latestThread.setTitle(threadEntity.getTitle());
+				latestThread.setCreateTime(threadEntity.getCreateTime());
+
+				UserDto creator = new UserDto();
+				creator.setId(threadEntity.getUser().getId());
+				creator.setUsername(threadEntity.getUser().getUsername());
+				latestThread.setCreator(creator);
+				setLatestThread(latestThread);
+			}
 
 			if (!forumEntity.getChildForums().isEmpty()) {
 				setChildrenAmount(forumEntity.getChildForums().size());

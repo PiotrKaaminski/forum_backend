@@ -22,6 +22,7 @@ public class ForumDto {
 	private List<ThreadDto> threads;
 	private List<ForumDto> breadcrumb;
 	private boolean canModerate;
+	private ThreadDto latestThread;
 
 	public Integer getId() {
 		return id;
@@ -101,6 +102,14 @@ public class ForumDto {
 
 	public void setCanModerate(boolean canModerate) {
 		this.canModerate = canModerate;
+	}
+
+	public ThreadDto getLatestThread() {
+		return latestThread;
+	}
+
+	public void setLatestThread(ThreadDto latestThread) {
+		this.latestThread = latestThread;
 	}
 
 	//helper methods
