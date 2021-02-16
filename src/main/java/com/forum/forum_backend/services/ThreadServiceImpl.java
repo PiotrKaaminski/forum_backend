@@ -1,10 +1,7 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
-import com.forum.forum_backend.dtos.PaginatedResponse;
-import com.forum.forum_backend.dtos.PostDto;
-import com.forum.forum_backend.dtos.ThreadDto;
-import com.forum.forum_backend.dtos.UserDto;
+import com.forum.forum_backend.dtos.*;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.ForumEntity;
@@ -179,6 +176,8 @@ public class ThreadServiceImpl implements ThreadService {
 		}
 	}
 
+
+
 	@Override
 	public ThreadDto mapChildEntityToDto(ThreadEntity threadEntity) {
 		return new ThreadDto() {{
@@ -187,6 +186,7 @@ public class ThreadServiceImpl implements ThreadService {
 			setCreateTime(threadEntity.getCreateTime());
 
 			setCanModerate(userService.isUserPermittedToModerate(threadEntity.getParentForum()) || userService.isUserAnAuthor(threadEntity.getUser()));
+			setLocked(threadEntity.isLocked());
 
 			UserDto author = new UserDto();
 			author.setId(threadEntity.getUser().getId());
@@ -196,5 +196,21 @@ public class ThreadServiceImpl implements ThreadService {
 			setPostsAmount(threadEntity.getPosts().size());
 			setLikesAmount(threadEntity.getUsersLikes().size());
 		}};
+	}
+
+	@Override
+	public void toggleLocked(int threadId, LockThreadDto lockThreadDto) throws NotFoundException, UnauthorizedException {
+		try {
+			ThreadEntity threadEntity = threadRepository.getOne(threadId);
+
+			if (userService.isUserAnAuthor(threadEntity.getUser()) || userService.isUserPermittedToModerate(threadEntity.getParentForum())) {
+				threadEntity.setLocked(lockThreadDto.isLocked());
+			} else {
+				throw new UnauthorizedException("You have no permission to lock thread with id = " + threadId);
+			}
+
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("Thread with id = " + threadId + " doesn't exist");
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.forum.forum_backend.controllers;
 
+import com.forum.forum_backend.dtos.LockThreadDto;
 import com.forum.forum_backend.dtos.ThreadDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
@@ -50,6 +51,12 @@ public class ThreadController {
 	public void deleteTopic(@PathVariable int threadId)
 			throws UnauthorizedException, NotFoundException {
 		threadService.deleteThread(threadId);
+	}
+
+	@PatchMapping("/{threadId}")
+	public void toggleLocked(@PathVariable int threadId, @RequestBody LockThreadDto lockThreadDto)
+			throws NotFoundException, UnauthorizedException {
+		threadService.toggleLocked(threadId, lockThreadDto);
 	}
 
 }

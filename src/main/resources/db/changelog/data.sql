@@ -53,13 +53,13 @@ INSERT INTO forum (title, description, parent_forum_id, create_time) VALUES
 /*INSERT INTO forum_moderators (forum_id, user_id) VALUES*/
 
 
-INSERT INTO thread (title, message, creator_id, forum_id, create_time) VALUES
-("user1 thread1", "message", 1, 5, "2021-02-07 14:23:58"),
-("user2 thread2", "message", 2, 6, "2021-02-07 14:23:58"),
-("user3 thread3", "message", 3, 7, "2021-02-07 14:23:58"),
-("user2 thread4", "message", 2, 11, "2021-02-07 14:23:58"),
-("user2 thread5", "message", 2, 11, "2021-02-07 14:23:58"),
-("user2 thread6", "message", 2, 11, "2021-02-07 14:23:58");
+INSERT INTO thread (title, message, creator_id, forum_id, create_time, locked) VALUES
+("user1 thread1", "message", 1, 5, "2021-02-07 14:23:58", false),
+("user2 thread2", "message", 2, 6, "2021-02-07 14:23:58", false),
+("user3 thread3", "message", 3, 7, "2021-02-07 14:23:58", false),
+("user2 thread4", "message", 2, 11, "2021-02-07 14:23:58", false),
+("user2 thread5", "message", 2, 11, "2021-02-07 14:23:58", false),
+("user2 thread6", "message", 2, 11, "2021-02-07 14:23:58", false);
 
 INSERT INTO post (message, thread_id, creator_id, create_time) VALUES
 ("user3 post1", 1, 3, "2021-02-07 14:23:58"),

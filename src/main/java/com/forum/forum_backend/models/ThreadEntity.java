@@ -23,6 +23,9 @@ public class ThreadEntity {
 	@Column(name = "create_time")
 	private Timestamp createTime;
 
+	@Column(name = "locked")
+	private boolean locked;
+
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "forum_id")
 	private ForumEntity parentForum;
@@ -71,6 +74,22 @@ public class ThreadEntity {
 		this.message = message;
 	}
 
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
+
 	public ForumEntity getParentForum() {
 		return parentForum;
 	}
@@ -101,14 +120,6 @@ public class ThreadEntity {
 
 	public void setUsersLikes(List<UserEntity> usersLikes) {
 		this.usersLikes = usersLikes;
-	}
-
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
 	}
 
 	// helper methods

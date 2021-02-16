@@ -25,6 +25,7 @@ public class ThreadDto {
 	private PaginatedResponse<PostDto> posts;
 	private List<ForumDto> breadcrumb;
 	private boolean canModerate;
+	private boolean locked;
 
 
 	public int getId() {
@@ -113,6 +114,14 @@ public class ThreadDto {
 
 	public void setCanModerate(boolean canModerate) {
 		this.canModerate = canModerate;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 
 	//helper methods

@@ -1,5 +1,6 @@
 package com.forum.forum_backend.services.interfaces;
 
+import com.forum.forum_backend.dtos.LockThreadDto;
 import com.forum.forum_backend.dtos.ThreadDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
@@ -13,4 +14,5 @@ public interface ThreadService {
 	void modifyThread(ThreadDto threadDto, int threadId) throws UnauthorizedException, NotFoundException;
 	void deleteThread(int threadId) throws UnauthorizedException, NotFoundException;
 	ThreadDto mapChildEntityToDto(ThreadEntity threadEntity);
+	void toggleLocked(int threadId, LockThreadDto lockThreadDto) throws NotFoundException, UnauthorizedException;
 }

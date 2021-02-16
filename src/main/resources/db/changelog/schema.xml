@@ -53,6 +53,9 @@
 			<column name="create_time" type="DATETIME">
 				<constraints nullable="false" />
 			</column>
+			<column name="locked" type="BOOL">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 
 		<createTable tableName="thread_likes">
