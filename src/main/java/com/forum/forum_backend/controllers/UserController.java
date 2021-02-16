@@ -1,6 +1,11 @@
 package com.forum.forum_backend.controllers;
 
+import com.forum.forum_backend.dtos.PaginatedResponse;
+import com.forum.forum_backend.dtos.PermissionDto;
 import com.forum.forum_backend.dtos.UserDto;
+import com.forum.forum_backend.exceptions.NotFoundException;
+import com.forum.forum_backend.exceptions.UnauthorizedException;
+import com.forum.forum_backend.services.interfaces.AuthoritiesService;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +16,16 @@ import javax.validation.Valid;
 public class UserController {
 
 	private final UserService userService;
+	private final AuthoritiesService authoritiesService;
 
-	public UserController(UserService userService) {
+	public UserController(UserService userService, AuthoritiesService authoritiesService) {
 		this.userService = userService;
+		this.authoritiesService = authoritiesService;
+	}
+
+	@GetMapping
+	public PaginatedResponse<UserDto> getUsers (@RequestParam(defaultValue = "", required = false) String username) {
+		return userService.getUsers(username);
 	}
 
 	@GetMapping("/me")
@@ -24,5 +36,11 @@ public class UserController {
 	@PostMapping
 	public void addUser(@Valid @RequestBody UserDto userDto){
 		userService.addUser(userDto);
+	}
+
+	@PatchMapping("/{userId}")
+	public void assignPermission(@RequestBody PermissionDto permissionDto, @PathVariable int userId)
+			throws NotFoundException, UnauthorizedException {
+		authoritiesService.assignPermission(permissionDto, userId);
 	}
 }

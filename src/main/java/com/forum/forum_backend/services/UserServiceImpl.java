@@ -1,6 +1,7 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
+import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.models.AuthorityEntity;
 import com.forum.forum_backend.models.ForumEntity;
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -137,7 +140,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setId(userEntity.getId());
 		user.setUsername(userEntity.getUsername());
 		//email not implemented, email is now hard-coded to UserDto
+
+		for (GrantedAuthority authority : userPrincipal.getAuthorities()) {
+			user.addAuthority(authority.getAuthority());
+		}
 		return user;
+	}
+
+	@Override
+	public PaginatedResponse<UserDto> getUsers(String username) {
+		List<UserEntity> userEntities = userRepository.findByUsernameStartsWith(username);
+
+		PaginatedResponse<UserDto> response = new PaginatedResponse<>();
+		response.setResults(new ArrayList<>() {{
+			addAll(userEntities.stream().map(x -> new UserDto() {{
+				setId(x.getId());
+				setUsername(x.getUsername());
+			}}).collect(Collectors.toList()));
+		}});
+		response.setCount(response.getResults().size());
+		return response;
 	}
 }
 

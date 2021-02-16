@@ -67,7 +67,7 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public ForumDto getSubForum(int forumId) throws NotFoundException {
+	public ForumDto getSubForum(int forumId, boolean getThreads) throws NotFoundException {
 		try {
 			ForumEntity forumEntity = forumRepository.getOne(forumId);
 
@@ -91,11 +91,13 @@ public class ForumServiceImpl implements ForumService {
 							.collect(Collectors.toList())
 			);
 
-			forum.setThreads(
-					forumEntity.getThreadEntities()
-							.stream().map(threadService::mapChildEntityToDto)
-							.collect(Collectors.toList())
-			);
+			if (getThreads) {
+				forum.setThreads(
+						forumEntity.getThreadEntities()
+								.stream().map(threadService::mapChildEntityToDto)
+								.collect(Collectors.toList())
+				);
+			}
 
 
 			return forum;

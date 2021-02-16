@@ -26,8 +26,11 @@ public class ForumController {
 	}
 
 	@GetMapping("/{forumId}")
-	public ForumDto getSubForum(@PathVariable int forumId) throws NotFoundException {
-		return forumService.getSubForum(forumId);
+	public ForumDto getSubForum(
+			@PathVariable int forumId,
+			@RequestParam(defaultValue = "true", required = false) boolean getThreads)
+			throws NotFoundException {
+		return forumService.getSubForum(forumId, getThreads);
 	}
 
 	@PostMapping

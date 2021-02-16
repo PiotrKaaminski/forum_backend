@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ForumService {
 	PaginatedResponse<ForumDto> getMainForumList();
-	ForumDto getSubForum(int forumId) throws NotFoundException;
+	ForumDto getSubForum(int forumId, boolean getThreads) throws NotFoundException;
 	void addForum(ForumDto forumDto) throws NotFoundException, UnauthorizedException;
 	void modifyForum(ForumDto forumDto, int forumId) throws NotFoundException, UnauthorizedException;
 	void deleteForum(int forumId) throws NotFoundException, UnauthorizedException;
