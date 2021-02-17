@@ -19,6 +19,12 @@ public class PostController {
 		this.postService = postService;
 	}
 
+	@GetMapping("/{postId}")
+	public PostDto getPost(@PathVariable int postId)
+			throws NotFoundException {
+		return postService.getPost(postId);
+	}
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public PostDto addPost(@Valid @RequestBody PostDto postDto)
@@ -33,10 +39,10 @@ public class PostController {
 		postService.addLike(postId);
 	}
 
-	@PutMapping("/{postId}")
-	public void modifyPost(@PathVariable int postId ,@Valid @RequestBody PostDto postDto)
+	@PatchMapping("/{postId}")
+	public PostDto modifyPost(@PathVariable int postId ,@Valid @RequestBody PostDto postDto)
 			throws UnauthorizedException, NotFoundException {
-		postService.modifyPost(postId, postDto);
+		return postService.modifyPost(postId, postDto);
 	}
 
 	@DeleteMapping("/{postId}")

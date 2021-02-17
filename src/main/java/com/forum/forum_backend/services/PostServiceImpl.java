@@ -83,7 +83,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void modifyPost(int postId, PostDto postDto) throws UnauthorizedException, NotFoundException {
+	public PostDto modifyPost(int postId, PostDto postDto) throws UnauthorizedException, NotFoundException {
 		try {
 			PostEntity post = postRepository.getOne(postId);
 
@@ -93,6 +93,8 @@ public class PostServiceImpl implements PostService {
 				throw new UnauthorizedException("You have no permissions to modify this post");
 			}
 			postRepository.save(post);
+
+			return getPost(postId);
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Post with id = " + postId + " doesn't exist");
 		}
@@ -114,7 +116,7 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
-	private PostDto getPost(int postId) throws NotFoundException {
+	public PostDto getPost(int postId) throws NotFoundException {
 		try {
 			PostEntity postEntity = postRepository.getOne(postId);
 			PostDto post = new PostDto();
