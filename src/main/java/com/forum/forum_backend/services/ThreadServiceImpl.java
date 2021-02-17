@@ -1,7 +1,9 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
-import com.forum.forum_backend.dtos.*;
+import com.forum.forum_backend.dtos.LockThreadDto;
+import com.forum.forum_backend.dtos.ThreadDto;
+import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.ForumEntity;
@@ -11,6 +13,7 @@ import com.forum.forum_backend.repositories.ForumRepository;
 import com.forum.forum_backend.repositories.ThreadRepository;
 import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.ForumService;
+import com.forum.forum_backend.services.interfaces.PostService;
 import com.forum.forum_backend.services.interfaces.ThreadService;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.context.annotation.Lazy;
@@ -20,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -32,22 +33,24 @@ public class ThreadServiceImpl implements ThreadService {
 	private final UserRepository userRepository;
 	private final UserService userService;
 	private final ForumService forumService;
+	private final PostService postService;
 
 	public ThreadServiceImpl(
 			ForumRepository forumRepository,
 			ThreadRepository threadRepository,
 			UserRepository userRepository,
 			UserService userService,
-			@Lazy ForumService forumService) {
+			@Lazy ForumService forumService, PostService postService) {
 		this.forumRepository = forumRepository;
 		this.threadRepository = threadRepository;
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.forumService = forumService;
+		this.postService = postService;
 	}
 
 	@Override
-	public ThreadDto getThread(int threadId) throws NotFoundException {
+	public ThreadDto getThread(int threadId, int size, int page) throws NotFoundException {
 		try {
 			ThreadEntity threadEntity = threadRepository.getOne(threadId);
 			ThreadDto thread = new ThreadDto();
@@ -67,25 +70,7 @@ public class ThreadServiceImpl implements ThreadService {
 
 			thread.setCanModerate(userService.isUserAnAuthor(threadEntity.getUser()) || userService.isUserPermittedToModerate(threadEntity.getParentForum()));
 
-			thread.setPosts(new PaginatedResponse<>() {{
-				setResults(new ArrayList<>() {{
-					addAll(threadEntity.getPosts().stream().map(x -> new PostDto() {{
-						setId(x.getId());
-						setMessage(x.getMessage());
-
-						UserDto postAuthor = new UserDto();
-						postAuthor.setId(x.getUser().getId());
-						postAuthor.setUsername(x.getUser().getUsername());
-
-						setCanModerate(userService.isUserAnAuthor(x.getUser()) || userService.isUserPermittedToModerate(x.getThread().getParentForum()));
-
-						setPostAuthor(postAuthor);
-						setLikesAmount(x.getUsersLikes().size());
-						setCreateTime(x.getCreateTime());
-					}}).collect(Collectors.toList()));
-				}});
-				setCount(getResults().size());
-			}});
+			thread.setPosts(postService.getPostsByThread(threadEntity.getId(), size, page));
 
 			return thread;
 
@@ -113,7 +98,7 @@ public class ThreadServiceImpl implements ThreadService {
 			ThreadEntity thread = new ThreadEntity(threadDto.getTitle(), threadDto.getMessage(), owner, timestamp);
 			thread.setParentForum(parentForum);
 			int threadId = threadRepository.save(thread).getId();
-			return getThread(threadId);
+			return getThread(threadId, 0, 0);
 		} catch (EntityNotFoundException | UnauthorizedException ex) {
 			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
 		}

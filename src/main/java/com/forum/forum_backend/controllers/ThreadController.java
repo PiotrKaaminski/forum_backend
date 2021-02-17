@@ -22,9 +22,11 @@ public class ThreadController {
 
 	@GetMapping("/{threadId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ThreadDto getThread(@PathVariable int threadId)
+	public ThreadDto getThread(@PathVariable int threadId,
+							   @RequestParam(defaultValue = "3", required = false) int size,
+							   @RequestParam(defaultValue = "0", required = false) int page)
 			throws NotFoundException {
-		return threadService.getThread(threadId);
+		return threadService.getThread(threadId, size, page);
 	}
 
 	@PostMapping

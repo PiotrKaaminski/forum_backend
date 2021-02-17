@@ -8,7 +8,7 @@ import com.forum.forum_backend.models.ThreadEntity;
 
 public interface ThreadService {
 
-	ThreadDto getThread(int threadId) throws NotFoundException;
+	ThreadDto getThread(int threadId, int size, int page) throws NotFoundException;
 	ThreadDto addThread(ThreadDto threadDto) throws NotFoundException;
 	void addLike(int threadId) throws NotFoundException;
 	void modifyThread(ThreadDto threadDto, int threadId) throws UnauthorizedException, NotFoundException;

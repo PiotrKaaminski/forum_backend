@@ -1,6 +1,7 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
+import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.dtos.PostDto;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
@@ -13,12 +14,17 @@ import com.forum.forum_backend.repositories.ThreadRepository;
 import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.PostService;
 import com.forum.forum_backend.services.interfaces.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -139,4 +145,35 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
+	@Override
+	public PaginatedResponse<PostDto> getPostsByThread(int threadId, int size, int page) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<PostEntity> postEntityPage = postRepository.findByThreadId(threadId, pageable);
+
+		PaginatedResponse<PostDto> response = new PaginatedResponse<>();
+
+		response.setResults(new ArrayList<>() {{
+			addAll(postEntityPage.stream().map(x -> new PostDto() {{
+				setId(x.getId());
+				setMessage(x.getMessage());
+
+				UserDto postAuthor = new UserDto();
+				postAuthor.setId(x.getUser().getId());
+				postAuthor.setUsername(x.getUser().getUsername());
+
+				setCanModerate(userService.isUserAnAuthor(x.getUser()) || userService.isUserPermittedToModerate(x.getThread().getParentForum()));
+
+				setPostAuthor(postAuthor);
+				setLikesAmount(x.getUsersLikes().size());
+				setCreateTime(x.getCreateTime());
+			}}).collect(Collectors.toList()));
+		}});
+		response.setCount(postEntityPage.getNumberOfElements());
+		response.setPagesAmount(postEntityPage.getTotalPages());
+		response.setPage(postEntityPage.getNumber());
+		response.setLast(postEntityPage.isLast());
+		response.setFirst(postEntityPage.isFirst());
+
+		return response;
+	}
 }
