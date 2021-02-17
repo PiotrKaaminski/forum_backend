@@ -14,5 +14,5 @@ public interface UserService {
 	boolean isUserPermittedToModerate(ForumEntity forumEntity);
 	void addUser(UserDto userDto);
 	UserDto myAccountInfo();
-	PaginatedResponse<UserDto> getUsers(String username);
+	PaginatedResponse<UserDto> getUsers(String username, int size, int page);
 }

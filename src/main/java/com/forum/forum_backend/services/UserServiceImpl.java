@@ -10,6 +10,9 @@ import com.forum.forum_backend.repositories.AuthorityRepository;
 import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -148,17 +150,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public PaginatedResponse<UserDto> getUsers(String username) {
-		List<UserEntity> userEntities = userRepository.findByUsernameStartsWith(username);
+	public PaginatedResponse<UserDto> getUsers(String username, int size, int page) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<UserEntity> userEntityPage = userRepository.findByUsernameStartsWith(username, pageable);
 
 		PaginatedResponse<UserDto> response = new PaginatedResponse<>();
 		response.setResults(new ArrayList<>() {{
-			addAll(userEntities.stream().map(x -> new UserDto() {{
+			addAll(userEntityPage.stream().map(x -> new UserDto() {{
 				setId(x.getId());
 				setUsername(x.getUsername());
 			}}).collect(Collectors.toList()));
 		}});
-		response.setCount(response.getResults().size());
+		response.setCount(userEntityPage.getNumberOfElements());
+		response.setPagesAmount(userEntityPage.getTotalPages());
+		response.setPage(userEntityPage.getNumber());
+		response.setLast(userEntityPage.isLast());
+		response.setFirst(userEntityPage.isFirst());
 		return response;
 	}
 }

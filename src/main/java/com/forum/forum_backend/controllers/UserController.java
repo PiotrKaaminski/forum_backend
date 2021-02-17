@@ -24,8 +24,11 @@ public class UserController {
 	}
 
 	@GetMapping
-	public PaginatedResponse<UserDto> getUsers (@RequestParam(defaultValue = "", required = false) String username) {
-		return userService.getUsers(username);
+	public PaginatedResponse<UserDto> getUsers (
+			@RequestParam(defaultValue = "", required = false) String username,
+			@RequestParam(defaultValue = "3", required = false) int size,
+			@RequestParam(defaultValue = "0", required = false) int page) {
+		return userService.getUsers(username, size, page);
 	}
 
 	@GetMapping("/me")
