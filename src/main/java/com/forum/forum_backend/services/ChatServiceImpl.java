@@ -43,6 +43,7 @@ public class ChatServiceImpl implements ChatService {
 			throw new UserNotFoundException(commandArgs[1] + " is offline.", author);
 		} else {
 			simpMessagingTemplate.convertAndSendToUser(commandArgs[1], "/queue/whisper", chatMessageDto);
+			simpMessagingTemplate.convertAndSendToUser(author, "/queue/whisper", chatMessageDto);
 		}
 	}
 

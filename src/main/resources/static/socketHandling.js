@@ -64,4 +64,3 @@ function addWhisper(whisper) {
 	trNode.appendChild(tdNode2);
 	document.getElementById('whispers').appendChild(trNode);
 }
-

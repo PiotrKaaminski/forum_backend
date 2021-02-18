@@ -31,7 +31,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/socket-handshake").withSockJS();
+		registry.addEndpoint("/socket-handshake").setAllowedOrigins("http://localhost:4200").withSockJS();
 	}
 
 	@Override
