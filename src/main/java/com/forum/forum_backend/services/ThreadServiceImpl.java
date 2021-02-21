@@ -40,7 +40,8 @@ public class ThreadServiceImpl implements ThreadService {
 			ThreadRepository threadRepository,
 			UserRepository userRepository,
 			UserService userService,
-			@Lazy ForumService forumService, PostService postService) {
+			@Lazy ForumService forumService,
+			PostService postService) {
 		this.forumRepository = forumRepository;
 		this.threadRepository = threadRepository;
 		this.userRepository = userRepository;
@@ -98,7 +99,7 @@ public class ThreadServiceImpl implements ThreadService {
 			ThreadEntity thread = new ThreadEntity(threadDto.getTitle(), threadDto.getMessage(), owner, timestamp);
 			thread.setParentForum(parentForum);
 			int threadId = threadRepository.save(thread).getId();
-			return getThread(threadId, 0, 0);
+			return getThread(threadId, 1, 0);
 		} catch (EntityNotFoundException | UnauthorizedException ex) {
 			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
 		}
