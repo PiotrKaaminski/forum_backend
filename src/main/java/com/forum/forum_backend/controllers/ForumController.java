@@ -35,8 +35,8 @@ public class ForumController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addMainForum(@Valid @RequestBody ForumDto forumDto) throws NotFoundException, UnauthorizedException {
-		forumService.addForum(forumDto);
+	public ForumDto addForum(@Valid @RequestBody ForumDto forumDto) throws NotFoundException, UnauthorizedException {
+		return forumService.addForum(forumDto);
 	}
 
 

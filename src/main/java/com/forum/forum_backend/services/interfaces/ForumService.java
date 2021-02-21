@@ -11,7 +11,7 @@ import java.util.List;
 public interface ForumService {
 	PaginatedResponse<ForumDto> getMainForumList();
 	ForumDto getSubForum(int forumId, boolean getThreads) throws NotFoundException;
-	void addForum(ForumDto forumDto) throws NotFoundException, UnauthorizedException;
+	ForumDto addForum(ForumDto forumDto) throws NotFoundException, UnauthorizedException;
 	void modifyForum(ForumDto forumDto, int forumId) throws NotFoundException, UnauthorizedException;
 	void deleteForum(int forumId) throws NotFoundException, UnauthorizedException;
 	List<ForumDto> getBreadcrumb(ForumEntity forumEntity);

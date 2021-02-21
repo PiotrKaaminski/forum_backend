@@ -107,7 +107,7 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public void addForum(ForumDto forumDto)
+	public ForumDto addForum(ForumDto forumDto)
 			throws UnauthorizedException, NotFoundException {
 		Integer parentForumId = forumDto.getParent().getId();
 		try {
@@ -127,6 +127,7 @@ public class ForumServiceImpl implements ForumService {
 
 			if (userService.isUserPermittedToModerate(parentForumEntity)) {
 				forumRepository.save(forumEntity);
+				return getSubForum(forumEntity.getId(), true);
 			} else {
 				throw new UnauthorizedException("You have no permission to add forum here");
 			}
