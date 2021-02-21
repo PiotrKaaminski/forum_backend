@@ -3,7 +3,6 @@ package com.forum.forum_backend.controllers;
 import com.forum.forum_backend.dtos.ChatMessageDto;
 import com.forum.forum_backend.enums.ShoutboxMessageStatus;
 import com.forum.forum_backend.exceptions.BadChatCommandException;
-import com.forum.forum_backend.exceptions.UserNotFoundException;
 import com.forum.forum_backend.services.interfaces.ChatService;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,15 +23,8 @@ public class ShoutboxController {
 	}
 
 	@MessageMapping("/chat")
-	public void chat(String message, Principal author) throws InterruptedException, UserNotFoundException, BadChatCommandException {
-		Thread.sleep(500);
+	public void chat(String message, Principal author) throws BadChatCommandException {
 		chatService.commandCheck(message.trim(), author.getName());
-	}
-
-	@MessageExceptionHandler
-	public void handleUserNotFoundException(UserNotFoundException ex) {
-		ChatMessageDto whisper = new ChatMessageDto(ex.getMessage(), ShoutboxMessageStatus.ERROR);
-		simpMessagingTemplate.convertAndSendToUser(ex.getAuthor(), "/queue/whisper", whisper);
 	}
 
 	@MessageExceptionHandler
