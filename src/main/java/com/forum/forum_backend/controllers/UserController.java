@@ -35,6 +35,11 @@ public class UserController {
 	public UserDto myAccountInfo() {
 		return userService.myAccountInfo();
 	}
+	
+	@GetMapping("/{userId}")
+	public UserDto getUser(@PathVariable int userId) throws NotFoundException {
+		return userService.getUser(userId);
+	}
 
 	@PostMapping
 	public void addUser(@Valid @RequestBody UserDto userDto){

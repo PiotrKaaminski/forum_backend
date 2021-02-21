@@ -1,6 +1,7 @@
 package com.forum.forum_backend.models;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +20,9 @@ public class UserEntity {
 
 	@Column(name = "password")
 	private String password;
+
+	@Column(name = "join_time")
+	private Timestamp joinTime;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
@@ -61,6 +65,14 @@ public class UserEntity {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Timestamp getJoinTime() {
+		return joinTime;
+	}
+
+	public void setJoinTime(Timestamp joinTime) {
+		this.joinTime = joinTime;
 	}
 
 	public Collection<AuthorityEntity> getAuthorities() {

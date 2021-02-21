@@ -25,6 +25,9 @@
 			<column name="password" type="VARCHAR(100)">
 				<constraints nullable="false" />
 			</column>
+			<column name="join_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 		
 		<createTable tableName="user_authorities">

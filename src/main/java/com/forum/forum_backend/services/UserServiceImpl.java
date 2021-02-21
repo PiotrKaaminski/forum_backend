@@ -3,6 +3,7 @@ package com.forum.forum_backend.services;
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.dtos.UserDto;
+import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.models.AuthorityEntity;
 import com.forum.forum_backend.models.ForumEntity;
 import com.forum.forum_backend.models.UserEntity;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -125,6 +127,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		UserEntity user = new UserEntity();
 		user.setUsername(userDto.getUsername());
 		user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+		user.setJoinTime(new Timestamp(System.currentTimeMillis()));
 
 		AuthorityEntity authority = authorityRepository.findByAuthority("USER");
 		user.addAuthority(authority);
@@ -142,6 +145,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setId(userEntity.getId());
 		user.setUsername(userEntity.getUsername());
 		//email not implemented, email is now hard-coded to UserDto
+		user.setJoinTime(userEntity.getJoinTime());
 
 		for (GrantedAuthority authority : userPrincipal.getAuthorities()) {
 			user.addAuthority(authority.getAuthority());
@@ -159,6 +163,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			addAll(userEntityPage.stream().map(x -> new UserDto() {{
 				setId(x.getId());
 				setUsername(x.getUsername());
+				setJoinTime(x.getJoinTime());
+				for (AuthorityEntity authority : x.getAuthorities()) {
+					addAuthority(authority.getAuthority());
+				}
 			}}).collect(Collectors.toList()));
 		}});
 		response.setCount(userEntityPage.getNumberOfElements());
@@ -167,6 +175,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		response.setLast(userEntityPage.isLast());
 		response.setFirst(userEntityPage.isFirst());
 		return response;
+	}
+
+	@Override
+	public UserDto getUser(int userId) throws NotFoundException {
+		try {
+			UserEntity userEntity = userRepository.getOne(userId);
+
+			UserDto user = new UserDto();
+
+			user.setId(userEntity.getId());
+			user.setUsername(userEntity.getUsername());
+			//email not implemented, email is now hard-coded to UserDto
+			user.setJoinTime(userEntity.getJoinTime());
+
+			for (AuthorityEntity authority : userEntity.getAuthorities()) {
+				user.addAuthority(authority.getAuthority());
+			}
+			return user;
+		} catch (EntityNotFoundException ex) {
+			throw new NotFoundException("User with id = " + userId + " doesn't exist");
+		}
 	}
 }
 

@@ -6,6 +6,7 @@ import com.forum.forum_backend.validators.annotations.UsernameUnique;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class UserDto {
 	private String password;
 	private String email = "user@forum.com"; //email will be implemented
 	private String jwt;
+	private Timestamp joinTime;
 	private List<String> authorities;
 
 	public int getId() {
@@ -64,6 +66,14 @@ public class UserDto {
 
 	public void setJwt(String jwt) {
 		this.jwt = jwt;
+	}
+
+	public Timestamp getJoinTime() {
+		return joinTime;
+	}
+
+	public void setJoinTime(Timestamp joinTime) {
+		this.joinTime = joinTime;
 	}
 
 	public List<String> getAuthorities() {
