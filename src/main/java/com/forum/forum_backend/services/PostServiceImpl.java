@@ -134,6 +134,7 @@ public class PostServiceImpl implements PostService {
 			postAuthor.setUsername(postEntity.getUser().getUsername());
 			post.setPostAuthor(postAuthor);
 
+			post.setThreadId(postEntity.getThread().getId());
 			post.setLikesAmount(postEntity.getUsersLikes().size());
 			post.setCreateTime(postEntity.getCreateTime());
 
@@ -163,6 +164,7 @@ public class PostServiceImpl implements PostService {
 
 				setCanModerate(userService.isUserAnAuthor(x.getUser()) || userService.isUserPermittedToModerate(x.getThread().getParentForum()));
 
+				setThreadId(x.getThread().getId());
 				setPostAuthor(postAuthor);
 				setLikesAmount(x.getUsersLikes().size());
 				setCreateTime(x.getCreateTime());
