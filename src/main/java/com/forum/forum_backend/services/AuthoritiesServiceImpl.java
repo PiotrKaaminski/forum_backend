@@ -3,6 +3,7 @@ package com.forum.forum_backend.services;
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.PermissionDto;
 import com.forum.forum_backend.enums.Permission;
+import com.forum.forum_backend.exceptions.BadRequestException;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.AuthorityEntity;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Service
 public class AuthoritiesServiceImpl implements AuthoritiesService {
@@ -54,7 +56,7 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 	}
 
 	@Override
-	public void assignPermission(PermissionDto permissionDto, int userId) throws NotFoundException, UnauthorizedException {
+	public void assignPermission(PermissionDto permissionDto, int userId) throws NotFoundException, UnauthorizedException, BadRequestException {
 
 		if (permissionDto.getName().equals(Permission.MODERATOR)) {
 			assignModerator(permissionDto, userId);
@@ -64,7 +66,7 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 
 	}
 
-	private void assignModerator(PermissionDto permission, int userId) throws NotFoundException, UnauthorizedException {
+	private void assignModerator(PermissionDto permission, int userId) throws NotFoundException, UnauthorizedException, BadRequestException {
 		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		try {
@@ -81,8 +83,13 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 
 			try {
 				UserEntity userEntity = userRepository.getOne(userId);
+				if (userService.isUserPermittedToModerate(forumEntity, userEntity)) {
+					throw new BadRequestException("User with id = " + userEntity.getId() + " is already moderating forum with id = " + forumEntity.getId());
+				}
 				AuthorityEntity authority = authorityRepository.findByAuthority(permission.getName().toString());
-				userEntity.addAuthority(authority);
+				if (!userEntity.hasAuthority(Permission.MODERATOR.name())) {
+					userEntity.addAuthority(authority);
+				}
 				forumEntity.addModerator(userEntity);
 				forumRepository.save(forumEntity);
 			} catch (EntityNotFoundException ex) {
@@ -93,7 +100,7 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 		}
 	}
 
-	private void assign(Permission permission, int userId) throws UnauthorizedException, NotFoundException {
+	private void assign(Permission permission, int userId) throws UnauthorizedException, NotFoundException, BadRequestException {
 		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (!userPrincipal.hasAuthority(Permission.ADMIN.name())) {
@@ -105,6 +112,9 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 
 			try {
 				UserEntity user = userRepository.getOne(userId);
+				if (user.getAuthorities().stream().anyMatch(Predicate.isEqual(authority))) {
+					throw new BadRequestException("User with id = " + userId + " already has permission " + authority.getAuthority());
+				}
 				user.addAuthority(authority);
 				userRepository.save(user);
 			} catch (EntityNotFoundException ex) {

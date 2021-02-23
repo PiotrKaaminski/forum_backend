@@ -96,20 +96,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public boolean isUserPermittedToModerate(ForumEntity forumEntity) {
+	public boolean isUserPermittedToModerate(ForumEntity forumEntity, UserEntity user) {
 
-		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
-			return false;
-		}
-
-		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-
-		if (userPrincipal.hasAuthority(Permission.ADMIN.name()) || userPrincipal.hasAuthority(Permission.HEAD_MODERATOR.name())) {
+		if (user.hasAuthority(Permission.ADMIN.name()) || user.hasAuthority(Permission.HEAD_MODERATOR.name())) {
 			return true;
 		}
-
-		UserEntity user = getUserById(userPrincipal.getId());
 
 		while (forumEntity != null){
 			if (forumEntity.isUserModerator(user)) {
@@ -124,6 +115,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean isUserPermittedToModerate(ForumEntity forumEntity) {
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return false;
+		}
+
+		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserEntity user = getUserById(userPrincipal.getId());
+
+		return isUserPermittedToModerate(forumEntity, user);
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.forum.forum_backend.models;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -139,5 +141,20 @@ public class UserEntity {
 		}
 		moderatedForums.add(forumEntity);
 
+	}
+
+	// helper methods
+
+	public boolean hasAuthority(String authority) {
+		if (authorities == null) {
+			return false;
+		} else {
+			for (AuthorityEntity x : authorities) {
+				if (x.getAuthority().equals(authority)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

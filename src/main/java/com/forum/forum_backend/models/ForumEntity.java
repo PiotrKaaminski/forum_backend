@@ -113,11 +113,6 @@ public class ForumEntity {
 	}
 
 	public boolean isUserModerator(UserEntity user) {
-		/*for (UserEntity moderator : moderators) {
-			if (moderator.getId() == user.getId()) {
-				return true;
-			}
-		}*/
 		return moderators.stream().anyMatch(Predicate.isEqual(user));
 	}
 }

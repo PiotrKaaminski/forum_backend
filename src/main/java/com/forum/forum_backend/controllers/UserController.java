@@ -3,6 +3,7 @@ package com.forum.forum_backend.controllers;
 import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.dtos.PermissionDto;
 import com.forum.forum_backend.dtos.UserDto;
+import com.forum.forum_backend.exceptions.BadRequestException;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.services.interfaces.AuthoritiesService;
@@ -54,7 +55,7 @@ public class UserController {
 
 	@PatchMapping("/{userId}")
 	public void assignPermission(@RequestBody PermissionDto permissionDto, @PathVariable int userId)
-			throws NotFoundException, UnauthorizedException {
+			throws NotFoundException, UnauthorizedException, BadRequestException {
 		authoritiesService.assignPermission(permissionDto, userId);
 	}
 }
