@@ -28,7 +28,7 @@ public class PostController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public PostDto addPost(@Valid @RequestBody PostDto postDto)
-			throws NotFoundException {
+			throws NotFoundException, UnauthorizedException {
 		return postService.addPost(postDto.getThreadId(), postDto);
 	}
 

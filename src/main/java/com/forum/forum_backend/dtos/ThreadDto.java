@@ -25,6 +25,7 @@ public class ThreadDto {
 	private PaginatedResponse<PostDto> posts;
 	private List<ForumDto> breadcrumb;
 	private boolean canModerate;
+	@NotNull(message = "Locked state cannot be null")
 	private boolean locked;
 
 

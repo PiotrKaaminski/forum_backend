@@ -43,9 +43,13 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostDto addPost( int threadId, PostDto postDto) throws NotFoundException {
+	public PostDto addPost( int threadId, PostDto postDto) throws NotFoundException, UnauthorizedException {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
+
+			if (thread.isLocked()) {
+				throw new UnauthorizedException("Thread with id = " + threadId + " is locked, cannot add post");
+			}
 
 			PostEntity post = new PostEntity();
 

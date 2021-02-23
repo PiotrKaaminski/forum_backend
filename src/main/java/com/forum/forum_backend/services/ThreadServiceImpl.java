@@ -1,7 +1,6 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
-import com.forum.forum_backend.dtos.LockThreadDto;
 import com.forum.forum_backend.dtos.ThreadDto;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.exceptions.NotFoundException;
@@ -62,6 +61,8 @@ public class ThreadServiceImpl implements ThreadService {
 			UserDto threadAuthor = new UserDto();
 			threadAuthor.setId(threadEntity.getUser().getId());
 			threadAuthor.setUsername(threadEntity.getUser().getUsername());
+
+			thread.setLocked(threadEntity.isLocked());
 			thread.setCreator(threadAuthor);
 			thread.setLikesAmount(threadEntity.getUsersLikes().size());
 			thread.setPostsAmount(null);
@@ -126,28 +127,6 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public void modifyThread(ThreadDto threadDto, int threadId) throws UnauthorizedException, NotFoundException {
-
-		try {
-			ThreadEntity thread = threadRepository.getOne(threadId);
-
-			if (userService.isUserAnAuthor(thread.getUser()) || userService.isUserPermittedToModerate(thread.getParentForum())) {
-				if (threadDto.getTitle() != null) {
-					thread.setTitle(threadDto.getTitle());
-				}
-				if (threadDto.getMessage() != null) {
-					thread.setMessage(threadDto.getMessage());
-				}
-				threadRepository.save(thread);
-			} else {
-				throw new UnauthorizedException("You have no permissions to modify this thread");
-			}
-		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Thread with id = " + threadId + " doesn't exist");
-		}
-	}
-
-	@Override
 	public void deleteThread(int threadId) throws UnauthorizedException, NotFoundException {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
@@ -185,16 +164,16 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public void toggleLocked(int threadId, LockThreadDto lockThreadDto) throws NotFoundException, UnauthorizedException {
+	public void modifyThread(int threadId, ThreadDto threadDto) throws NotFoundException, UnauthorizedException {
 		try {
-			ThreadEntity threadEntity = threadRepository.getOne(threadId);
+			ThreadEntity thread = threadRepository.getOne(threadId);
 
-			if (userService.isUserAnAuthor(threadEntity.getUser()) || userService.isUserPermittedToModerate(threadEntity.getParentForum())) {
-				threadEntity.setLocked(lockThreadDto.isLocked());
+			if (userService.isUserAnAuthor(thread.getUser()) || userService.isUserPermittedToModerate(thread.getParentForum())) {
+				thread.setLocked(threadDto.isLocked());
+				threadRepository.save(thread);
 			} else {
-				throw new UnauthorizedException("You have no permission to lock thread with id = " + threadId);
+				throw new UnauthorizedException("You have no permissions to modify this thread");
 			}
-
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Thread with id = " + threadId + " doesn't exist");
 		}
