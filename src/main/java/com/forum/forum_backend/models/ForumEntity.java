@@ -1,11 +1,10 @@
 package com.forum.forum_backend.models;
 
-import com.forum.forum_backend.config.UserPrincipal;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Entity
 @Table(name = "forum")
@@ -113,12 +112,12 @@ public class ForumEntity {
 		moderators.add(userEntity);
 	}
 
-	public boolean isUserModerator(UserPrincipal user) {
-		for (UserEntity moderator : moderators) {
+	public boolean isUserModerator(UserEntity user) {
+		/*for (UserEntity moderator : moderators) {
 			if (moderator.getId() == user.getId()) {
 				return true;
 			}
-		}
-		return false;
+		}*/
+		return moderators.stream().anyMatch(Predicate.isEqual(user));
 	}
 }

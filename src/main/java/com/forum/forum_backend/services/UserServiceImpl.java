@@ -3,6 +3,7 @@ package com.forum.forum_backend.services;
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.dtos.UserDto;
+import com.forum.forum_backend.enums.Permission;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.models.AuthorityEntity;
 import com.forum.forum_backend.models.ForumEntity;
@@ -101,11 +102,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			return false;
 		}
 
-		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (user.hasAuthority("ADMIN") || user.hasAuthority("HEAD_MODERATOR")) {
+
+		if (userPrincipal.hasAuthority(Permission.ADMIN.name()) || userPrincipal.hasAuthority(Permission.HEAD_MODERATOR.name())) {
 			return true;
 		}
+
+		UserEntity user = getUserById(userPrincipal.getId());
 
 		while (forumEntity != null){
 			if (forumEntity.isUserModerator(user)) {

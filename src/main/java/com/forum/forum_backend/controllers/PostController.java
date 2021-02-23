@@ -1,6 +1,7 @@
 package com.forum.forum_backend.controllers;
 
 import com.forum.forum_backend.dtos.PostDto;
+import com.forum.forum_backend.exceptions.BadRequestException;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.services.interfaces.PostService;
@@ -28,11 +29,11 @@ public class PostController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public PostDto addPost(@Valid @RequestBody PostDto postDto)
-			throws NotFoundException, UnauthorizedException {
+			throws NotFoundException, BadRequestException {
 		return postService.addPost(postDto.getThreadId(), postDto);
 	}
 
-	@PostMapping("/{postId}")
+	@PostMapping("/likes/{postId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void addLike(@PathVariable int postId)
 			throws NotFoundException {

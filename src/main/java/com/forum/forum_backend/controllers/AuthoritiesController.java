@@ -1,5 +1,6 @@
 package com.forum.forum_backend.controllers;
 
+import com.forum.forum_backend.enums.Permission;
 import com.forum.forum_backend.services.interfaces.AuthoritiesService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ public class AuthoritiesController {
 	}
 
 	@GetMapping
-	public List<String> getAuthorities() {
+	public List<Permission> getAuthorities() {
 		return authoritiesService.getAuthorities();
 	}
 }

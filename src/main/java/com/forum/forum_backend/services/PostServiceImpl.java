@@ -4,6 +4,7 @@ import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.dtos.PostDto;
 import com.forum.forum_backend.dtos.UserDto;
+import com.forum.forum_backend.exceptions.BadRequestException;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.PostEntity;
@@ -43,12 +44,12 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostDto addPost( int threadId, PostDto postDto) throws NotFoundException, UnauthorizedException {
+	public PostDto addPost( int threadId, PostDto postDto) throws NotFoundException, BadRequestException {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
 
 			if (thread.isLocked()) {
-				throw new UnauthorizedException("Thread with id = " + threadId + " is locked, cannot add post");
+				throw new BadRequestException("Thread with id = " + threadId + " is locked, cannot add post");
 			}
 
 			PostEntity post = new PostEntity();

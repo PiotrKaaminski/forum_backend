@@ -2,6 +2,7 @@ package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.PermissionDto;
+import com.forum.forum_backend.enums.Permission;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.models.AuthorityEntity;
@@ -39,15 +40,15 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 	}
 
 	@Override
-	public List<String> getAuthorities() {
+	public List<Permission> getAuthorities() {
 		UserPrincipal user = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		List<String> authorities = new ArrayList<>();
-		if (user.hasAuthority("ADMIN")) {
-			authorities.add("ADMIN");
-			authorities.add("HEAD_MODERATOR");
-			authorities.add("MODERATOR");
-		} else if (user.hasAuthority("HEAD_MODERATOR") || user.hasAuthority("MODERATOR")) {
-			authorities.add("MODERATOR");
+		List<Permission> authorities = new ArrayList<>();
+		if (user.hasAuthority(Permission.ADMIN.name())) {
+			authorities.add(Permission.ADMIN);
+			authorities.add(Permission.HEAD_MODERATOR);
+			authorities.add(Permission.MODERATOR);
+		} else if (user.hasAuthority(Permission.HEAD_MODERATOR.name()) || user.hasAuthority(Permission.MODERATOR.name())) {
+			authorities.add(Permission.MODERATOR);
 		}
 		return authorities;
 	}
@@ -55,9 +56,9 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 	@Override
 	public void assignPermission(PermissionDto permissionDto, int userId) throws NotFoundException, UnauthorizedException {
 
-		if (permissionDto.getName().equals("MODERATOR")) {
+		if (permissionDto.getName().equals(Permission.MODERATOR)) {
 			assignModerator(permissionDto, userId);
-		} else if (permissionDto.getName().equals("ADMIN") || permissionDto.getName().equals("HEAD_MODERATOR")) {
+		} else if (permissionDto.getName().equals(Permission.ADMIN) || permissionDto.getName().equals(Permission.HEAD_MODERATOR)) {
 			assign(permissionDto.getName(), userId);
 		}
 
@@ -74,13 +75,13 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 				parentForumEntity = forumEntity.getParentForum();
 			}
 
-			if (userPrincipal.hasAuthority("MODERATOR") && !userService.isUserPermittedToModerate(parentForumEntity)) {
+			if (userPrincipal.hasAuthority(Permission.MODERATOR.name()) && !userService.isUserPermittedToModerate(parentForumEntity)) {
 				throw new UnauthorizedException("You have no permission to assign moderator to this forum");
 			}
 
 			try {
 				UserEntity userEntity = userRepository.getOne(userId);
-				AuthorityEntity authority = authorityRepository.findByAuthority(permission.getName());
+				AuthorityEntity authority = authorityRepository.findByAuthority(permission.getName().toString());
 				userEntity.addAuthority(authority);
 				forumEntity.addModerator(userEntity);
 				forumRepository.save(forumEntity);
@@ -92,15 +93,15 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 		}
 	}
 
-	private void assign(String permission, int userId) throws UnauthorizedException, NotFoundException {
+	private void assign(Permission permission, int userId) throws UnauthorizedException, NotFoundException {
 		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (!userPrincipal.hasAuthority("ADMIN")) {
+		if (!userPrincipal.hasAuthority(Permission.ADMIN.name())) {
 			throw new UnauthorizedException("You have to be admin to assign " + permission + " permission");
 		}
 
 		try {
-			AuthorityEntity authority = authorityRepository.findByAuthority(permission);
+			AuthorityEntity authority = authorityRepository.findByAuthority(permission.toString());
 
 			try {
 				UserEntity user = userRepository.getOne(userId);

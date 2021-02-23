@@ -50,7 +50,8 @@ INSERT INTO forum (title, description, parent_forum_id, create_time) VALUES
 ("sub-sub-forum 2 in 1", "description", 5, "2021-02-07 14:23:58"),
 ("sub-sub-forum 1 in 2", "description", 10, "2021-02-07 14:23:58");
 
-/*INSERT INTO forum_moderators (forum_id, user_id) VALUES*/
+INSERT INTO forum_moderators (forum_id, user_id) VALUES
+(1, 6);
 
 
 INSERT INTO thread (title, message, creator_id, forum_id, create_time, locked) VALUES

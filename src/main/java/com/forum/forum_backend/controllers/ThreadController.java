@@ -42,7 +42,7 @@ public class ThreadController {
 		return threadService.addThread(threadDto);
 	}
 
-	@PostMapping("/{threadId}")
+	@PostMapping("/likes/{threadId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void addLike(@PathVariable int threadId)
 		throws NotFoundException {

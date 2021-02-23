@@ -1,15 +1,17 @@
 package com.forum.forum_backend.dtos;
 
+import com.forum.forum_backend.enums.Permission;
+
 public class PermissionDto {
 
-	private String name;
+	private Permission name;
 	private int forumId;
 
-	public String getName() {
+	public Permission getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(Permission name) {
 		this.name = name;
 	}
 

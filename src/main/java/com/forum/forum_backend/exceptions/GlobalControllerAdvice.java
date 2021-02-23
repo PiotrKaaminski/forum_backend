@@ -32,6 +32,16 @@ public class GlobalControllerAdvice {
 		return new ResponseEntity<>(exception, ex.getHttpStatus());
 	}
 
+	@ExceptionHandler(BadRequestException.class)
+	public ResponseEntity<ExceptionDto> handleBadRequestException(BadRequestException ex, HttpServletRequest request) {
+		ExceptionDto exception = new ExceptionDto();
+		exception.setStatus(ex.getHttpStatus().value());
+		exception.setError(ex.getHttpStatus().toString().split(" ")[1]);
+		exception.setMessage(ex.getMessage());
+		exception.setPath(request.getRequestURI());
+		return new ResponseEntity<>(exception, ex.getHttpStatus());
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ExceptionDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
 		ExceptionDto exception = new ExceptionDto();
