@@ -170,11 +170,7 @@ public class PostServiceImpl implements PostService {
 				setCreateTime(x.getCreateTime());
 			}}).collect(Collectors.toList()));
 		}});
-		response.setCount(postEntityPage.getNumberOfElements());
-		response.setPagesAmount(postEntityPage.getTotalPages());
-		response.setPage(postEntityPage.getNumber());
-		response.setLast(postEntityPage.isLast());
-		response.setFirst(postEntityPage.isFirst());
+		response.setCount((int) postEntityPage.getTotalElements());
 
 		return response;
 	}

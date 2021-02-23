@@ -169,11 +169,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				}
 			}}).collect(Collectors.toList()));
 		}});
-		response.setCount(userEntityPage.getNumberOfElements());
-		response.setPagesAmount(userEntityPage.getTotalPages());
-		response.setPage(userEntityPage.getNumber());
-		response.setLast(userEntityPage.isLast());
-		response.setFirst(userEntityPage.isFirst());
+		response.setCount((int) userEntityPage.getTotalElements());
+
 		return response;
 	}
 
