@@ -7,8 +7,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
@@ -26,7 +24,7 @@ public class UserDto {
 	private String email = "user@forum.com"; //email will be implemented
 	private String jwt;
 	private Timestamp joinTime;
-	private List<String> authorities;
+	private String authority;
 
 	public int getId() {
 		return id;
@@ -76,18 +74,11 @@ public class UserDto {
 		this.joinTime = joinTime;
 	}
 
-	public List<String> getAuthorities() {
-		return authorities;
+	public String getAuthority() {
+		return authority;
 	}
 
-	public void setAuthorities(List<String> authorities) {
-		this.authorities = authorities;
-	}
-
-	public void addAuthority(String authority) {
-		if (this.authorities == null) {
-			authorities = new ArrayList<>();
-		}
-		authorities.add(authority);
+	public void setAuthority(String authority) {
+		this.authority = authority;
 	}
 }

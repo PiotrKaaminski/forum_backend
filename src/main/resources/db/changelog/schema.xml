@@ -28,15 +28,7 @@
 			<column name="join_time" type="DATETIME">
 				<constraints nullable="false" />
 			</column>
-		</createTable>
-		
-		<createTable tableName="user_authorities">
-			<column name="user_id" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false"/>
-			</column>
-			<column name="authority_id" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
+			<column name="authority_id" type="INT UNSIGNED" />
 		</createTable>
 		
 		<createTable tableName="thread">

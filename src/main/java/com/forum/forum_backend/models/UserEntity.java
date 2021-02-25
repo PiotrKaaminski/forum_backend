@@ -1,11 +1,8 @@
 package com.forum.forum_backend.models;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -26,9 +23,9 @@ public class UserEntity {
 	@Column(name = "join_time")
 	private Timestamp joinTime;
 
-	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
-	private Collection<AuthorityEntity> authorities = new ArrayList<>();
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "authority_id")
+	private AuthorityEntity authority;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name = "thread_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "thread_id"))
@@ -77,12 +74,12 @@ public class UserEntity {
 		this.joinTime = joinTime;
 	}
 
-	public Collection<AuthorityEntity> getAuthorities() {
-		return authorities;
+	public AuthorityEntity getAuthority() {
+		return authority;
 	}
 
-	public void setAuthorities(Collection<AuthorityEntity> authorities) {
-		this.authorities = authorities;
+	public void setAuthority(AuthorityEntity authority) {
+		this.authority = authority;
 	}
 
 	public List<ThreadEntity> getLikedThreads() {
@@ -111,14 +108,6 @@ public class UserEntity {
 
 	// helper methods
 
-	public void addAuthority(AuthorityEntity authorityEntity) {
-		if (this.authorities == null) {
-			authorities = new ArrayList<>();
-		}
-		authorities.add(authorityEntity);
-
-	}
-
 	public void addThreadLike(ThreadEntity threadEntity) {
 		if (this.likedThreads == null) {
 			likedThreads = new ArrayList<>();
@@ -141,20 +130,5 @@ public class UserEntity {
 		}
 		moderatedForums.add(forumEntity);
 
-	}
-
-	// helper methods
-
-	public boolean hasAuthority(String authority) {
-		if (authorities == null) {
-			return false;
-		} else {
-			for (AuthorityEntity x : authorities) {
-				if (x.getAuthority().equals(authority)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 }

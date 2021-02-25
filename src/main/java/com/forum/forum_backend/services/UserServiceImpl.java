@@ -5,7 +5,6 @@ import com.forum.forum_backend.dtos.PaginatedResponse;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.enums.Permission;
 import com.forum.forum_backend.exceptions.NotFoundException;
-import com.forum.forum_backend.models.AuthorityEntity;
 import com.forum.forum_backend.models.ForumEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.AuthorityRepository;
@@ -28,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -57,10 +56,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	private UserPrincipal createUserPrincipal(UserEntity userEntity) {
-		Collection<GrantedAuthority> authorities = new ArrayList<>();
+		List<GrantedAuthority> authorities = new ArrayList<>();
 
-		if (userEntity.getAuthorities() != null) {
-			userEntity.getAuthorities().forEach(r -> authorities.add(new SimpleGrantedAuthority(r.getAuthority().toUpperCase())));
+		if (userEntity.getAuthority() != null) {
+			authorities.add(new SimpleGrantedAuthority(userEntity.getAuthority().getAuthority().toUpperCase()));
 		}
 
 		return new UserPrincipal(
@@ -97,8 +96,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public boolean isUserPermittedToModerate(ForumEntity forumEntity, UserEntity user) {
+		if (user.getAuthority() == null) {
+			return false;
+		}
 
-		if (user.hasAuthority(Permission.ADMIN.name()) || user.hasAuthority(Permission.HEAD_MODERATOR.name())) {
+		if (user.getAuthority().getAuthority().equals(Permission.ADMIN.name()) ||
+			user.getAuthority().getAuthority().equals(Permission.HEAD_MODERATOR.name())) {
 			return true;
 		}
 
@@ -136,9 +139,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 		user.setJoinTime(new Timestamp(System.currentTimeMillis()));
 
-		AuthorityEntity authority = authorityRepository.findByAuthority("USER");
-		user.addAuthority(authority);
-
 		userRepository.save(user);
 
 	}
@@ -154,9 +154,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		//email not implemented, email is now hard-coded to UserDto
 		user.setJoinTime(userEntity.getJoinTime());
 
-		for (GrantedAuthority authority : userPrincipal.getAuthorities()) {
-			user.addAuthority(authority.getAuthority());
+		if (!userPrincipal.getAuthorities().isEmpty()) {
+			user.setAuthority(userPrincipal.getAuthorities().get(0).getAuthority());
 		}
+
 		return user;
 	}
 
@@ -171,8 +172,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				setId(x.getId());
 				setUsername(x.getUsername());
 				setJoinTime(x.getJoinTime());
-				for (AuthorityEntity authority : x.getAuthorities()) {
-					addAuthority(authority.getAuthority());
+				if(x.getAuthority() != null) {
+					setAuthority(x.getAuthority().getAuthority());
 				}
 			}}).collect(Collectors.toList()));
 		}});
@@ -192,10 +193,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setUsername(userEntity.getUsername());
 			//email not implemented, email is now hard-coded to UserDto
 			user.setJoinTime(userEntity.getJoinTime());
-
-			for (AuthorityEntity authority : userEntity.getAuthorities()) {
-				user.addAuthority(authority.getAuthority());
+			if (userEntity.getAuthority() != null) {
+				user.setAuthority(userEntity.getAuthority().getAuthority());
 			}
+
 			return user;
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("User with id = " + userId + " doesn't exist");
