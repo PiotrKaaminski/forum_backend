@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 
 		if (userEntity.getAuthority() != null) {
-			authorities.add(new SimpleGrantedAuthority(userEntity.getAuthority().getAuthority().toUpperCase()));
+			authorities.add(new SimpleGrantedAuthority(userEntity.getAuthority().getName().toUpperCase()));
 		}
 
 		return new UserPrincipal(
@@ -100,8 +100,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			return false;
 		}
 
-		if (user.getAuthority().getAuthority().equals(Permission.ADMIN.name()) ||
-			user.getAuthority().getAuthority().equals(Permission.HEAD_MODERATOR.name())) {
+		if (user.getAuthority().getName().equals(Permission.ADMIN.name()) ||
+			user.getAuthority().getName().equals(Permission.HEAD_MODERATOR.name())) {
 			return true;
 		}
 
@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				setUsername(x.getUsername());
 				setJoinTime(x.getJoinTime());
 				if(x.getAuthority() != null) {
-					setAuthority(x.getAuthority().getAuthority());
+					setAuthority(x.getAuthority().getName());
 				}
 			}}).collect(Collectors.toList()));
 		}});
@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			//email not implemented, email is now hard-coded to UserDto
 			user.setJoinTime(userEntity.getJoinTime());
 			if (userEntity.getAuthority() != null) {
-				user.setAuthority(userEntity.getAuthority().getAuthority());
+				user.setAuthority(userEntity.getAuthority().getName());
 			}
 
 			return user;

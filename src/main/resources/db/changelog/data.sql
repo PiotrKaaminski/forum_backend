@@ -1,4 +1,4 @@
-INSERT INTO authority (authority) VALUES
+INSERT INTO authority (name) VALUES
 ("MODERATOR"),
 ("HEAD_MODERATOR"),
 ("ADMIN");

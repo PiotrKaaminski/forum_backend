@@ -10,7 +10,7 @@
 			<column name="id" autoIncrement="true" type="INT UNSIGNED">
 				<constraints primaryKey="true" nullable="false" unique="true" />
 			</column>
-			<column name="authority" type="VARCHAR(60)">
+			<column name="name" type="VARCHAR(60)">
 				<constraints nullable="false" />
 			</column>
 		</createTable>

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthorityRepository extends JpaRepository<AuthorityEntity, Integer> {
 
-	AuthorityEntity findByAuthority(String authority);
+	AuthorityEntity findByName(String name);
 
 }
