@@ -24,7 +24,7 @@ public class UserDto {
 	private String email = "user@forum.com"; //email will be implemented
 	private String jwt;
 	private Timestamp joinTime;
-	private String authority;
+	private PermissionDto authority;
 
 	public int getId() {
 		return id;
@@ -74,11 +74,11 @@ public class UserDto {
 		this.joinTime = joinTime;
 	}
 
-	public String getAuthority() {
+	public PermissionDto getAuthority() {
 		return authority;
 	}
 
-	public void setAuthority(String authority) {
+	public void setAuthority(PermissionDto authority) {
 		this.authority = authority;
 	}
 }

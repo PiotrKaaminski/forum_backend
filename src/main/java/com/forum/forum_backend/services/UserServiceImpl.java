@@ -2,6 +2,7 @@ package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.PaginatedResponse;
+import com.forum.forum_backend.dtos.PermissionDto;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.enums.Permission;
 import com.forum.forum_backend.exceptions.NotFoundException;
@@ -153,11 +154,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setUsername(userEntity.getUsername());
 		//email not implemented, email is now hard-coded to UserDto
 		user.setJoinTime(userEntity.getJoinTime());
-
-
-		if (userEntity.getAuthority() != null) {
-			user.setAuthority(userEntity.getAuthority().getName());
-		}
+		user.setAuthority(getPermissionFromUserEntitiy(userEntity));
 
 		return user;
 	}
@@ -173,9 +170,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				setId(x.getId());
 				setUsername(x.getUsername());
 				setJoinTime(x.getJoinTime());
-				if(x.getAuthority() != null) {
-					setAuthority(x.getAuthority().getName());
-				}
+				setAuthority(getPermissionFromUserEntitiy(x));
 			}}).collect(Collectors.toList()));
 		}});
 		response.setCount((int) userEntityPage.getTotalElements());
@@ -194,14 +189,29 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setUsername(userEntity.getUsername());
 			//email not implemented, email is now hard-coded to UserDto
 			user.setJoinTime(userEntity.getJoinTime());
-			if (userEntity.getAuthority() != null) {
-				user.setAuthority(userEntity.getAuthority().getName());
-			}
+			user.setAuthority(getPermissionFromUserEntitiy(userEntity));
 
 			return user;
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("User with id = " + userId + " doesn't exist");
 		}
+	}
+
+	private PermissionDto getPermissionFromUserEntitiy(UserEntity userEntity) {
+		PermissionDto permissionDto = new PermissionDto();
+		if (userEntity.getAuthority() != null) {
+			switch (userEntity.getAuthority().getName()) {
+				case "ADMIN" -> permissionDto.setName(Permission.ADMIN);
+				case "HEAD_MODERATOR" -> permissionDto.setName(Permission.HEAD_MODERATOR);
+				case "MODERATOR" -> {
+					permissionDto.setName(Permission.MODERATOR);
+					for (ForumEntity forumEntity : userEntity.getModeratedForums()) {
+						permissionDto.addForumId(forumEntity.getId());
+					}
+				}
+			}
+		}
+		return permissionDto;
 	}
 }
 

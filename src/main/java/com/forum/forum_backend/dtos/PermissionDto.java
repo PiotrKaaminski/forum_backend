@@ -25,4 +25,13 @@ public class PermissionDto {
 	public void setForumIdList(List<Integer> forumIdList) {
 		this.forumIdList = forumIdList;
 	}
+
+	// helper methods
+
+	public void addForumId(Integer forumId) {
+		if (forumIdList == null) {
+			forumIdList = new ArrayList<>();
+		}
+		forumIdList.add(forumId);
+	}
 }

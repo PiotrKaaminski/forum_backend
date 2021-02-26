@@ -1,9 +1,9 @@
 package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.JwtTokenProvider;
-import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.services.interfaces.AuthenticationService;
+import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,11 +17,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final UserService userService;
 
-	public AuthenticationServiceImpl( AuthenticationManager authenticationManager,
-									 JwtTokenProvider jwtTokenProvider) {
+	public AuthenticationServiceImpl(AuthenticationManager authenticationManager,
+									 JwtTokenProvider jwtTokenProvider, UserService userService) {
 		this.authenticationManager = authenticationManager;
 		this.jwtTokenProvider = jwtTokenProvider;
+		this.userService = userService;
 	}
 
 	@Override
@@ -35,11 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		UserDto user = new UserDto();
-		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		user.setId(userPrincipal.getId());
-		user.setUsername(userPrincipal.getUsername());
+		UserDto user = userService.myAccountInfo();
 		user.setJwt(jwtTokenProvider.generateToken(authentication));
 
 		return user;
