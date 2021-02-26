@@ -154,8 +154,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		//email not implemented, email is now hard-coded to UserDto
 		user.setJoinTime(userEntity.getJoinTime());
 
-		if (!userPrincipal.getAuthorities().isEmpty()) {
-			user.setAuthority(userPrincipal.getAuthorities().get(0).getAuthority());
+
+		if (userEntity.getAuthority() != null) {
+			user.setAuthority(userEntity.getAuthority().getName());
 		}
 
 		return user;

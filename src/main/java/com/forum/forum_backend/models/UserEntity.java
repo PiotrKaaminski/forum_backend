@@ -131,4 +131,8 @@ public class UserEntity {
 		moderatedForums.add(forumEntity);
 
 	}
+
+	public boolean hasAnyAuthority(List<String> authoritiesToCompare) {
+		return authoritiesToCompare.contains(authority.getName());
+	}
 }

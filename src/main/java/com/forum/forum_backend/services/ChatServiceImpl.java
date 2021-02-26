@@ -7,7 +7,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class ChatServiceImpl implements ChatService {
 
 	final private SimpMessagingTemplate simpMessagingTemplate;

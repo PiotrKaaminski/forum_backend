@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface AuthoritiesService {
 	List<Permission> getAuthorities();
-	void assignPermission(PermissionDto permissionDto, int userId) throws NotFoundException, UnauthorizedException, BadRequestException;
+	void assign(PermissionDto permissionDto, int userId) throws NotFoundException, UnauthorizedException, BadRequestException;
 }

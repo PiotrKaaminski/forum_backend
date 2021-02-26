@@ -56,6 +56,6 @@ public class UserController {
 	@PatchMapping("/{userId}")
 	public void assignPermission(@RequestBody PermissionDto permissionDto, @PathVariable int userId)
 			throws NotFoundException, UnauthorizedException, BadRequestException {
-		authoritiesService.assignPermission(permissionDto, userId);
+		authoritiesService.assign(permissionDto, userId);
 	}
 }

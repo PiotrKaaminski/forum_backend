@@ -2,10 +2,13 @@ package com.forum.forum_backend.dtos;
 
 import com.forum.forum_backend.enums.Permission;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PermissionDto {
 
 	private Permission name;
-	private int forumId;
+	private List<Integer> forumIdList = new ArrayList<>();
 
 	public Permission getName() {
 		return name;
@@ -15,11 +18,11 @@ public class PermissionDto {
 		this.name = name;
 	}
 
-	public int getForumId() {
-		return forumId;
+	public List<Integer> getForumIdList() {
+		return forumIdList;
 	}
 
-	public void setForumId(int forumId) {
-		this.forumId = forumId;
+	public void setForumIdList(List<Integer> forumIdList) {
+		this.forumIdList = forumIdList;
 	}
 }
