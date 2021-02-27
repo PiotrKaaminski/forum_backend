@@ -2,6 +2,7 @@ package com.forum.forum_backend.services;
 
 import com.forum.forum_backend.config.UserPrincipal;
 import com.forum.forum_backend.dtos.PermissionDto;
+import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.enums.Permission;
 import com.forum.forum_backend.exceptions.BadRequestException;
 import com.forum.forum_backend.exceptions.NotFoundException;
@@ -56,7 +57,7 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 	}
 
 	@Override
-	public void assign(PermissionDto permissionDto, int userId) throws NotFoundException, UnauthorizedException, BadRequestException {
+	public UserDto assign(PermissionDto permissionDto, int userId) throws NotFoundException, UnauthorizedException, BadRequestException {
 		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if(userPrincipal.getId() == userId) {
@@ -83,6 +84,7 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 			revoke(userId, userRepository.getOne(userPrincipal.getId()));
 		}
 
+		return userService.getUser(userId);
 
 	}
 

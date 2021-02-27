@@ -1,6 +1,7 @@
 package com.forum.forum_backend.services.interfaces;
 
 import com.forum.forum_backend.dtos.PermissionDto;
+import com.forum.forum_backend.dtos.UserDto;
 import com.forum.forum_backend.enums.Permission;
 import com.forum.forum_backend.exceptions.BadRequestException;
 import com.forum.forum_backend.exceptions.NotFoundException;
@@ -10,5 +11,5 @@ import java.util.List;
 
 public interface AuthoritiesService {
 	List<Permission> getAuthorities();
-	void assign(PermissionDto permissionDto, int userId) throws NotFoundException, UnauthorizedException, BadRequestException;
+	UserDto assign(PermissionDto permissionDto, int userId) throws NotFoundException, UnauthorizedException, BadRequestException;
 }
