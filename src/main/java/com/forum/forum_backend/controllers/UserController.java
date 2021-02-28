@@ -53,7 +53,7 @@ public class UserController {
 		userService.addUser(userDto);
 	}
 
-	@PatchMapping("/{userId}")
+	@PatchMapping("/{userId}/permission")
 	public UserDto assignPermission(@RequestBody PermissionDto permissionDto, @PathVariable int userId)
 			throws NotFoundException, UnauthorizedException, BadRequestException {
 		return authoritiesService.assign(permissionDto, userId);
