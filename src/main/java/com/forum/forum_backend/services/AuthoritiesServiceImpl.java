@@ -101,7 +101,8 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 		}
 	}
 
-	private void assignModerator(PermissionDto permissionDto, int userId, UserEntity modifier) throws NotFoundException, UnauthorizedException, BadRequestException {
+	private void assignModerator(PermissionDto permissionDto, int userId, UserEntity modifier)
+			throws NotFoundException, UnauthorizedException, BadRequestException {
 		try {
 			UserEntity userToModify = userRepository.getOne(userId);
 
@@ -170,13 +171,12 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 		}
 	}
 
-	private void revoke(int userId, UserEntity modifier) throws NotFoundException, UnauthorizedException, BadRequestException {
+	private void revoke(int userId, UserEntity modifier) throws NotFoundException, UnauthorizedException {
 		try {
 			UserEntity userToRevoke = userRepository.getOne(userId);
 
-			if (userToRevoke.getAuthority() == null) {
-				throw new BadRequestException("User with id = " + userId + " has no permission to revoke");
-			} else if (userToRevoke.hasAnyAuthority(Arrays.asList(Permission.ADMIN.name(), Permission.HEAD_MODERATOR.name()))) {
+			if (userToRevoke.getAuthority() != null &&
+					userToRevoke.hasAnyAuthority(Arrays.asList(Permission.ADMIN.name(), Permission.HEAD_MODERATOR.name()))) {
 				if (modifier.hasAnyAuthority(Collections.singletonList(Permission.ADMIN.name()))) {
 					userToRevoke.setAuthority(null);
 					userToRevoke.setModeratedForums(null);
@@ -184,7 +184,8 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 				} else {
 					throw new UnauthorizedException("You cannot revoke " + userToRevoke.getAuthority().getName() + " permission");
 				}
-			} else if (userToRevoke.hasAnyAuthority(Collections.singletonList(Permission.MODERATOR.name()))) {
+			} else if (userToRevoke.getAuthority() != null &&
+					userToRevoke.hasAnyAuthority(Collections.singletonList(Permission.MODERATOR.name()))) {
 				for (ForumEntity moderatedForum : userToRevoke.getModeratedForums()) {
 					ForumEntity parentForum = null;
 					if (moderatedForum.getParentForum() != null) {
@@ -199,7 +200,7 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 				userRepository.save(userToRevoke);
 			}
 		} catch (EntityNotFoundException e) {
-			throw new NotFoundException("User wit id = " + userId + " doesn't exist");
+			throw new NotFoundException("User with id = " + userId + " doesn't exist");
 		}
 	}
 
