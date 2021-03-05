@@ -40,10 +40,10 @@ public class ForumController {
 	}
 
 
-	@PutMapping("/{forumId}")
-	public void modifyForum(@Valid @RequestBody ForumDto forumDto, @PathVariable int forumId)
+	@PatchMapping("/{forumId}")
+	public ForumDto modifyForum(@Valid @RequestBody ForumDto forumDto, @PathVariable int forumId)
 			throws UnauthorizedException, NotFoundException {
-		forumService.modifyForum(forumDto, forumId);
+		return forumService.modifyForum(forumDto, forumId);
 	}
 
 	@DeleteMapping("/{forumId}")

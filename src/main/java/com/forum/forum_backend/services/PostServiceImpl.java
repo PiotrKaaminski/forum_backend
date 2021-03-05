@@ -44,7 +44,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostDto addPost( int threadId, PostDto postDto) throws NotFoundException, BadRequestException {
+	public PostDto addPost(int threadId, PostDto postDto) throws NotFoundException, BadRequestException {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
 

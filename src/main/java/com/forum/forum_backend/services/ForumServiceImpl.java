@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,6 +84,7 @@ public class ForumServiceImpl implements ForumService {
 				ForumDto parentForum = new ForumDto();
 				parentForum.setId(forumEntity.getParentForum().getId());
 				parentForum.setTitle(forumEntity.getParentForum().getTitle());
+				forum.setParent(parentForum);
 			}
 
 			forum.setForums(
@@ -107,53 +109,52 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public ForumDto addForum(ForumDto forumDto)
-			throws UnauthorizedException, NotFoundException {
-		Integer parentForumId = forumDto.getParent().getId();
-		try {
-			ForumEntity forumEntity = new ForumEntity();
-			ForumEntity parentForumEntity = null;
+	public ForumDto addForum(ForumDto forumDto) throws UnauthorizedException, NotFoundException {
+		ForumEntity forumEntity = new ForumEntity();
+		ForumEntity parentForum = null;
 
-			if (parentForumId != null) {
-				parentForumEntity = forumRepository.getOne(parentForumId);
-				forumEntity.setParentForum(parentForumEntity);
+		if (forumDto.getParent() != null && forumDto.getParent().getId() != null) {
+			int parentForumId = forumDto.getParent().getId();
+			Optional<ForumEntity> parentForumEntity = forumRepository.findById(parentForumId);
+
+			if (parentForumEntity.isEmpty()) {
+				throw new NotFoundException("Forum with id = " + parentForumId + " doesn't exist");
 			}
+			parentForum = parentForumEntity.get();
+			forumEntity.setParentForum(parentForum);
+		}
 
-			forumEntity.setTitle(forumDto.getTitle());
-			forumEntity.setDescription(forumDto.getDescription());
 
-			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			forumEntity.setCreateTime(timestamp);
+		forumEntity.setTitle(forumDto.getTitle());
+		forumEntity.setDescription(forumDto.getDescription());
 
-			if (userService.isUserPermittedToModerate(parentForumEntity)) {
-				forumRepository.save(forumEntity);
-				return getSubForum(forumEntity.getId(), true);
-			} else {
-				throw new UnauthorizedException("You have no permission to add forum here");
-			}
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		forumEntity.setCreateTime(timestamp);
 
-		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Forum with id: " + parentForumId + " doesn't exist");
+		if (userService.isUserPermittedToModerate(parentForum)) {
+			int forumId = forumRepository.save(forumEntity).getId();
+			return getSubForum(forumId, true);
+		} else {
+			throw new UnauthorizedException("You have no permission to add forum here");
 		}
 	}
 
 	@Override
-	public void modifyForum(ForumDto forumDto, int forumId) throws NotFoundException, UnauthorizedException {
+	public ForumDto modifyForum(ForumDto forumDto, int forumId) throws NotFoundException, UnauthorizedException {
 		try {
 			ForumEntity forumEntity = forumRepository.getOne(forumId);
 			if (userService.isUserPermittedToModerate(forumEntity)) {
-				if (forumDto.getTitle() != null) {
-					forumEntity.setTitle(forumDto.getTitle());
-				}
-				if (forumDto.getDescription() != null) {
-					forumEntity.setDescription(forumDto.getDescription());
-				}
+
+				forumEntity.setTitle(forumDto.getTitle());
+				forumEntity.setDescription(forumDto.getDescription());
+
 				forumRepository.save(forumEntity);
+				return getSubForum(forumId, true);
 			} else {
 				throw new UnauthorizedException("You have no permission to modify this forum");
 			}
 		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Forum with id: " + forumId + " doesn't exist");
+			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
 		}
 	}
 
@@ -161,16 +162,18 @@ public class ForumServiceImpl implements ForumService {
 	public void deleteForum(int forumId) throws NotFoundException, UnauthorizedException {
 		try {
 			ForumEntity forumEntity = forumRepository.getOne(forumId);
+			ForumEntity parentForumEntity = null;
+			if (forumEntity.getParentForum() != null) {
+				parentForumEntity = forumEntity.getParentForum();
+			}
 
-			if (forumEntity.getParentForum() == null) {
-				forumRepository.delete(forumEntity);
-			} else if (userService.isUserPermittedToModerate(forumEntity.getParentForum())) {
+			if (userService.isUserPermittedToModerate(parentForumEntity)) {
 				forumRepository.delete(forumEntity);
 			} else {
 				throw new UnauthorizedException("You have no permission to delete this forum");
 			}
 		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Forum with id: " + forumId + " doesn't exist");
+			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
 		}
 	}
 

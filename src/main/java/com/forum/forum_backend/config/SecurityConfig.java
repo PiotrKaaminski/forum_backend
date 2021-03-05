@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/api/threads", "/api/threads/*", "/api/posts", "/api/posts/*")
 				.authenticated()
 				.antMatchers(HttpMethod.POST, "/api/forums")
-				.hasAnyAuthority("HEAD_MODERATOR", "ADMIN")
+				.hasAnyAuthority("HEAD_MODERATOR", "ADMIN", "MODERATOR")
 				.antMatchers(HttpMethod.POST, "/api/forums/*")
 				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
 				.antMatchers(HttpMethod.PATCH, "/api/threads/*", "/api/posts/*")
