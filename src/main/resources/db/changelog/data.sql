@@ -15,7 +15,7 @@ INSERT INTO user (username, password, join_time, authority_id) VALUES
 ("moderator3", "$2a$10$2uXMzRSUu0oRg8ghXGNRIOB6Lswptct.ay1EcJP1QAcr29EamWSi6", "2021-02-07 14:23:58", 1);
 
 INSERT INTO forum (title, description, parent_forum_id, create_time) VALUES
-/*("main forum 1", "description", null, "2021-02-07 14:23:58"),
+("main forum 1", "description", null, "2021-02-07 14:23:58"),
 ("main forum 2", "description", null, "2021-02-07 14:23:58"),
 ("main forum 3", "description", null, "2021-02-07 14:23:58"),
 ("main forum 4", "description", null, "2021-02-07 14:23:58"),
@@ -27,19 +27,7 @@ INSERT INTO forum (title, description, parent_forum_id, create_time) VALUES
 ("sub-forum 2 in 4", "description", 4, "2021-02-07 14:23:58"),
 ("sub-sub-forum 1 in 1", "description", 5, "2021-02-07 14:23:58"),
 ("sub-sub-forum 2 in 1", "description", 5, "2021-02-07 14:23:58"),
-("sub-sub-forum 1 in 2", "description", 10, "2021-02-07 14:23:58");*/
-("main forum 1", "description", null, "2021-02-07 14:23:58"),
-("main forum 2", "description", null, "2021-02-07 14:23:58"),
-("main forum 3", "description", null, "2021-02-07 14:23:58"),
-("main forum 4", "description", null, "2021-02-07 14:23:58"),
-("sub forum 1 in 1", "description", 1, "2021-02-07 14:23:58"),
-("sub forum 2 in 1", "description", 1, "2021-02-07 14:23:58"),
-("sub forum 1 in 2", "description", 2, "2021-02-07 14:23:58"),
-("sub forum 2 in 2", "description", 2, "2021-02-07 14:23:58"),
-("sub forum 1 in 3", "description", 3, "2021-02-07 14:23:58"),
-("sub forum 2 in 3", "description", 3, "2021-02-07 14:23:58"),
-("sub forum 1 in 5", "description", 4, "2021-02-07 14:23:58"),
-("sub forum 2 in 5", "description", 4, "2021-02-07 14:23:58");
+("sub-sub-forum 1 in 2", "description", 10, "2021-02-07 14:23:58");
 
 INSERT INTO forum_moderators (forum_id, user_id) VALUES
 (1, 7),
@@ -49,7 +37,7 @@ INSERT INTO forum_moderators (forum_id, user_id) VALUES
 (6, 9);
 
 
-/*INSERT INTO thread (title, message, creator_id, forum_id, create_time, locked) VALUES
+INSERT INTO thread (title, message, creator_id, forum_id, create_time, locked) VALUES
 ("user1 thread1", "message", 1, 5, "2021-02-07 14:23:58", false),
 ("user2 thread2", "message", 2, 6, "2021-02-07 14:23:58", false),
 ("user3 thread3", "message", 3, 7, "2021-02-07 14:23:58", false),
@@ -75,7 +63,7 @@ INSERT INTO post (message, thread_id, creator_id, create_time) VALUES
 ("user1 post10", 1, 1, "2021-02-07 14:23:58"),
 ("user1 post11", 1, 1, "2021-02-07 14:23:58"),
 ("user1 post12", 1, 1, "2021-02-07 14:23:58"),
-("user1 post13", 1, 1, "2021-02-07 14:23:58");*/
+("user1 post13", 1, 1, "2021-02-07 14:23:58");
 
 
 

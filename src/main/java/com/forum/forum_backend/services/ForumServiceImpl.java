@@ -222,13 +222,8 @@ public class ForumServiceImpl implements ForumService {
 				setLatestThread(latestThread);
 			}
 
-			if (!forumEntity.getChildForums().isEmpty()) {
-				setChildrenAmount(forumEntity.getChildForums().size());
-			} else if (!forumEntity.getThreadEntities().isEmpty()) {
-				setChildrenAmount(forumEntity.getThreadEntities().size());
-			} else {
-				setChildrenAmount(0);
-			}
+			setThreadsAmount(forumEntity.getThreadEntities().size());
+
 		}};
 	}
 }

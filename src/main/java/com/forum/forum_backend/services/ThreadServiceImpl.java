@@ -65,7 +65,6 @@ public class ThreadServiceImpl implements ThreadService {
 			thread.setLocked(threadEntity.isLocked());
 			thread.setCreator(threadAuthor);
 			thread.setLikesAmount(threadEntity.getUsersLikes().size());
-			thread.setPostsAmount(null);
 			thread.setCreateTime(threadEntity.getCreateTime());
 			thread.setBreadcrumb(forumService.getBreadcrumb(threadEntity.getParentForum()));
 

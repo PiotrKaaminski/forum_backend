@@ -17,7 +17,7 @@ public class ForumDto {
 	private String description;
 	private Timestamp createTime;
 	private ForumDto parent;
-	private Integer childrenAmount;
+	private Integer threadsAmount;
 	private List<ForumDto> forums;
 	private List<ThreadDto> threads;
 	private List<ForumDto> breadcrumb;
@@ -64,12 +64,12 @@ public class ForumDto {
 		this.parent = parent;
 	}
 
-	public Integer getChildrenAmount() {
-		return childrenAmount;
+	public Integer getThreadsAmount() {
+		return threadsAmount;
 	}
 
-	public void setChildrenAmount(Integer childrenAmount) {
-		this.childrenAmount = childrenAmount;
+	public void setThreadsAmount(Integer threadsAmount) {
+		this.threadsAmount = threadsAmount;
 	}
 
 	public List<ForumDto> getForums() {
