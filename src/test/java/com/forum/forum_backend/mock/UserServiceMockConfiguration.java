@@ -5,8 +5,10 @@ import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.ActiveProfiles;
 
 @Configuration
+@ActiveProfiles("unitTest")
 public class UserServiceMockConfiguration {
 
 	@Bean

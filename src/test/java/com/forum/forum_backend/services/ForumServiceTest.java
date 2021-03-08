@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
+@ActiveProfiles("unitTest")
 public class ForumServiceTest {
 
 	@MockBean

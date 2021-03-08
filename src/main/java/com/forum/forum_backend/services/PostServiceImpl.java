@@ -18,6 +18,7 @@ import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -145,6 +146,13 @@ public class PostServiceImpl implements PostService {
 
 			post.setCanModerate(userService.isUserAnAuthor(postEntity.getUser()) || userService.isUserPermittedToModerate(postEntity.getThread().getParentForum()));
 
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			UserEntity userEntity = null;
+			if (!authentication.getPrincipal().equals("anonymousUser")) {
+				userEntity = userService.getUserById(((UserPrincipal) authentication.getPrincipal()).getId());
+			}
+			post.setLiked(postEntity.getUsersLikes().contains(userEntity));
+
 			return post;
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Post with id = " + postId + " doesn't exist");
@@ -173,6 +181,13 @@ public class PostServiceImpl implements PostService {
 				setPostAuthor(postAuthor);
 				setLikesAmount(x.getUsersLikes().size());
 				setCreateTime(x.getCreateTime());
+
+				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+				UserEntity userEntity = null;
+				if (!authentication.getPrincipal().equals("anonymousUser")) {
+					userEntity = userService.getUserById(((UserPrincipal) authentication.getPrincipal()).getId());
+				}
+				setLiked(x.getUsersLikes().contains(userEntity));
 			}}).collect(Collectors.toList()));
 		}});
 		response.setCount((int) postEntityPage.getTotalElements());

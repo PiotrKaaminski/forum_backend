@@ -16,6 +16,7 @@ import com.forum.forum_backend.services.interfaces.PostService;
 import com.forum.forum_backend.services.interfaces.ThreadService;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,9 +69,14 @@ public class ThreadServiceImpl implements ThreadService {
 			thread.setCreateTime(threadEntity.getCreateTime());
 			thread.setBreadcrumb(forumService.getBreadcrumb(threadEntity.getParentForum()));
 
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			UserEntity userEntity = null;
+			if (!authentication.getPrincipal().equals("anonymousUser")) {
+				userEntity = userService.getUserById(((UserPrincipal) authentication.getPrincipal()).getId());
+			}
+			thread.setLiked(threadEntity.getUsersLikes().contains(userEntity));
 
 			thread.setCanModerate(userService.isUserAnAuthor(threadEntity.getUser()) || userService.isUserPermittedToModerate(threadEntity.getParentForum()));
-
 			thread.setPosts(postService.getPostsByThread(threadEntity.getId(), size, page));
 
 			return thread;
@@ -159,6 +165,14 @@ public class ThreadServiceImpl implements ThreadService {
 
 			setPostsAmount(threadEntity.getPosts().size());
 			setLikesAmount(threadEntity.getUsersLikes().size());
+
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			UserEntity userEntity = null;
+			if (!authentication.getPrincipal().equals("anonymousUser")) {
+				userEntity = userService.getUserById(((UserPrincipal) authentication.getPrincipal()).getId());
+			}
+
+			setLiked(threadEntity.getUsersLikes().contains(userEntity));
 		}};
 	}
 

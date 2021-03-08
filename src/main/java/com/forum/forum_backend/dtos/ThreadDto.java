@@ -27,6 +27,7 @@ public class ThreadDto {
 	private boolean canModerate;
 	@NotNull(message = "Locked state cannot be null")
 	private boolean locked;
+	private boolean liked;
 
 
 	public int getId() {
@@ -123,6 +124,14 @@ public class ThreadDto {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
+	}
+
+	public boolean isLiked() {
+		return liked;
+	}
+
+	public void setLiked(boolean liked) {
+		this.liked = liked;
 	}
 
 	//helper methods
