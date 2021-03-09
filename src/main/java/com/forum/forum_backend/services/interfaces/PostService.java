@@ -11,7 +11,6 @@ public interface PostService {
 	PostDto getPost(int postId) throws NotFoundException;
 	PaginatedResponse<PostDto> getPostsByThread(int threadId, int size, int page);
 	PostDto addPost(int threadId, PostDto postDto) throws NotFoundException, BadRequestException;
-	void addLike(int postId) throws NotFoundException;
 	PostDto modifyPost(int postId, PostDto postDto) throws UnauthorizedException, NotFoundException;
 	void deletePost(int postId) throws UnauthorizedException, NotFoundException;
 

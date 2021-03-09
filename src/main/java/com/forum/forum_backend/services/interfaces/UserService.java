@@ -7,6 +7,8 @@ import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.models.ForumEntity;
 import com.forum.forum_backend.models.UserEntity;
 
+import java.util.List;
+
 public interface UserService {
 
 	UserDto getUser(int userId) throws NotFoundException;
@@ -18,4 +20,5 @@ public interface UserService {
 	void addUser(UserDto userDto);
 	UserDto myAccountInfo();
 	PaginatedResponse<UserDto> getUsers(String username, int size, int page);
+	List<UserEntity> setLikes(List<UserEntity> likes, boolean liked);
 }

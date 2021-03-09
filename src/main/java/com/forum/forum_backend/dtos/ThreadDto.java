@@ -25,9 +25,8 @@ public class ThreadDto {
 	private PaginatedResponse<PostDto> posts;
 	private List<ForumDto> breadcrumb;
 	private boolean canModerate;
-	@NotNull(message = "Locked state cannot be null")
-	private boolean locked;
-	private boolean liked;
+	private Boolean locked;
+	private Boolean liked;
 
 
 	public int getId() {
@@ -118,19 +117,19 @@ public class ThreadDto {
 		this.canModerate = canModerate;
 	}
 
-	public boolean isLocked() {
+	public Boolean isLocked() {
 		return locked;
 	}
 
-	public void setLocked(boolean locked) {
+	public void setLocked(Boolean locked) {
 		this.locked = locked;
 	}
 
-	public boolean isLiked() {
+	public Boolean isLiked() {
 		return liked;
 	}
 
-	public void setLiked(boolean liked) {
+	public void setLiked(Boolean liked) {
 		this.liked = liked;
 	}
 

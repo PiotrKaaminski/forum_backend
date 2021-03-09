@@ -42,13 +42,6 @@ public class ThreadController {
 		return threadService.addThread(threadDto);
 	}
 
-	@PostMapping("/likes/{threadId}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void addLike(@PathVariable int threadId)
-		throws NotFoundException {
-		threadService.addLike(threadId);
-	}
-
 	@DeleteMapping("/{threadId}")
 	public void deleteTopic(@PathVariable int threadId)
 			throws UnauthorizedException, NotFoundException {

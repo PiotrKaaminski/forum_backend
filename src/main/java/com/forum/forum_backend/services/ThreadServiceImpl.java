@@ -10,7 +10,6 @@ import com.forum.forum_backend.models.ThreadEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.ForumRepository;
 import com.forum.forum_backend.repositories.ThreadRepository;
-import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.ForumService;
 import com.forum.forum_backend.services.interfaces.PostService;
 import com.forum.forum_backend.services.interfaces.ThreadService;
@@ -30,7 +29,6 @@ public class ThreadServiceImpl implements ThreadService {
 
 	private final ForumRepository forumRepository;
 	private final ThreadRepository threadRepository;
-	private final UserRepository userRepository;
 	private final UserService userService;
 	private final ForumService forumService;
 	private final PostService postService;
@@ -38,13 +36,11 @@ public class ThreadServiceImpl implements ThreadService {
 	public ThreadServiceImpl(
 			ForumRepository forumRepository,
 			ThreadRepository threadRepository,
-			UserRepository userRepository,
 			UserService userService,
 			@Lazy ForumService forumService,
 			PostService postService) {
 		this.forumRepository = forumRepository;
 		this.threadRepository = threadRepository;
-		this.userRepository = userRepository;
 		this.userService = userService;
 		this.forumService = forumService;
 		this.postService = postService;
@@ -112,26 +108,6 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public void addLike(int threadId) throws NotFoundException {
-		try {
-			ThreadEntity thread = threadRepository.getOne(threadId);
-
-			UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			UserEntity user = userService.getUserById(userPrincipal.getId());
-
-			if(user.getLikedThreads().contains(thread)){
-				user.getLikedThreads().remove(thread);
-			} else {
-				user.addThreadLike(thread);
-				userRepository.save(user);
-			}
-
-		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Thread with id = " + threadId + " doesn't exist");
-		}
-	}
-
-	@Override
 	public void deleteThread(int threadId) throws UnauthorizedException, NotFoundException {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
@@ -181,12 +157,19 @@ public class ThreadServiceImpl implements ThreadService {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
 
-			if (userService.isUserAnAuthor(thread.getUser()) || userService.isUserPermittedToModerate(thread.getParentForum())) {
+			if (threadDto.isLocked() != null) {
+				if (!userService.isUserAnAuthor(thread.getUser()) && !userService.isUserPermittedToModerate(thread.getParentForum())) {
+					throw new UnauthorizedException("You have no permissions to modify this thread");
+				}
 				thread.setLocked(threadDto.isLocked());
-				threadRepository.save(thread);
-			} else {
-				throw new UnauthorizedException("You have no permissions to modify this thread");
 			}
+
+			if (threadDto.isLiked() != null) {
+				thread.setUsersLikes(userService.setLikes(thread.getUsersLikes(), threadDto.isLiked()));
+			}
+
+			threadRepository.save(thread);
+
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Thread with id = " + threadId + " doesn't exist");
 		}

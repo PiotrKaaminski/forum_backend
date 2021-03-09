@@ -213,6 +213,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 		return permissionDto;
 	}
+
+	@Override
+	public List<UserEntity> setLikes (List<UserEntity> userLikes, boolean liked) {
+		UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserEntity userEntity = getUserById(userPrincipal.getId());
+
+		if (liked && !userLikes.contains(userEntity)) {
+			userLikes.add(userEntity);
+		}
+
+		if (!liked) {
+			userLikes.remove(userEntity);
+		}
+
+		return userLikes;
+	}
 }
 
 

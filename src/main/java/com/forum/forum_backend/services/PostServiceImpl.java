@@ -12,7 +12,6 @@ import com.forum.forum_backend.models.ThreadEntity;
 import com.forum.forum_backend.models.UserEntity;
 import com.forum.forum_backend.repositories.PostRepository;
 import com.forum.forum_backend.repositories.ThreadRepository;
-import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.PostService;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.data.domain.Page;
@@ -35,13 +34,11 @@ public class PostServiceImpl implements PostService {
 	private final PostRepository postRepository;
 	private final ThreadRepository threadRepository;
 	private final UserService userService;
-	private final UserRepository userRepository;
 
-	public PostServiceImpl(PostRepository postRepository, ThreadRepository threadRepository, UserService userService, UserRepository userRepository) {
+	public PostServiceImpl(PostRepository postRepository, ThreadRepository threadRepository, UserService userService) {
 		this.postRepository = postRepository;
 		this.threadRepository = threadRepository;
 		this.userService = userService;
-		this.userRepository = userRepository;
 	}
 
 	@Override
@@ -75,35 +72,21 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void addLike(int postId) throws NotFoundException {
-		try {
-			PostEntity post = postRepository.getOne(postId);
-
-			UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			UserEntity user = userService.getUserById(userPrincipal.getId());
-
-			if(user.getLikedPosts().contains(post)){
-				user.getLikedPosts().remove(post);
-			} else {
-				user.addPostLike(post);
-				userRepository.save(user);
-			}
-
-		} catch (EntityNotFoundException ex) {
-			throw new NotFoundException("Post with id = " + postId + " doesn't exist");
-		}
-	}
-
-	@Override
 	public PostDto modifyPost(int postId, PostDto postDto) throws UnauthorizedException, NotFoundException {
 		try {
 			PostEntity post = postRepository.getOne(postId);
 
-			if (userService.isUserAnAuthor(post.getUser()) || userService.isUserPermittedToModerate(post.getThread().getParentForum())) {
+			if (postDto.getMessage() != null) {
+				if (!userService.isUserAnAuthor(post.getUser()) && !userService.isUserPermittedToModerate(post.getThread().getParentForum())) {
+					throw new UnauthorizedException("You have no permissions to modify this post");
+				}
 				post.setMessage(postDto.getMessage());
-			} else {
-				throw new UnauthorizedException("You have no permissions to modify this post");
 			}
+
+			if (postDto.isLiked() != null) {
+				post.setUsersLikes(userService.setLikes(post.getUsersLikes(), postDto.isLiked()));
+			}
+
 			postRepository.save(post);
 
 			return getPost(postId);

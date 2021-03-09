@@ -33,15 +33,8 @@ public class PostController {
 		return postService.addPost(postDto.getThreadId(), postDto);
 	}
 
-	@PostMapping("/likes/{postId}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void addLike(@PathVariable int postId)
-			throws NotFoundException {
-		postService.addLike(postId);
-	}
-
 	@PatchMapping("/{postId}")
-	public PostDto modifyPost(@PathVariable int postId ,@Valid @RequestBody PostDto postDto)
+	public PostDto modifyPost(@PathVariable int postId ,@RequestBody PostDto postDto)
 			throws UnauthorizedException, NotFoundException {
 		return postService.modifyPost(postId, postDto);
 	}
@@ -51,6 +44,5 @@ public class PostController {
 			throws UnauthorizedException, NotFoundException {
 		postService.deletePost(postId);
 	}
-
 
 }
