@@ -1,0 +1,18 @@
+{
+  "properties": [
+	{
+	  "name": "jwt.secret",
+	  "type": "java.lang.String",
+	  "description": "Description for jwt.secret."
+	},
+	{
+	  "name": "jwt.expirationInMilis",
+	  "type": "java.lang.String",
+	  "description": "Description for jwt.expirationInMilis."
+	},
+	{
+	  "name": "pagination.defaultSize",
+	  "type": "java.lang.String",
+	  "description": "Description for pagination.defaultSize."
+	}
+  ] }

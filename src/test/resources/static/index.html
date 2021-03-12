@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+	<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+	<script src="/requestsToREST.js"></script>
+	<script src="/socketHandling.js"></script>
+	<style>
+		body {
+			background-color: black;
+			color: white;
+		}
+	</style>
+</head>
+<body>
+	<input type="text" id="username">
+	<input type="text" id="password">
+	<button onclick="getJwt()">Login</button>
+	<hr>
+	<button onclick="connect()" id="connectButton">Connect</button>
+	<button onclick="disconnect()" id="disconnectButton" disabled>Disconnect</button>
+
+	<hr>
+
+	<input type="text" id="message" placeholder="message" width="70" style="width: 600px; height: 30px;"><br>
+	<button onclick="sendMessage()" id="sendButton">send to /app/chat</button>
+	<br>
+	<h3>Messages</h3>
+	<table id="messages"></table>
+
+	<hr>
+	<h3>Whispers</h3>
+	<table id="whispers"></table>
+
+</body>
+</html>

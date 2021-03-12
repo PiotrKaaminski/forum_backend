@@ -8,7 +8,6 @@ import com.forum.forum_backend.enums.Permission;
 import com.forum.forum_backend.exceptions.NotFoundException;
 import com.forum.forum_backend.models.ForumEntity;
 import com.forum.forum_backend.models.UserEntity;
-import com.forum.forum_backend.repositories.AuthorityRepository;
 import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.context.annotation.Lazy;
@@ -37,12 +36,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-	private final AuthorityRepository authorityRepository;
 
-	public UserServiceImpl(UserRepository userRepository, @Lazy BCryptPasswordEncoder bCryptPasswordEncoder, AuthorityRepository authorityRepository) {
+	public UserServiceImpl(UserRepository userRepository, @Lazy BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userRepository = userRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-		this.authorityRepository = authorityRepository;
 	}
 
 	@Override
@@ -154,7 +151,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setUsername(userEntity.getUsername());
 		//email not implemented, email is now hard-coded to UserDto
 		user.setJoinTime(userEntity.getJoinTime());
-		user.setAuthority(getPermissionFromUserEntitiy(userEntity));
+		user.setAuthority(getPermissionFromUserEntity(userEntity));
 
 		return user;
 	}
@@ -170,7 +167,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				setId(x.getId());
 				setUsername(x.getUsername());
 				setJoinTime(x.getJoinTime());
-				setAuthority(getPermissionFromUserEntitiy(x));
+				setAuthority(getPermissionFromUserEntity(x));
 			}}).collect(Collectors.toList()));
 		}});
 		response.setCount((int) userEntityPage.getTotalElements());
@@ -189,7 +186,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setUsername(userEntity.getUsername());
 			//email not implemented, email is now hard-coded to UserDto
 			user.setJoinTime(userEntity.getJoinTime());
-			user.setAuthority(getPermissionFromUserEntitiy(userEntity));
+			user.setAuthority(getPermissionFromUserEntity(userEntity));
 
 			return user;
 		} catch (EntityNotFoundException ex) {
@@ -197,7 +194,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 	}
 
-	private PermissionDto getPermissionFromUserEntitiy(UserEntity userEntity) {
+	private PermissionDto getPermissionFromUserEntity(UserEntity userEntity) {
 		PermissionDto permissionDto = new PermissionDto();
 		if (userEntity.getAuthority() != null) {
 			switch (userEntity.getAuthority().getName()) {

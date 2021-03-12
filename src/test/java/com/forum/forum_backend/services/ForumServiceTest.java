@@ -38,11 +38,11 @@ public class ForumServiceTest {
 	private ForumRepository forumRepository;
 	@MockBean
 	private ThreadService threadService;
-
-	@Autowired
+	@MockBean
 	private UserService userService;
 	@Autowired
 	private ForumService forumService;
+
 
 	@Test
 	@DisplayName("Test getMainForumList success")
