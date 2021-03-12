@@ -34,7 +34,7 @@ INSERT INTO thread (title, message, creator_id, forum_id, create_time, locked) V
 ("thread 3 title", "thread message", 1, 4, "2021-02-07 14:23:58", false),
 ("thread 4 title", "thread message", 3, 5, "2021-02-07 14:23:58", false),
 ("thread 5 title", "thread message", 2, 5, "2021-02-07 14:23:58", false),
-("thread 6 title", "thread message", 3, 6, "2021-02-07 14:23:58", false);
+("thread 6 title", "thread message", 3, 6, "2021-02-07 14:23:58", true);
 
 INSERT INTO post (message, thread_id, creator_id, create_time) VALUES
 ("post 1 message", 1, 2, "2021-02-07 14:23:58"),

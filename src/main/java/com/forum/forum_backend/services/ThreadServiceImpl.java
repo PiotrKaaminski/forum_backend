@@ -83,7 +83,7 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public ThreadDto addThread(ThreadDto threadDto) throws NotFoundException {
+	public ThreadDto addThread(ThreadDto threadDto) throws NotFoundException, UnauthorizedException {
 		int forumId = threadDto.getForum().getId();
 		try {
 			ForumEntity parentForum = forumRepository.getOne(forumId);
@@ -102,7 +102,7 @@ public class ThreadServiceImpl implements ThreadService {
 			thread.setParentForum(parentForum);
 			int threadId = threadRepository.save(thread).getId();
 			return getThread(threadId, 1, 0);
-		} catch (EntityNotFoundException | UnauthorizedException ex) {
+		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
 		}
 	}

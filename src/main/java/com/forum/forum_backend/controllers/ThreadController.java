@@ -38,7 +38,7 @@ public class ThreadController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ThreadDto addThread(@Valid @RequestBody ThreadDto threadDto)
-			throws NotFoundException {
+			throws NotFoundException, UnauthorizedException {
 		return threadService.addThread(threadDto);
 	}
 
