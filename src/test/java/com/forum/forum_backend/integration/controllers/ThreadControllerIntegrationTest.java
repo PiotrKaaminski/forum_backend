@@ -204,7 +204,7 @@ public class ThreadControllerIntegrationTest {
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/threads")
 				.header("Authorization", "Bearer " + jwt)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(threadToAdd)))
+				.content(testUtils.objectAsJson(threadToAdd)))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
 
@@ -243,7 +243,7 @@ public class ThreadControllerIntegrationTest {
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/threads")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(threadToAdd)))
+				.content(testUtils.objectAsJson(threadToAdd)))
 				.andExpect(MockMvcResultMatchers.status().isUnauthorized())
 				.andExpect(MockMvcResultMatchers.status().reason("Full authentication is required to access this resource"));
 
@@ -264,7 +264,7 @@ public class ThreadControllerIntegrationTest {
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/threads")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(threadToAdd))
+				.content(testUtils.objectAsJson(threadToAdd))
 				.header("Authorization", "Bearer " + jwt))
 				.andExpect(MockMvcResultMatchers.status().isNotFound())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
@@ -293,7 +293,7 @@ public class ThreadControllerIntegrationTest {
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/threads")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(threadToAdd))
+				.content(testUtils.objectAsJson(threadToAdd))
 				.header("Authorization", "Bearer " + jwt))
 				.andExpect(MockMvcResultMatchers.status().isForbidden())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
@@ -321,7 +321,7 @@ public class ThreadControllerIntegrationTest {
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/threads")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(threadToAdd))
+				.content(testUtils.objectAsJson(threadToAdd))
 				.header("Authorization", "Bearer " + jwt))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
@@ -349,7 +349,7 @@ public class ThreadControllerIntegrationTest {
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/threads")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(threadToAdd))
+				.content(testUtils.objectAsJson(threadToAdd))
 				.header("Authorization", "Bearer " + jwt))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
@@ -375,7 +375,7 @@ public class ThreadControllerIntegrationTest {
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/threads")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(threadToAdd))
+				.content(testUtils.objectAsJson(threadToAdd))
 				.header("Authorization", "Bearer " + jwt))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
@@ -458,7 +458,7 @@ public class ThreadControllerIntegrationTest {
 		mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
 				.header("Authorization", "Bearer " + jwt)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(dataToModify)))
+				.content(testUtils.objectAsJson(dataToModify)))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/threads/4")
@@ -484,7 +484,7 @@ public class ThreadControllerIntegrationTest {
 		mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
 				.header("Authorization", "Bearer " + jwt)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(dataToModify)))
+				.content(testUtils.objectAsJson(dataToModify)))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/threads/4"))
@@ -506,7 +506,7 @@ public class ThreadControllerIntegrationTest {
 
 		mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(dataToModify)))
+				.content(testUtils.objectAsJson(dataToModify)))
 				.andExpect(MockMvcResultMatchers.status().isUnauthorized())
 				.andExpect(MockMvcResultMatchers.status().reason("Full authentication is required to access this resource"));
 
@@ -525,7 +525,7 @@ public class ThreadControllerIntegrationTest {
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/100")
 				.header("Authorization", "Bearer " + jwt)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(dataToModify)))
+				.content(testUtils.objectAsJson(dataToModify)))
 				.andExpect(MockMvcResultMatchers.status().isNotFound())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
 
@@ -551,7 +551,7 @@ public class ThreadControllerIntegrationTest {
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
 				.header("Authorization", "Bearer " + jwt)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectAsJson(dataToModify)))
+				.content(testUtils.objectAsJson(dataToModify)))
 				.andExpect(MockMvcResultMatchers.status().isForbidden())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
 
@@ -562,10 +562,6 @@ public class ThreadControllerIntegrationTest {
 		Assertions.assertEquals("FORBIDDEN", returnedException.getError());
 		Assertions.assertEquals("You have no permissions to modify this thread", returnedException.getMessage());
 		Assertions.assertEquals("/api/threads/4", returnedException.getPath());
-	}
-
-	private String objectAsJson(Object obj) throws Exception {
-		return objectMapper.writeValueAsString(obj);
 	}
 
 }

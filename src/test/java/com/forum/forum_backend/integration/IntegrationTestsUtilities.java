@@ -28,7 +28,7 @@ public class IntegrationTestsUtilities {
 		}};
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(asJsonString(userDto)))
+				.content(objectAsJson(userDto)))
 
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
@@ -43,11 +43,7 @@ public class IntegrationTestsUtilities {
 		return returnedUser.getJwt();
 	}
 
-	private String asJsonString(final Object obj) {
-		try {
-			return objectMapper.writeValueAsString(obj);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+	public String objectAsJson(Object obj) throws Exception {
+		return objectMapper.writeValueAsString(obj);
 	}
 }
