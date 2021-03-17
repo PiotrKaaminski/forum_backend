@@ -225,9 +225,6 @@ public class ThreadControllerIntegrationTest {
 		Assertions.assertEquals(3, breadcrumb.get(1).getId());
 		Assertions.assertEquals("sub forum 1 in 1", breadcrumb.get(1).getTitle());
 
-		Assertions.assertEquals(0, returnedThread.getPosts().getCount());
-		Assertions.assertEquals(0, returnedThread.getPosts().getResults().size());
-
 	}
 
 	@Test
@@ -455,16 +452,11 @@ public class ThreadControllerIntegrationTest {
 
 		String jwt = testUtils.getJwt("user1", "user1pass");
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
 				.header("Authorization", "Bearer " + jwt)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(testUtils.objectAsJson(dataToModify)))
-				.andExpect(MockMvcResultMatchers.status().isOk());
-
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/threads/4")
-				.header("Authorization", "Bearer " + jwt))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
 		ThreadDto returnedThread = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ThreadDto.class);
 
@@ -481,15 +473,11 @@ public class ThreadControllerIntegrationTest {
 
 		String jwt = testUtils.getJwt("user3", "user3pass");
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
 				.header("Authorization", "Bearer " + jwt)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(testUtils.objectAsJson(dataToModify)))
-				.andExpect(MockMvcResultMatchers.status().isOk());
-
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/threads/4"))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
 		ThreadDto returnedThread = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ThreadDto.class);
 

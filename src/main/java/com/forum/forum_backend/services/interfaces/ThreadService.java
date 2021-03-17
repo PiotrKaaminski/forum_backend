@@ -11,5 +11,5 @@ public interface ThreadService {
 	ThreadDto addThread(ThreadDto threadDto) throws NotFoundException, UnauthorizedException;
 	void deleteThread(int threadId) throws UnauthorizedException, NotFoundException;
 	ThreadDto mapChildEntityToDto(ThreadEntity threadEntity);
-	void modifyThread(int threadId, ThreadDto threadDto) throws NotFoundException, UnauthorizedException;
+	ThreadDto modifyThread(int threadId, ThreadDto threadDto) throws NotFoundException, UnauthorizedException;
 }

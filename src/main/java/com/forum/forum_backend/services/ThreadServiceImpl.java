@@ -46,8 +46,7 @@ public class ThreadServiceImpl implements ThreadService {
 		this.postService = postService;
 	}
 
-	@Override
-	public ThreadDto getThread(int threadId, int size, int page) throws NotFoundException {
+	private ThreadDto getThread(int threadId, Integer size, Integer page, boolean getPosts) throws NotFoundException {
 		try {
 			ThreadEntity threadEntity = threadRepository.getOne(threadId);
 			ThreadDto thread = new ThreadDto();
@@ -73,7 +72,10 @@ public class ThreadServiceImpl implements ThreadService {
 			thread.setLiked(threadEntity.getUsersLikes().contains(userEntity));
 
 			thread.setCanModerate(userService.isUserAnAuthor(threadEntity.getUser()) || userService.isUserPermittedToModerate(threadEntity.getParentForum()));
-			thread.setPosts(postService.getPostsByThread(threadEntity.getId(), size, page));
+
+			if(getPosts) {
+				thread.setPosts(postService.getPostsByThread(threadEntity.getId(), size, page));
+			}
 
 			return thread;
 
@@ -81,6 +83,16 @@ public class ThreadServiceImpl implements ThreadService {
 			throw new NotFoundException("Thread with id = " + threadId + " doesn't exist");
 		}
 	}
+
+	@Override
+	public ThreadDto getThread(int threadId, int size, int page) throws NotFoundException {
+		return getThread(threadId, size, page, true);
+	}
+
+	private ThreadDto getThread(int threadId) throws NotFoundException {
+		return getThread(threadId, null, null, false);
+	}
+
 
 	@Override
 	public ThreadDto addThread(ThreadDto threadDto) throws NotFoundException, UnauthorizedException {
@@ -101,7 +113,7 @@ public class ThreadServiceImpl implements ThreadService {
 			ThreadEntity thread = new ThreadEntity(threadDto.getTitle(), threadDto.getMessage(), owner, timestamp);
 			thread.setParentForum(parentForum);
 			int threadId = threadRepository.save(thread).getId();
-			return getThread(threadId, 1, 0);
+			return getThread(threadId);
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
 		}
@@ -153,7 +165,7 @@ public class ThreadServiceImpl implements ThreadService {
 	}
 
 	@Override
-	public void modifyThread(int threadId, ThreadDto threadDto) throws NotFoundException, UnauthorizedException {
+	public ThreadDto modifyThread(int threadId, ThreadDto threadDto) throws NotFoundException, UnauthorizedException {
 		try {
 			ThreadEntity thread = threadRepository.getOne(threadId);
 
@@ -169,6 +181,7 @@ public class ThreadServiceImpl implements ThreadService {
 			}
 
 			threadRepository.save(thread);
+			return getThread(threadId);
 
 		} catch (EntityNotFoundException ex) {
 			throw new NotFoundException("Thread with id = " + threadId + " doesn't exist");

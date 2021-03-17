@@ -49,9 +49,9 @@ public class ThreadController {
 	}
 
 	@PatchMapping("/{threadId}")
-	public void modifyThread(@PathVariable int threadId, @RequestBody ThreadDto threadDto)
+	public ThreadDto modifyThread(@PathVariable int threadId, @RequestBody ThreadDto threadDto)
 			throws NotFoundException, UnauthorizedException {
-		threadService.modifyThread(threadId, threadDto);
+		return threadService.modifyThread(threadId, threadDto);
 	}
 
 }
