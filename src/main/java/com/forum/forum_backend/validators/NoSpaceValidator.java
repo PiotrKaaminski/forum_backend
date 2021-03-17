@@ -9,6 +9,9 @@ public class NoSpaceValidator implements ConstraintValidator<NoSpace, String> {
 
 	@Override
 	public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
+		if (s == null) {
+			return false;
+		}
 		return !s.contains(" ");
 	}
 

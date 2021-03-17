@@ -2,7 +2,8 @@ package com.forum.forum_backend.integration.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.forum.forum_backend.integration.IntegrationTestsUtilities;
+import com.forum.forum_backend.enums.Permission;
+import com.forum.forum_backend.integration.config.IntegrationTestsUtilities;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,12 +41,10 @@ public class AuthoritiesControllerIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
 
-		List<String> returnedPermissions = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
-		});
+		List<Permission> returnedPermissions = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {});
 
-		Assertions.assertNotNull(returnedPermissions);
 		Assertions.assertEquals(1, returnedPermissions.size());
-		Assertions.assertEquals("MODERATOR", returnedPermissions.get(0));
+		Assertions.assertEquals(Permission.MODERATOR, returnedPermissions.get(0));
 	}
 
 	@Test
@@ -58,12 +57,11 @@ public class AuthoritiesControllerIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
 
-		List<String> returnedPermissions = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
-		});
+		List<Permission> returnedPermissions = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {});
 
 		Assertions.assertNotNull(returnedPermissions);
 		Assertions.assertEquals(1, returnedPermissions.size());
-		Assertions.assertEquals("MODERATOR", returnedPermissions.get(0));
+		Assertions.assertEquals(Permission.MODERATOR, returnedPermissions.get(0));
 	}
 
 	@Test
@@ -76,14 +74,13 @@ public class AuthoritiesControllerIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)).andReturn();
 
-		List<String> returnedPermissions = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
-		});
+		List<Permission> returnedPermissions = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {});
 
 		Assertions.assertNotNull(returnedPermissions);
 		Assertions.assertEquals(3, returnedPermissions.size());
-		Assertions.assertEquals("ADMIN", returnedPermissions.get(0));
-		Assertions.assertEquals("HEAD_MODERATOR", returnedPermissions.get(1));
-		Assertions.assertEquals("MODERATOR", returnedPermissions.get(2));
+		Assertions.assertEquals(Permission.ADMIN, returnedPermissions.get(0));
+		Assertions.assertEquals(Permission.HEAD_MODERATOR, returnedPermissions.get(1));
+		Assertions.assertEquals(Permission.MODERATOR, returnedPermissions.get(2));
 	}
 
 	@Test

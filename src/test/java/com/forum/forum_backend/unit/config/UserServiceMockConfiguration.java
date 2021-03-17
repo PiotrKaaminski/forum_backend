@@ -1,4 +1,4 @@
-package com.forum.forum_backend.mock;
+package com.forum.forum_backend.unit.config;
 
 import com.forum.forum_backend.repositories.UserRepository;
 import com.forum.forum_backend.services.UserServiceImpl;

@@ -12,7 +12,16 @@ INSERT INTO user (username, password, join_time, authority_id) VALUES
 ("headModerator1", "$2a$10$t7rpw/VndwDobDLdHe5SeeJ9xsd6QbPW/0mDiN1Xe2WFFefaNG/4y", "2021-02-07 14:23:58", 2),
 ("moderator1", "$2a$10$GplnWpXcAZolUkGKhW4URucIxtlYUycDyz92nu/rmj3vk.WtCijka", "2021-02-07 14:23:58", 1),
 ("moderator2", "$2a$10$2uXMzRSUu0oRg8ghXGNRIOB6Lswptct.ay1EcJP1QAcr29EamWSi6", "2021-02-07 14:23:58", 1),
-("moderator3", "$2a$10$2uXMzRSUu0oRg8ghXGNRIOB6Lswptct.ay1EcJP1QAcr29EamWSi6", "2021-02-07 14:23:58", 1);
+("moderator3", "$2a$10$2uXMzRSUu0oRg8ghXGNRIOB6Lswptct.ay1EcJP1QAcr29EamWSi6", "2021-02-07 14:23:58", 1),
+("user4", "$2a$10$H87xIZj7f3JDD2.fejASR.fXrp091Qd2Dtt.hsDOUbjoMrp7VoT76", "2021-02-07 14:23:58", null),
+("user5", "$2a$10$H87xIZj7f3JDD2.fejASR.fXrp091Qd2Dtt.hsDOUbjoMrp7VoT76", "2021-02-07 14:23:58", 3),
+("user6", "$2a$10$H87xIZj7f3JDD2.fejASR.fXrp091Qd2Dtt.hsDOUbjoMrp7VoT76", "2021-02-07 14:23:58", 2),
+("user7", "$2a$10$H87xIZj7f3JDD2.fejASR.fXrp091Qd2Dtt.hsDOUbjoMrp7VoT76", "2021-02-07 14:23:58", 1),
+("user8", "$2a$10$H87xIZj7f3JDD2.fejASR.fXrp091Qd2Dtt.hsDOUbjoMrp7VoT76", "2021-02-07 14:23:58", null),
+("user9", "$2a$10$H87xIZj7f3JDD2.fejASR.fXrp091Qd2Dtt.hsDOUbjoMrp7VoT76", "2021-02-07 14:23:58", 1),
+("headModerator2", "$2a$10$t7rpw/VndwDobDLdHe5SeeJ9xsd6QbPW/0mDiN1Xe2WFFefaNG/4y", "2021-02-07 14:23:58", 2),
+("headModerator3", "$2a$10$t7rpw/VndwDobDLdHe5SeeJ9xsd6QbPW/0mDiN1Xe2WFFefaNG/4y", "2021-02-07 14:23:58", 2),
+("moderator4", "$2a$10$2uXMzRSUu0oRg8ghXGNRIOB6Lswptct.ay1EcJP1QAcr29EamWSi6", "2021-02-07 14:23:58", 1);
 
 INSERT INTO forum (title, description, parent_forum_id, create_time) VALUES
 ("main forum 1", "description", null, "2021-02-07 14:23:58"),
@@ -25,8 +34,12 @@ INSERT INTO forum (title, description, parent_forum_id, create_time) VALUES
 INSERT INTO forum_moderators (forum_id, user_id) VALUES
 (1, 7),
 (6, 7),
-(2, 8),
-(3, 9);
+(3, 8),
+(3, 9),
+(1, 13),
+(6, 13),
+(3, 15),
+(2, 18);
 
 INSERT INTO thread (title, message, creator_id, forum_id, create_time, locked) VALUES
 ("thread 1 title", "thread message", 1, 3, "2021-02-07 14:23:58", false),

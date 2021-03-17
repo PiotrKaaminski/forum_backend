@@ -18,7 +18,6 @@ import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -64,11 +63,16 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 			throw new BadRequestException("You cannot modify your own permissions");
 		}
 
+		Optional<UserEntity> userToModify = userRepository.findById(userId);
+		if (userToModify.isEmpty()) {
+			throw new NotFoundException("User with id = " + userId + " doesn't exist");
+		}
+
 		if(permissionDto.getName() != null) {
 			switch (permissionDto.getName()) {
 				case ADMIN, HEAD_MODERATOR -> {
 					if (userPrincipal.hasAuthority(Permission.ADMIN.name())) {
-						assignPermission(permissionDto.getName().name(), userId);
+						assignPermission(permissionDto.getName().name(), userToModify.get());
 					} else {
 						throw new UnauthorizedException("You cannot assign " + permissionDto.getName() + " permission");
 					}
@@ -77,131 +81,113 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 					if(permissionDto.getForumIdList().isEmpty() || permissionDto.getForumIdList() == null) {
 						throw new BadRequestException("Forum id list cannot be empty when assigning MODERATOR permission");
 					}
-					assignModerator(permissionDto, userId, userRepository.getOne(userPrincipal.getId()));
+					assignModerator(permissionDto, userToModify.get(), userRepository.getOne(userPrincipal.getId()));
 				}
 			}
 		} else {
-			revoke(userId, userRepository.getOne(userPrincipal.getId()));
+			revoke(userToModify.get(), userRepository.getOne(userPrincipal.getId()));
 		}
 
 		return userService.getUser(userId);
 
 	}
 
-	private void assignPermission(String permission, int userId) throws NotFoundException {
-		try {
-			UserEntity userEntity = userRepository.getOne(userId);
-			AuthorityEntity authorityEntity = authorityRepository.findByName(permission);
-			userEntity.setAuthority(authorityEntity);
-			userEntity.setModeratedForums(null);
-			userRepository.save(userEntity);
-
-		} catch (EntityNotFoundException e) {
-			throw new NotFoundException("User with id = " + userId + " doesn't exist");
-		}
+	private void assignPermission(String permission, UserEntity userToModify) {
+		AuthorityEntity authorityEntity = authorityRepository.findByName(permission);
+		userToModify.setAuthority(authorityEntity);
+		userToModify.setModeratedForums(null);
+		userRepository.save(userToModify);
 	}
 
-	private void assignModerator(PermissionDto permissionDto, int userId, UserEntity modifier)
-			throws NotFoundException, UnauthorizedException, BadRequestException {
-		try {
-			UserEntity userToModify = userRepository.getOne(userId);
+	private void assignModerator(PermissionDto permissionDto, UserEntity userToModify, UserEntity modifier)
+			throws NotFoundException, UnauthorizedException {
 
-			if(userToModify.getAuthority() != null) {
-				if(userToModify.hasAnyAuthority(Arrays.asList(Permission.ADMIN.name(), Permission.HEAD_MODERATOR.name())) &&
-						!modifier.hasAnyAuthority(Collections.singletonList(Permission.ADMIN.name()))) {
-					throw new UnauthorizedException("You cannot degrade user with id = " + userId + " from " +
-							userToModify.getAuthority().getName() + " to MODERATOR");
-				}
+
+		if(userToModify.getAuthority() != null) {
+			if(userToModify.hasAnyAuthority(Arrays.asList(Permission.ADMIN.name(), Permission.HEAD_MODERATOR.name())) &&
+					!modifier.hasAnyAuthority(Collections.singletonList(Permission.ADMIN.name()))) {
+				throw new UnauthorizedException("You cannot degrade user with id = " + userToModify.getId() + " from " +
+						userToModify.getAuthority().getName() + " to MODERATOR");
 			}
-
-			// get all forums listed in dto as forum entity
-			List<ForumEntity> forumsToModerate = new ArrayList<>();
-			for(Integer forumId : permissionDto.getForumIdList()) {
-				Optional<ForumEntity> tempForum = forumRepository.findById(forumId);
-				if (tempForum.isEmpty()) {
-					throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
-				}
-				forumsToModerate.add(tempForum.get());
-			}
-
-			// create list of forumEntities to be assigned
-			List<ForumEntity> forumsToAssign = new ArrayList<>(forumsToModerate);
-			forumsToAssign.removeAll(userToModify.getModeratedForums());
-
-			// check if modifier has permission to assign those forumEntities
-			for(ForumEntity forumToAssign : forumsToAssign) {
-				System.out.println("forumToAssign id: " + forumToAssign.getId());
-				ForumEntity parentForum = null;
-				if (forumToAssign.getParentForum() != null) {
-					parentForum = forumToAssign.getParentForum();
-				}
-				if (!userService.isUserPermittedToModerate(parentForum, modifier)) {
-					throw new UnauthorizedException("You have no permission to assign moderator to forum with id = " + forumToAssign.getId());
-				}
-				if (forumToAssign.isUserModerator(userToModify)) {
-					throw new BadRequestException("User with id = " + userToModify.getId() + " is already moderator of forum with id = " + forumToAssign.getId());
-				}
-			}
-
-			// create list of forumEntites to be revoked
-			List<ForumEntity> forumsToRevoke = new ArrayList<>(userToModify.getModeratedForums());
-			forumsToRevoke.removeAll(forumsToModerate);
-
-			// check if modifier has permission to revoke those forumEntities
-			for(ForumEntity forumToRevoke : forumsToRevoke) {
-				System.out.println("forumToRevoke id: " + forumToRevoke.getId());
-				ForumEntity parentForum = null;
-				if (forumToRevoke.getParentForum() != null) {
-					parentForum = forumToRevoke.getParentForum();
-				}
-				if (!userService.isUserPermittedToModerate(parentForum, modifier)) {
-					throw new UnauthorizedException("You have no permission to revoke moderator from forum with id = " + forumToRevoke.getId());
-				}
-			}
-
-			// modifier has permisisons to revoke and assign all forums listed in dto
-			// save all forum entities listed in dto
-			userToModify.setModeratedForums(forumsToModerate);
-			AuthorityEntity authorityEntity = authorityRepository.findByName(permissionDto.getName().name());
-			userToModify.setAuthority(authorityEntity);
-			userRepository.save(userToModify);
-
-		} catch (EntityNotFoundException e) {
-			throw new NotFoundException("User with id = " + userId + " doesn't exist");
 		}
+
+		// get all forums listed in dto as forum entity
+		List<ForumEntity> forumsToModerate = new ArrayList<>();
+		for(Integer forumId : permissionDto.getForumIdList()) {
+			Optional<ForumEntity> tempForum = forumRepository.findById(forumId);
+			if (tempForum.isEmpty()) {
+				throw new NotFoundException("Forum with id = " + forumId + " doesn't exist");
+			}
+			forumsToModerate.add(tempForum.get());
+		}
+
+		// create list of forumEntities to be assigned
+		List<ForumEntity> forumsToAssign = new ArrayList<>(forumsToModerate);
+		forumsToAssign.removeAll(userToModify.getModeratedForums());
+
+		// check if modifier has permission to assign those forumEntities
+		for(ForumEntity forumToAssign : forumsToAssign) {
+			System.out.println("forumToAssign id: " + forumToAssign.getId());
+			ForumEntity parentForum = null;
+			if (forumToAssign.getParentForum() != null) {
+				parentForum = forumToAssign.getParentForum();
+			}
+			if (!userService.isUserPermittedToModerate(parentForum, modifier)) {
+				throw new UnauthorizedException("You have no permission to assign moderator to forum with id = " + forumToAssign.getId());
+			}
+		}
+
+		// create list of forumEntities to be revoked
+		List<ForumEntity> forumsToRevoke = new ArrayList<>(userToModify.getModeratedForums());
+		forumsToRevoke.removeAll(forumsToModerate);
+
+		// check if modifier has permission to revoke those forumEntities
+		for(ForumEntity forumToRevoke : forumsToRevoke) {
+			System.out.println("forumToRevoke id: " + forumToRevoke.getId());
+			ForumEntity parentForum = null;
+			if (forumToRevoke.getParentForum() != null) {
+				parentForum = forumToRevoke.getParentForum();
+			}
+			if (!userService.isUserPermittedToModerate(parentForum, modifier)) {
+				throw new UnauthorizedException("You have no permission to revoke moderator from forum with id = " + forumToRevoke.getId());
+			}
+		}
+
+		// modifier has permisisons to revoke and assign all forums listed in dto
+		// save all forum entities listed in dto
+		userToModify.setModeratedForums(forumsToModerate);
+		AuthorityEntity authorityEntity = authorityRepository.findByName(permissionDto.getName().name());
+		userToModify.setAuthority(authorityEntity);
+		userRepository.save(userToModify);
 	}
 
-	private void revoke(int userId, UserEntity modifier) throws NotFoundException, UnauthorizedException {
-		try {
-			UserEntity userToRevoke = userRepository.getOne(userId);
+	private void revoke(UserEntity userToModify, UserEntity modifier) throws UnauthorizedException {
 
-			if (userToRevoke.getAuthority() != null &&
-					userToRevoke.hasAnyAuthority(Arrays.asList(Permission.ADMIN.name(), Permission.HEAD_MODERATOR.name()))) {
+			if (userToModify.getAuthority() != null &&
+					userToModify.hasAnyAuthority(Arrays.asList(Permission.ADMIN.name(), Permission.HEAD_MODERATOR.name()))) {
 				if (modifier.hasAnyAuthority(Collections.singletonList(Permission.ADMIN.name()))) {
-					userToRevoke.setAuthority(null);
-					userToRevoke.setModeratedForums(null);
-					userRepository.save(userToRevoke);
+					userToModify.setAuthority(null);
+					userToModify.setModeratedForums(null);
+					userRepository.save(userToModify);
 				} else {
-					throw new UnauthorizedException("You cannot revoke " + userToRevoke.getAuthority().getName() + " permission");
+					throw new UnauthorizedException("You cannot revoke " + userToModify.getAuthority().getName() + " permission");
 				}
-			} else if (userToRevoke.getAuthority() != null &&
-					userToRevoke.hasAnyAuthority(Collections.singletonList(Permission.MODERATOR.name()))) {
-				for (ForumEntity moderatedForum : userToRevoke.getModeratedForums()) {
+			} else if (userToModify.getAuthority() != null &&
+					userToModify.hasAnyAuthority(Collections.singletonList(Permission.MODERATOR.name()))) {
+				for (ForumEntity moderatedForum : userToModify.getModeratedForums()) {
 					ForumEntity parentForum = null;
 					if (moderatedForum.getParentForum() != null) {
 						parentForum = moderatedForum.getParentForum();
 					}
 					if (!userService.isUserPermittedToModerate(parentForum, modifier)) {
-						throw new UnauthorizedException("You have no permission revoke MODERATOR form forum with id = " + moderatedForum.getId());
+						throw new UnauthorizedException("You have no permission to revoke MODERATOR from forum with id = " + moderatedForum.getId());
 					}
 				}
-				userToRevoke.setAuthority(null);
-				userToRevoke.setModeratedForums(null);
-				userRepository.save(userToRevoke);
+				userToModify.setAuthority(null);
+				userToModify.setModeratedForums(null);
+				userRepository.save(userToModify);
 			}
-		} catch (EntityNotFoundException e) {
-			throw new NotFoundException("User with id = " + userId + " doesn't exist");
-		}
+
 	}
 
 }

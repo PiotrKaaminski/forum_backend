@@ -1,4 +1,4 @@
-package com.forum.forum_backend.services;
+package com.forum.forum_backend.unit.services;
 
 import com.forum.forum_backend.dtos.ForumDto;
 import com.forum.forum_backend.dtos.PaginatedResponse;

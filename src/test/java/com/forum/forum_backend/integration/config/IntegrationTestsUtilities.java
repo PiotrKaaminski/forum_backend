@@ -1,4 +1,4 @@
-package com.forum.forum_backend.integration;
+package com.forum.forum_backend.integration.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.forum_backend.dtos.UserDto;

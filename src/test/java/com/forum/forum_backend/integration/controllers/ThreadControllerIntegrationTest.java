@@ -2,7 +2,7 @@ package com.forum.forum_backend.integration.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.forum_backend.dtos.*;
-import com.forum.forum_backend.integration.IntegrationTestsUtilities;
+import com.forum.forum_backend.integration.config.IntegrationTestsUtilities;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

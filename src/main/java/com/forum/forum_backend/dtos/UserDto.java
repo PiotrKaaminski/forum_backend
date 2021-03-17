@@ -5,7 +5,6 @@ import com.forum.forum_backend.validators.annotations.NoSpace;
 import com.forum.forum_backend.validators.annotations.UsernameUnique;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -13,12 +12,10 @@ public class UserDto {
 
 	private int id;
 	@NoSpace
-	@NotNull(message = "Username cannot be null")
 	@Length(min = 5, max = 20, message = "Username cannot be shorter than 5 and longer than 20")
 	@UsernameUnique
 	private String username;
 	@NoSpace
-	@NotNull(message = "Password cannot be null")
 	@Length(min = 5, max = 25, message = "Password cannot be shorter than 5 and longer than 25")
 	private String password;
 	private String email = "user@forum.com"; //email will be implemented

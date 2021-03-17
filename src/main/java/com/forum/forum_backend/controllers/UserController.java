@@ -9,6 +9,7 @@ import com.forum.forum_backend.exceptions.UnauthorizedException;
 import com.forum.forum_backend.services.interfaces.AuthoritiesService;
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,6 +50,7 @@ public class UserController {
 	}
 
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public void addUser(@Valid @RequestBody UserDto userDto){
 		userService.addUser(userDto);
 	}
