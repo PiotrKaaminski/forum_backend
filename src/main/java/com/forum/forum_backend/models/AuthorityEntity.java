@@ -11,8 +11,8 @@ public class AuthorityEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name = "authority")
-	private String authority;
+	@Column(name = "name")
+	private String name;
 
 	public int getId() {
 		return id;
@@ -22,11 +22,11 @@ public class AuthorityEntity {
 		this.id = id;
 	}
 
-	public String getAuthority() {
-		return authority;
+	public String getName() {
+		return name;
 	}
 
-	public void setAuthority(String authority) {
-		this.authority = authority;
+	public void setName(String authority) {
+		this.name = authority;
 	}
 }

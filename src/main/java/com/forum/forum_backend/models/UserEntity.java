@@ -1,8 +1,8 @@
 package com.forum.forum_backend.models;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -20,23 +20,27 @@ public class UserEntity {
 	@Column(name = "password")
 	private String password;
 
-	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
-	private Collection<AuthorityEntity> authorities;
+	@Column(name = "join_time")
+	private Timestamp joinTime;
+
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "authority_id")
+	private AuthorityEntity authority;
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "topic_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
-	private List<TopicEntity> likedTopics ;
+	@JoinTable(name = "thread_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "thread_id"))
+	private List<ThreadEntity> likedThreads = new ArrayList<>();
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "comment_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "comment_id"))
-	private List<CommentEntity> likedComments;
+	@JoinTable(name = "post_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "post_id"))
+	private List<PostEntity> likedPosts = new ArrayList<>();
 
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-	@JoinTable(name = "category_moderators", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-	private List<CategoryEntity> moderatedCategories;
+	@JoinTable(name = "forum_moderators", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "forum_id"))
+	private List<ForumEntity> moderatedForums = new ArrayList<>();
 
 	// Getters and setters
+
 
 	public int getId() {
 		return id;
@@ -62,69 +66,73 @@ public class UserEntity {
 		this.password = password;
 	}
 
-	public Collection<AuthorityEntity> getAuthorities() {
-		return authorities;
+	public Timestamp getJoinTime() {
+		return joinTime;
 	}
 
-	public void setAuthorities(Collection<AuthorityEntity> authorities) {
-		this.authorities = authorities;
+	public void setJoinTime(Timestamp joinTime) {
+		this.joinTime = joinTime;
 	}
 
-	public List<TopicEntity> getLikedTopics() {
-		return likedTopics;
+	public AuthorityEntity getAuthority() {
+		return authority;
 	}
 
-	public void setLikedTopics(List<TopicEntity> likedTopics) {
-		this.likedTopics = likedTopics;
+	public void setAuthority(AuthorityEntity authority) {
+		this.authority = authority;
 	}
 
-	public List<CommentEntity> getLikedComments() {
-		return likedComments;
+	public List<ThreadEntity> getLikedThreads() {
+		return likedThreads;
 	}
 
-	public void setLikedComments(List<CommentEntity> likedComments) {
-		this.likedComments = likedComments;
+	public void setLikedThreads(List<ThreadEntity> likedThreads) {
+		this.likedThreads = likedThreads;
 	}
 
-	public List<CategoryEntity> getModeratedCategories() {
-		return moderatedCategories;
+	public List<PostEntity> getLikedPosts() {
+		return likedPosts;
 	}
 
-	public void setModeratedCategories(List<CategoryEntity> moderatedCategories) {
-		this.moderatedCategories = moderatedCategories;
+	public void setLikedPosts(List<PostEntity> likedPosts) {
+		this.likedPosts = likedPosts;
+	}
+
+	public List<ForumEntity> getModeratedForums() {
+		return moderatedForums;
+	}
+
+	public void setModeratedForums(List<ForumEntity> moderatedForums) {
+		this.moderatedForums = moderatedForums;
 	}
 
 	// helper methods
 
-	public void addAuthority(AuthorityEntity authorityEntity) {
-		if (this.authorities == null) {
-			authorities = new ArrayList<>();
+	public void addThreadLike(ThreadEntity threadEntity) {
+		if (this.likedThreads == null) {
+			likedThreads = new ArrayList<>();
 		}
-		authorities.add(authorityEntity);
+		likedThreads.add(threadEntity);
 
 	}
 
-	public void addTopicLike(TopicEntity topicEntity) {
-		if (this.likedTopics == null) {
-			likedTopics = new ArrayList<>();
+	public void addPostLike(PostEntity postEntity) {
+		if (this.likedPosts == null) {
+			likedPosts = new ArrayList<>();
 		}
-		likedTopics.add(topicEntity);
+		likedPosts.add(postEntity);
 
 	}
 
-	public void addCommentLike(CommentEntity commentEntity) {
-		if (this.likedComments == null) {
-			likedComments = new ArrayList<>();
+	public void addModeratedForum(ForumEntity forumEntity) {
+		if (this.moderatedForums == null) {
+			moderatedForums = new ArrayList<>();
 		}
-		likedComments.add(commentEntity);
+		moderatedForums.add(forumEntity);
 
 	}
 
-	public void addModeratedCategory(CategoryEntity categoryEntity) {
-		if (this.moderatedCategories == null) {
-			moderatedCategories = new ArrayList<>();
-		}
-		moderatedCategories.add(categoryEntity);
-
+	public boolean hasAnyAuthority(List<String> authoritiesToCompare) {
+		return authoritiesToCompare.contains(authority.getName());
 	}
 }

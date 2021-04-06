@@ -36,27 +36,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/api/register", "/api/login")
 				.permitAll()
-				.antMatchers(HttpMethod.GET, "/api/topics", "/api/topics/*", "/api/categories", "/api/categories/*")
+				.antMatchers(HttpMethod.GET, "/api/threads", "/api/threads/*", "/api/forums", "/api/forums/*")
 				.permitAll()
-				.antMatchers(HttpMethod.POST, "/api/topics", "/api/topics/*", "/api/comments", "/api/comments/*")
-				.hasAuthority("USER")
-				.antMatchers(HttpMethod.POST, "/api/categories")
-				.hasAnyAuthority("HEAD_MODERATOR", "ADMIN")
-				.antMatchers(HttpMethod.POST, "/api/categories/*")
+				.antMatchers(HttpMethod.POST, "/api/threads", "/api/threads/*", "/api/posts", "/api/posts/*")
+				.authenticated()
+				.antMatchers(HttpMethod.POST, "/api/forums")
+				.hasAnyAuthority("HEAD_MODERATOR", "ADMIN", "MODERATOR")
+				.antMatchers(HttpMethod.POST, "/api/forums/*")
 				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
-				.antMatchers(HttpMethod.PUT, "/api/topics/*", "/api/comments/*")
-				.hasAuthority("USER")
-				.antMatchers(HttpMethod.PUT, "/api/categories/*")
+				.antMatchers(HttpMethod.PATCH, "/api/threads/*", "/api/posts/*")
+				.authenticated()
+				.antMatchers(HttpMethod.PUT, "/api/forums/*")
 				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
-				.antMatchers(HttpMethod.DELETE, "/api/topics/*", "/api/comments/*")
-				.hasAuthority("USER")
-				.antMatchers(HttpMethod.DELETE, "/api/categories/*")
+				.antMatchers(HttpMethod.DELETE, "/api/threads/*", "/api/posts/*")
+				.authenticated()
+				.antMatchers(HttpMethod.DELETE, "/api/forums/*")
 				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
+				.antMatchers(HttpMethod.GET, "/api/users/me")
+				.authenticated()
+				.antMatchers(HttpMethod.GET, "/api/authorities")
+				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
+				.antMatchers(HttpMethod.GET, "/api/users")
+				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
+				.antMatchers(HttpMethod.PATCH, "/api/users/*")
+				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
+				.antMatchers(HttpMethod.GET, "/api/users/*")
+				.hasAnyAuthority("MODERATOR", "HEAD_MODERATOR", "ADMIN")
+				.antMatchers(HttpMethod.PATCH, "/api/threads/*")
+				.authenticated()
 				.and()
 				.csrf().disable()
 				.exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
 				.and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.cors();
 
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
@@ -81,4 +95,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {return new JwtAuthenticationFilter();}
+
+
 }

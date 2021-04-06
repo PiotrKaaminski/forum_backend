@@ -1,93 +1,70 @@
-INSERT INTO authority (authority) VALUES
-("USER"),
+INSERT INTO authority (name) VALUES
 ("MODERATOR"),
 ("HEAD_MODERATOR"),
 ("ADMIN");
 
-INSERT INTO user (username, password) VALUES
-("user1", "$2a$10$VOkW9NCOy6UZx3/Om2y.zuj1i1xZQrCEXJsez2V.CkjEuSeoNqWky"),
-("user2", "$2a$10$4nf6RBXk.Z59NAdmS76t8.MuLL/ibOopmVL.Lnf9rGsAXaEC0s73O"),
-("user3", "$2a$10$H87xIZj7f3JDD2.fejASR.fXrp091Qd2Dtt.hsDOUbjoMrp7VoT76"),
-("admin1", "$2a$10$1K2H99LDbrmz4GLj.KRmreYZrlC5eqbZ79.CgPXv.WS1DQ5fdiwhy"),
-("headModerator1", "$2a$10$t7rpw/VndwDobDLdHe5SeeJ9xsd6QbPW/0mDiN1Xe2WFFefaNG/4y"),
-("moderator1", "$2a$10$GplnWpXcAZolUkGKhW4URucIxtlYUycDyz92nu/rmj3vk.WtCijka"),
-("moderator2", "$2a$10$2uXMzRSUu0oRg8ghXGNRIOB6Lswptct.ay1EcJP1QAcr29EamWSi6"),
-("moderator3", "$2a$10$GiqY7E5.a5VIDtrwgdZms.YS07W2X5kVqawMgYEctTJRLvHqhWMdK"),
-("moderator4", "$2a$10$7GzzNFtE.3ed9MIoRghecO4ggsF42/tvItAgi3N4NFQtkC45yrE4i"),
-("moderator5", "$2a$10$j6wO./.XCTem8jQUek2Q1.2UjfhjiJl4sygmehv4xkWNLcwlxR/xW");
+INSERT INTO user (username, password, join_time, authority_id) VALUES
+("user1", "$2a$10$VOkW9NCOy6UZx3/Om2y.zuj1i1xZQrCEXJsez2V.CkjEuSeoNqWky", "2021-02-07 14:23:58", null),
+("user2", "$2a$10$4nf6RBXk.Z59NAdmS76t8.MuLL/ibOopmVL.Lnf9rGsAXaEC0s73O", "2021-02-07 14:23:58", null),
+("user3", "$2a$10$H87xIZj7f3JDD2.fejASR.fXrp091Qd2Dtt.hsDOUbjoMrp7VoT76", "2021-02-07 14:23:58", null),
+("admin1", "$2a$10$1K2H99LDbrmz4GLj.KRmreYZrlC5eqbZ79.CgPXv.WS1DQ5fdiwhy", "2021-02-07 14:23:58", 3),
+("admin2", "$2a$10$YfrUMUtbQzEsjnUF22e5ReV9cigri2XgIJvocmLoT5y81GGO.hzCu", "2021-02-07 14:23:58", 3),
+("headModerator1", "$2a$10$t7rpw/VndwDobDLdHe5SeeJ9xsd6QbPW/0mDiN1Xe2WFFefaNG/4y", "2021-02-07 14:23:58", 2),
+("moderator1", "$2a$10$GplnWpXcAZolUkGKhW4URucIxtlYUycDyz92nu/rmj3vk.WtCijka", "2021-02-07 14:23:58", 1),
+("moderator2", "$2a$10$2uXMzRSUu0oRg8ghXGNRIOB6Lswptct.ay1EcJP1QAcr29EamWSi6", "2021-02-07 14:23:58", 1),
+("moderator3", "$2a$10$2uXMzRSUu0oRg8ghXGNRIOB6Lswptct.ay1EcJP1QAcr29EamWSi6", "2021-02-07 14:23:58", 1);
 
-INSERT INTO user_authorities (user_id, authority_id) VALUES
-(1, 1),
-(2, 1),
-(3, 1),
-(4, 1),
-(4, 4),
-(5, 1),
-(5, 3),
-(6, 1),
-(6, 2),
-(7, 1),
-(7, 2),
-(8, 1),
-(8, 2),
-(9, 1),
-(9, 2),
-(10, 1),
-(10, 2);
+INSERT INTO forum (title, description, parent_forum_id, create_time) VALUES
+("main forum 1", "description", null, "2021-02-07 14:23:58"),
+("main forum 2", "description", null, "2021-02-07 14:23:58"),
+("main forum 3", "description", null, "2021-02-07 14:23:58"),
+("main forum 4", "description", null, "2021-02-07 14:23:58"),
+("sub-forum 1 in 1", "description", 1, "2021-02-07 14:23:58"),
+("sub-forum 2 in 1", "description", 1, "2021-02-07 14:23:58"),
+("sub-forum 1 in 2", "description", 2, "2021-02-07 14:23:58"),
+("sub-forum 2 in 2", "description", 2, "2021-02-07 14:23:58"),
+("sub-forum 1 in 4", "description", 4, "2021-02-07 14:23:58"),
+("sub-forum 2 in 4", "description", 4, "2021-02-07 14:23:58"),
+("sub-sub-forum 1 in 1", "description", 5, "2021-02-07 14:23:58"),
+("sub-sub-forum 2 in 1", "description", 5, "2021-02-07 14:23:58"),
+("sub-sub-forum 1 in 2", "description", 10, "2021-02-07 14:23:58");
 
-INSERT INTO category (title, parent_category_id) VALUES
-("main category 1 of categories", null),
-("main category 2 of topics", null),
-("main category 3 of categories", null),
-("main category 4 of topics", null),
-("sub-category 1 in 1 of topics", 1),
-("sub-category 2 in 1 of categories", 1),
-("sub-sub-category 1 in 6 of categories", 6),
-("sub-sub-category 2 in 6 of categories", 6),
-("sub-sub-category 3 in 6 of categories", 6),
-("sub-sub-category 4 in 6 of categories", 6);
-
-INSERT INTO category_moderators (category_id, user_id) VALUES
-(1, 6),
-(2, 6),
-(2, 7),
-(3, 7),
+INSERT INTO forum_moderators (forum_id, user_id) VALUES
+(1, 7),
+(7, 8),
 (4, 8),
-(6, 9),
-(7, 10);
+(5, 9),
+(6, 9);
 
-INSERT INTO topic (header, content, user_id, category_id) VALUES
-("user1 topic1", "user1 topic1 content", 1, 2),
-("user1 topic2", "user1 topic2 content", 1, 2),
-("user2 topic1", "user2 topic1 content", 2, 4),
-("user3 topic1", "user3 topic1 content", 3, 5),
-("admin1 topic1", "admin1 topic1 content", 4, 5);
 
-INSERT INTO comment (content, topic_id, user_id) VALUES
-("user1 topic1 comment1", 1, 1),
-("user1 topic1 comment2", 1, 2),
-("user1 topic1 comment3", 1, 4),
-("user1 topic1 comment4", 1, 3),
-("user1 topic1 comment5", 1, 2),
-("user1 topic1 comment6", 1, 2),
-("user1 topic1 comment7", 1, 1),
-("user1 topic1 comment8", 1, 4),
-("user1 topic1 comment9", 1, 1),
-("user1 topic2 comment1", 2, 3),
-("user1 topic2 comment2", 2, 3),
-("user1 topic2 comment3", 2, 4),
-("user1 topic2 comment4", 2, 2),
-("user1 topic2 comment5", 2, 1),
-("user1 topic2 comment6", 2, 4),
-("user1 topic2 comment7", 2, 2),
-("user1 topic2 comment8", 2, 2),
-("user2 topic1 comment1", 3, 3),
-("user2 topic1 comment2", 3, 2),
-("user2 topic1 comment3", 3, 4),
-("user2 topic1 comment4", 3, 1),
-("user3 topic1 comment1", 4, 2),
-("user3 topic1 comment2", 4, 2),
-("user3 topic1 comment3", 4, 3);
+INSERT INTO thread (title, message, creator_id, forum_id, create_time, locked) VALUES
+("user1 thread1", "message", 1, 5, "2021-02-07 14:23:58", false),
+("user2 thread2", "message", 2, 6, "2021-02-07 14:23:58", false),
+("user3 thread3", "message", 3, 7, "2021-02-07 14:23:58", false),
+("user2 thread4", "message", 2, 11, "2021-02-07 14:23:58", false),
+("user2 thread5", "message", 2, 11, "2021-02-07 14:23:58", false),
+("user2 thread6", "message", 2, 11, "2021-02-07 14:23:58", false);
+
+INSERT INTO post (message, thread_id, creator_id, create_time) VALUES
+("user3 post1", 1, 3, "2021-02-07 14:23:58"),
+("user3 post1", 1, 3, "2021-02-07 14:23:58"),
+("user3 post1", 1, 3, "2021-02-07 14:23:58"),
+("user2 post3", 3, 2, "2021-02-07 14:23:58"),
+("user2 post3", 3, 2, "2021-02-07 14:23:58"),
+("user2 post1", 4, 2, "2021-02-07 14:23:58"),
+("user2 post2", 4, 2, "2021-02-07 14:23:58"),
+("user1 post3", 4, 1, "2021-02-07 14:23:58"),
+("user1 post4", 4, 1, "2021-02-07 14:23:58"),
+("user1 post5", 1, 1, "2021-02-07 14:23:58"),
+("user1 post6", 1, 1, "2021-02-07 14:23:58"),
+("user1 post7", 1, 1, "2021-02-07 14:23:58"),
+("user1 post8", 1, 1, "2021-02-07 14:23:58"),
+("user1 post9", 1, 1, "2021-02-07 14:23:58"),
+("user1 post10", 1, 1, "2021-02-07 14:23:58"),
+("user1 post11", 1, 1, "2021-02-07 14:23:58"),
+("user1 post12", 1, 1, "2021-02-07 14:23:58"),
+("user1 post13", 1, 1, "2021-02-07 14:23:58");
+
 
 
 
