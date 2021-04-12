@@ -26,8 +26,11 @@ public class ChatServiceImpl implements ChatService {
 		if (message.startsWith("/")) {
 			String command = message.split(" ", 2)[0];
 			switch (command) {
-				case "/msg" -> whisper(message, author);
-				default -> throw new BadChatCommandException("Komenda \"" + command + "\" nie istnieje", author);
+				case "/msg":
+					whisper(message, author);
+					break;
+				default:
+					throw new BadChatCommandException("Komenda \"" + command + "\" nie istnieje", author);
 			}
 		} else {
 			ChatMessageDto chatMessageDto = new ChatMessageDto(author, message);

@@ -70,19 +70,19 @@ public class AuthoritiesServiceImpl implements AuthoritiesService {
 
 		if(permissionDto.getName() != null) {
 			switch (permissionDto.getName()) {
-				case ADMIN, HEAD_MODERATOR -> {
+				case ADMIN:
+				case HEAD_MODERATOR:
 					if (userPrincipal.hasAuthority(Permission.ADMIN.name())) {
 						assignPermission(permissionDto.getName().name(), userToModify.get());
 					} else {
 						throw new UnauthorizedException("You cannot assign " + permissionDto.getName() + " permission");
 					}
-				}
-				case MODERATOR -> {
+					break;
+				case MODERATOR:
 					if(permissionDto.getForumIdList().isEmpty() || permissionDto.getForumIdList() == null) {
 						throw new BadRequestException("Forum id list cannot be empty when assigning MODERATOR permission");
 					}
 					assignModerator(permissionDto, userToModify.get(), userRepository.getOne(userPrincipal.getId()));
-				}
 			}
 		} else {
 			revoke(userToModify.get(), userRepository.getOne(userPrincipal.getId()));

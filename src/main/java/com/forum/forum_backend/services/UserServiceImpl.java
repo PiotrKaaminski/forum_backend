@@ -198,14 +198,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		PermissionDto permissionDto = new PermissionDto();
 		if (userEntity.getAuthority() != null) {
 			switch (userEntity.getAuthority().getName()) {
-				case "ADMIN" -> permissionDto.setName(Permission.ADMIN);
-				case "HEAD_MODERATOR" -> permissionDto.setName(Permission.HEAD_MODERATOR);
-				case "MODERATOR" -> {
+				case "ADMIN":
+					permissionDto.setName(Permission.ADMIN);
+					break;
+				case "HEAD_MODERATOR":
+					permissionDto.setName(Permission.HEAD_MODERATOR);
+					break;
+				case "MODERATOR":
 					permissionDto.setName(Permission.MODERATOR);
 					for (ForumEntity forumEntity : userEntity.getModeratedForums()) {
 						permissionDto.addForumId(forumEntity.getId());
 					}
-				}
+					break;
 			}
 		}
 		return permissionDto;
