@@ -7,7 +7,7 @@ Authentication is implemented on the forum. Users who are not logged in can only
   
 ## Running project locally
 
-Clone code from main branch. To run this project MySQL server is required. On database server you need account with permissions to do every action on schema. If username is different than "admin" and password is different than "admin123" it has to be specified in application.properties (spring.datasource.username and spring.datasource.password) and in liquibase.properties (username and password). Database url also has to be specified in those property files if it is different than default. Schema can be empty because in this project liquibase is implemented, it creates tables and inserts some default values specified in resources/db/changelogdata.sql.
+Clone code from main branch. To run this project MySQL server is required. On database server you need account with permissions to do every action on schema. Username, password and URL needs to be specified in application.property file inside main directory. In order to run tests the same action has to be done inside test directory. Schema can be empty because in this project liquibase is implemented, it creates tables and inserts some default values specified in resources/db/changelog/data.sql.
 
 To see request results proper tool is required(e.g. postman)
 
