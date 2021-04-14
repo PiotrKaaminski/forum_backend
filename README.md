@@ -27,4 +27,4 @@ moderator1, moderator2, moderator3
 
 Each account has role corresponding to login.
 
-Password is always login+"pass" (e.g login: user1 password: user1pass)
+For all these accounts password is login+"pass" (e.g login: user1 password: user1pass)
