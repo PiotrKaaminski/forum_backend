@@ -19,11 +19,12 @@ Check here: https://pkaminski-forum.azurewebsites.net
 ## Additional info
 
 Users pre-created both in main branch to run application locally and on hosting site have following accounts:
-user1, user2, user3
-admin1, admin2
-headModerator1
+
+user1, user2, user3<br>
+admin1, admin2<br>
+headModerator1<br>
 moderator1, moderator2, moderator3
 
 Each account has role corresponding to login.
 
-password is always login+"pass" (e.g login: user1 password: user1pass)
+Password is always login+"pass" (e.g login: user1 password: user1pass)
