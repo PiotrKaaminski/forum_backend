@@ -86,7 +86,7 @@ public class AuthoritiesControllerIntegrationTest {
 	@Test
 	@DisplayName("test getAuthorities as user")
 	public void getAuthoritiesAsUser() throws Exception {
-		String jwt = testUtils.getJwt("user1", "user1pass");
+		String jwt = testUtils.getJwt("user3", "user3pass");
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/authorities")
 				.header("Authorization", "Bearer " + jwt))
