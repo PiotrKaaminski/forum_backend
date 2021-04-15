@@ -49,5 +49,5 @@ jobs:
       with:
         app-name: 'pkaminski-forum-api'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_c86d5c3b66d84a488ec6abc6fb0e6089 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_723b95bd459f4e5a8451f1fc11eb4868 }}
         package: '*.jar'
