@@ -45,7 +45,7 @@
 						<artifactId>liquibase-maven-plugin</artifactId>
 						<version>4.2.1</version>
 						<configuration>
-							<propertyFile>src/main/resources/liquibase-dev.properties</propertyFile>
+							<propertyFile>src/main/resources/liquibase.properties</propertyFile>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -75,7 +75,7 @@
 						<artifactId>liquibase-maven-plugin</artifactId>
 						<version>4.2.1</version>
 						<configuration>
-							<propertyFile>src/test/resources/liquibase-prod.properties</propertyFile>
+							<propertyFile>src/test/resources/liquibase.properties</propertyFile>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -139,14 +139,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>

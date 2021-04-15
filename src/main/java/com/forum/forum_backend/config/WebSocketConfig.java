@@ -24,8 +24,8 @@ import java.util.List;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-	@Value("${cors.allowedOrigin}")
-	private String allowedOrigin;
+	@Value("${cors.allowedOrigins}")
+	private String[] allowedOrigins;
 
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
@@ -35,7 +35,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/socket-handshake").setAllowedOrigins(allowedOrigin).withSockJS();
+		registry.addEndpoint("/socket-handshake").setAllowedOrigins(allowedOrigins).withSockJS();
 	}
 
 	@Override
