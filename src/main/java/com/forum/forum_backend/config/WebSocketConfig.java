@@ -25,7 +25,7 @@ import java.util.List;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Value("${cors.allowedOrigins}")
-	private String[] allowedOrigins;
+	private String allowedOrigins;
 
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
