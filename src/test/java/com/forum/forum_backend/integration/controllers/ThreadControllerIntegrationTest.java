@@ -427,7 +427,7 @@ public class ThreadControllerIntegrationTest {
 	@Test
 	@DisplayName("Test deleteThread unauthorized")
 	public void deleteThreadUnauthorized() throws Exception {
-		String jwt = testUtils.getJwt("user1", "user1pass");
+		String jwt = testUtils.getJwt("user3", "user3pass");
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.delete("/api/threads/2")
 				.header("Authorization", "Bearer " + jwt))
@@ -471,7 +471,7 @@ public class ThreadControllerIntegrationTest {
 			setLocked(true);
 		}};
 
-		String jwt = testUtils.getJwt("user3", "user3pass");
+		String jwt = testUtils.getJwt("user2", "user2pass");
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
 				.header("Authorization", "Bearer " + jwt)
@@ -534,7 +534,7 @@ public class ThreadControllerIntegrationTest {
 			setLocked(true);
 		}};
 
-		String jwt = testUtils.getJwt("user1", "user1pass");
+		String jwt = testUtils.getJwt("user3", "user3pass");
 
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.patch("/api/threads/4")
 				.header("Authorization", "Bearer " + jwt)

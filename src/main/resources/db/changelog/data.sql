@@ -64,31 +64,3 @@ INSERT INTO post (message, thread_id, creator_id, create_time) VALUES
 ("user1 post11", 1, 1, "2021-02-07 14:23:58"),
 ("user1 post12", 1, 1, "2021-02-07 14:23:58"),
 ("user1 post13", 1, 1, "2021-02-07 14:23:58");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

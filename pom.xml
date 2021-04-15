@@ -18,6 +18,71 @@
 		<java.version>15</java.version>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>dev</id>
+
+			<properties>
+				<activatedProperties>dev</activatedProperties>
+			</properties>
+
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<dependencies>
+				<dependency>
+					<groupId>org.liquibase</groupId>
+					<artifactId>liquibase-core</artifactId>
+					<version>4.2.1</version>
+				</dependency>
+			</dependencies>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<version>4.2.1</version>
+						<configuration>
+							<propertyFile>src/main/resources/liquibase-dev.properties</propertyFile>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>prod</id>
+
+			<properties>
+				<activatedProperties>prod</activatedProperties>
+			</properties>
+
+			<dependencies>
+				<dependency>
+					<groupId>org.liquibase</groupId>
+					<artifactId>liquibase-core</artifactId>
+					<version>4.2.1</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<version>4.2.1</version>
+						<configuration>
+							<propertyFile>src/test/resources/liquibase-prod.properties</propertyFile>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -69,28 +134,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
-			<version>4.2.1</version>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
-				<version>4.2.1</version>
-				<configuration>
-					<propertyFile>src/main/resources/liquibase.properties</propertyFile>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>

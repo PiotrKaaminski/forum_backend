@@ -2,6 +2,7 @@ package com.forum.forum_backend.config;
 
 import com.forum.forum_backend.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -23,6 +24,9 @@ import java.util.List;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+	@Value("${cors.allowedOrigins}")
+	private String[] allowedOrigins;
+
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
@@ -31,7 +35,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/socket-handshake").setAllowedOrigins("http://localhost:4200").withSockJS();
+		registry.addEndpoint("/socket-handshake").setAllowedOrigins(allowedOrigins).withSockJS();
 	}
 
 	@Override
