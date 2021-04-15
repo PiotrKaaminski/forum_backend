@@ -13,7 +13,7 @@ To see request results proper tool is required(e.g. postman)
 
 ## Project on host
   
-This project is hosted on azure platform with front-end application made by friend of mine in angular. CI/CD is applied on "azure" branch. 
+This project is hosted on azure platform with front-end application made by friend of mine in angular. CI/CD is applied on main branch. 
 Check here: https://pkaminski-forum.azurewebsites.net
 
 ## Additional info
