@@ -5,112 +5,220 @@
 		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-	<changeSet id="1" author="Piotr">
+	<changeSet id="schema" author="Piotr">
 		<createTable tableName="authority">
-			<column name="id" autoIncrement="true" type="INT UNSIGNED">
+			<column name="id" autoIncrement="true" type="SMALLINT UNSIGNED">
 				<constraints primaryKey="true" nullable="false" unique="true" />
 			</column>
-			<column name="name" type="VARCHAR(60)">
+			<column name="name" type="VARCHAR(30)">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
-		
+
 		<createTable tableName="user">
-			<column name="id" autoIncrement="true" type="INT UNSIGNED">
+			<column name="id" autoIncrement="true" type="SMALLINT UNSIGNED">
 				<constraints primaryKey="true" nullable="false" unique="true" />
 			</column>
-			<column name="username" type="VARCHAR(50)">
+			<column name="username" type="VARCHAR(25)">
 				<constraints nullable="false" unique="true" />
 			</column>
 			<column name="password" type="VARCHAR(100)">
 				<constraints nullable="false" />
 			</column>
-			<column name="join_time" type="DATETIME">
-				<constraints nullable="false" />
+			<column name="join_time" type="TIMESTAMP">
+				<constraints nullable="false"/>
 			</column>
-			<column name="authority_id" type="INT UNSIGNED" />
-		</createTable>
-		
-		<createTable tableName="thread">
-			<column name="id" autoIncrement="true" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false" unique="true" />
-			</column>
-			<column name="title" type="VARCHAR(100)">
-				<constraints nullable="false" />
-			</column>
-			<column name="message" type="VARCHAR(500)">
-				<constraints nullable="false" />
-			</column>
-			<column name="forum_id" type="INT UNSIGNED">
-				<constraints nullable="false" />
-			</column>
-			<column name="creator_id" type="INT UNSIGNED" />
-			<column name="create_time" type="DATETIME">
-				<constraints nullable="false" />
-			</column>
-			<column name="locked" type="BOOL">
-				<constraints nullable="false" />
-			</column>
+			<column name="authority_id" type="SMALLINT UNSIGNED" />
 		</createTable>
 
-		<createTable tableName="thread_likes">
-			<column name="thread_id" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="user_id" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-		</createTable>
-
-		<createTable tableName="post">
-			<column name="id" autoIncrement="true" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false" unique="true" />
-			</column>
-			<column name="message" type="VARCHAR(500)" >
-				<constraints nullable="false" />
-			</column>
-			<column name="thread_id" type="INT UNSIGNED">
-				<constraints nullable="false" />
-			</column>
-			<column name="creator_id" type="INT UNSIGNED" />
-			<column name="create_time" type="DATETIME">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-
-		<createTable tableName="post_likes">
-			<column name="post_id" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="user_id" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-		</createTable>
+		<addForeignKeyConstraint
+				baseTableName="user"
+				baseColumnNames="authority_id"
+				constraintName="user_ibfk_1"
+				referencedTableName="authority"
+				referencedColumnNames="id"
+				onDelete="SET NULL"
+		/>
 
 		<createTable tableName="forum">
-			<column name="id" autoIncrement="true" type="INT UNSIGNED">
+			<column name="id" autoIncrement="true" type="SMALLINT UNSIGNED">
 				<constraints primaryKey="true" nullable="false" unique="true" />
 			</column>
-			<column name="title" type="VARCHAR(100)">
+			<column name="title" type="VARCHAR(300)">
 				<constraints nullable="false" />
 			</column>
-			<column name="description" type="VARCHAR(100)">
+			<column name="description" type="VARCHAR(1000)">
 				<constraints nullable="false" />
 			</column>
-			<column name="parent_forum_id" type="INT UNSIGNED" />
-			<column name="create_time" type="DATETIME">
+			<column name="parent_forum_id" type="SMALLINT UNSIGNED" />
+			<column name="create_time" type="TIMESTAMP">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
 
+		<addForeignKeyConstraint
+				baseTableName="forum"
+				baseColumnNames="parent_forum_id"
+				constraintName="forum_ibfk_1"
+				referencedTableName="forum"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
 		<createTable tableName="forum_moderators">
-			<column name="forum_id" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false" />
+			<column name="forum_id" type="SMALLINT UNSIGNED">
+				<constraints nullable="false" />
 			</column>
-			<column name="user_id" type="INT UNSIGNED">
-				<constraints primaryKey="true" nullable="false" />
+			<column name="user_id" type="SMALLINT UNSIGNED">
+				<constraints nullable="false" />
 			</column>
 		</createTable>
+
+		<addForeignKeyConstraint
+				baseTableName="forum_moderators"
+				baseColumnNames="forum_id"
+				constraintName="forum_moderators_ibfk_1"
+				referencedTableName="forum"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
+		<addForeignKeyConstraint
+				baseTableName="forum_moderators"
+				baseColumnNames="user_id"
+				constraintName="forum_moderators_ibfk_2"
+				referencedTableName="user"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
+		<createTable tableName="thread">
+			<column name="id" autoIncrement="true" type="SMALLINT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" unique="true" />
+			</column>
+			<column name="title" type="VARCHAR(300)">
+				<constraints nullable="false" />
+			</column>
+			<column name="message" type="VARCHAR(1000)">
+				<constraints nullable="false" />
+			</column>
+			<column name="forum_id" type="SMALLINT UNSIGNED">
+				<constraints nullable="false" />
+			</column>
+			<column name="creator_id" type="SMALLINT UNSIGNED" />
+			<column name="create_time" type="TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+			<column name="locked" type="BIT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+				baseTableName="thread"
+				baseColumnNames="forum_id"
+				constraintName="thread_ibfk_1"
+				referencedTableName="forum"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
+		<addForeignKeyConstraint
+				baseTableName="thread"
+				baseColumnNames="creator_id"
+				constraintName="thread_ibfk_2"
+				referencedTableName="user"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
+		<createTable tableName="thread_likes">
+			<column name="thread_id" type="SMALLINT UNSIGNED">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="SMALLINT UNSIGNED">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+				baseTableName="thread_likes"
+				baseColumnNames="thread_id"
+				constraintName="thread_likes_ibfk_1"
+				referencedTableName="thread"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
+		<addForeignKeyConstraint
+				baseTableName="thread_likes"
+				baseColumnNames="user_id"
+				constraintName="thread_likes_ibfk_2"
+				referencedTableName="user"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
+		<createTable tableName="post">
+			<column name="id" autoIncrement="true" type="SMALLINT UNSIGNED">
+				<constraints primaryKey="true" nullable="false" unique="true" />
+			</column>
+			<column name="message" type="VARCHAR(1000)" >
+				<constraints nullable="false" />
+			</column>
+			<column name="thread_id" type="SMALLINT UNSIGNED">
+				<constraints nullable="false" />
+			</column>
+			<column name="creator_id" type="SMALLINT UNSIGNED" />
+			<column name="create_time" type="TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+				baseTableName="post"
+				baseColumnNames="thread_id"
+				constraintName="post_ibfk_1"
+				referencedTableName="thread"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
+		<addForeignKeyConstraint
+				baseTableName="post"
+				baseColumnNames="creator_id"
+				constraintName="post_ibfk_2"
+				referencedTableName="user"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
+		<createTable tableName="post_likes">
+			<column name="post_id" type="SMALLINT UNSIGNED">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="SMALLINT UNSIGNED">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint
+				baseTableName="post_likes"
+				baseColumnNames="post_id"
+				constraintName="post_likes_ibfk_1"
+				referencedTableName="post"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
+
+		<addForeignKeyConstraint
+				baseTableName="post_likes"
+				baseColumnNames="user_id"
+				constraintName="post_likes_ibfk_2"
+				referencedTableName="user"
+				referencedColumnNames="id"
+				onDelete="CASCADE"
+		/>
 	</changeSet>
 </databaseChangeLog>
 

@@ -5,7 +5,7 @@
 		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-	<changeSet id="1" author="Piotr">
+	<changeSet id="initialData" author="Piotr">
 		<sqlFile path="data.sql"
 				 relativeToChangelogFile="true"
 				 dbms="mysql"

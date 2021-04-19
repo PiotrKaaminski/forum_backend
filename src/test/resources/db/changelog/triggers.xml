@@ -5,7 +5,13 @@
 		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-	<include relativeToChangelogFile="true" file="schema.xml"/>
-	<include relativeToChangelogFile="true" file="data.xml"/>
-	<include relativeToChangelogFile="true" file="triggers.xml" />
+	<changeSet id="triggers" author="Piotr">
+		<sqlFile path="triggers.sql"
+				 relativeToChangelogFile="true"
+				 dbms="mysql"
+				 encoding="utf8"
+				 endDelimiter="//"
+				 splitStatements="false"/>
+
+	</changeSet>
 </databaseChangeLog>

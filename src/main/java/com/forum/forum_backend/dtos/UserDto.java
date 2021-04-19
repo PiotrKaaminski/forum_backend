@@ -12,7 +12,7 @@ public class UserDto {
 
 	private int id;
 	@NoSpace
-	@Length(min = 5, max = 20, message = "Username cannot be shorter than 5 and longer than 20")
+	@Length(min = 5, max = 25, message = "Username cannot be shorter than 5 and longer than 25")
 	@UsernameUnique
 	private String username;
 	@NoSpace

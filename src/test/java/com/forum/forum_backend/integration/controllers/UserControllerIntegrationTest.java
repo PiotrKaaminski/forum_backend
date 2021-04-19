@@ -296,7 +296,7 @@ public class UserControllerIntegrationTest {
 		Assertions.assertNotNull(returnedException);
 		Assertions.assertEquals(400, returnedException.getStatus());
 		Assertions.assertEquals("BAD_REQUEST", returnedException.getError());
-		Assertions.assertEquals("Username cannot be shorter than 5 and longer than 20", returnedException.getMessage());
+		Assertions.assertEquals("Username cannot be shorter than 5 and longer than 25", returnedException.getMessage());
 		Assertions.assertEquals("/api/users", returnedException.getPath());
 	}
 
